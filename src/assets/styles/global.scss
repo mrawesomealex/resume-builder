@@ -1,0 +1,112 @@
+//colors
+$main_black:#2f3030;
+$paragraphcolor: #7b7b7b;
+$active:#ef4136;$active_hover:#ee7e76;
+
+$btn_blue_inactive: #f5faff;
+$btn_blue_outline: #acd0f9;
+$btn_blue_filled:#699eda; 
+$btn_blue_text:#699eda;
+
+$btn_red_inactive: #fef7f9;
+$btn_red_outline: #f99a94;
+//active = brn_red_filled
+
+$block_grey_fill: #f5f7f8;
+$block_grey_outline: #e3e3e3;
+
+//fonts
+$Raleway: 'Raleway', sans-serif;
+$Roboto:'Roboto', sans-serif;
+
+//elements
+.block_neutral{
+    border-radius: 6px;
+    background:$block_grey_fill;
+    border:1px solid $block_grey_outline;
+    font-family: $Roboto;
+    font-weight: 300;
+}
+.block_neutral:focus{
+    background: white;
+    border: 1px solid $btn_blue_text;
+    outline:none;
+    color:$btn_blue_text;
+    transition: .3s ease;
+}
+.button{
+    border-radius: 6px;
+    padding: 15px 30px;
+    font-family: $Roboto;
+    cursor:pointer;
+}
+.button:hover{
+    color:white;
+}
+.blue{
+    border: 1px solid $btn_blue_outline;
+    background: $btn_blue_inactive;
+    color:$btn_blue_text;
+}
+
+.red{
+    border: 1px solid $btn_red_outline;
+    background: $btn_red_inactive;
+}
+.blue:hover{
+    border: 1px solid $btn_blue_filled;
+    background:$btn_blue_filled;
+}
+.red:hover{
+    background:$active;
+}
+
+a:hover{
+    cursor: pointer;
+}
+*{
+    user-select: none;
+}
+
+//modal animation
+
+.modal-enter,
+.modal-leave-active {
+    opacity: 0;
+  }
+  
+  .modal-enter .wrap_block,
+  .modal-leave-active .wrap_block {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+
+  // Error message Animation
+  .flowup-enter,
+  .flowup-leave-active{
+      opacity: 0;
+      padding-left:30px;
+  }
+
+.errorMessage{
+    font-family: $Raleway !important;
+    color:$active !important;
+    transition: 0.3s;
+    letter-spacing: 0.1px !important;
+}
+.error{
+    border: 1px solid $btn_red_outline;
+    background: $btn_red_inactive;
+    color:$active;
+}
+.error:focus{
+    border: 1px solid $btn_red_outline;
+    color:$active;
+}
+button[disabled = "disabled"],
+button[disabled = "disabled"]:hover{
+    background: $block_grey_fill;
+    border: 1px solid $block_grey_outline;
+    color:$paragraphcolor;
+    cursor: default;
+}
