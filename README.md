@@ -1,6 +1,13 @@
-# resume-builder
+# ResumeBuilder 
+> конструктор резюме 
 
-> A Vue.js project
+## Используемые технологии
+
+> Vue.js@2.4.4 (Webpack template)
+> Vuefire.js@1.4.4
+> Vue-Router@v3.0.1
+> Vue-scrollTo@1.0.1
+> Bootsrap 4.0.0/ Jquery 3.2.1
 
 ## Build Setup
 
