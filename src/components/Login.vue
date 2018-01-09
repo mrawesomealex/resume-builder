@@ -35,9 +35,8 @@ export default {
         .signInWithEmailAndPassword(this.email, this.password)
         .then(
           user => {
-            console.log(user)
             if (user.emailVerified) {
-              alert('Вы подтвердили емаил')
+              alert('Вы вошли!')
             } else {
               alert('Уупс вы не подтвердили e-mail')
             }
@@ -106,7 +105,7 @@ export default {
 }
 h2 {
   font-family: $Raleway;
-  font-weight: 300;
+  font-weight: 400;
 }
 .link-text {
   color: $active;

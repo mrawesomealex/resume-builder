@@ -43,6 +43,9 @@ $Roboto:'Roboto', sans-serif;
 .button:hover{
     color:white;
 }
+.button:focus{
+    outline: none;
+}
 .blue{
     border: 1px solid $btn_blue_outline;
     background: $btn_blue_inactive;

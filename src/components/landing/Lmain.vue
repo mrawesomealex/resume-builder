@@ -1,36 +1,7 @@
 
 <template>
     <div class="container-fluid">
-        <login @SwitchToSignUp="SwitchSignupState" @closeLoginWindow ="SwitchLoginState" v-if="login"></login>
-        <sign-up @SwitchToLogin="SwitchLoginState" @closeSignupWindow ="SwitchSignupState" v-if="signup"></sign-up>
-        <header  class="row  d-xl-flex d-lg-flex d-md-flex d-sm-none d-none" >
-               <div class="py-3 mr-auto col-9">
-                    <img src="../../assets/logo/Logo.svg" width="40px">
-                    <a href='/' v-scroll-to="'#mainblock'" class="pr-4 pl-5 pt-4">О ПРОДУКТЕ</a>
-                    <a href="/" v-scroll-to="'#advantages'" class="px-4 pt-4 ">ПРИЕМУЩЕСТВА</a>
-                    <router-link to='' class="px-4 pt-4">КОМАНДА</router-link>
-                    <a href="/" v-scroll-to="'#reviews'" class="px-4 pt-4">ОТЗЫВЫ</a>
-                </div>
-                <div  class="pt-2 pb-3 ml-auto col-3">
-                    <a @click="SwitchLoginState" class="signin offset-xl-4 offset-lg-3 offset-md-0 pt-4">ВОЙТИ</a>
-                    <span class="pt-3 divider h4 px-2">.</span>
-                    <a @click="SwitchSignupState" class="signup pt-4 pr-4">РЕГИСТРАЦИЯ</a>
-                </div> 
-        </header>
-        <header id="mobile-header" class="row d-xl-none d-lg-none d-md-none d-sm-flex d-xs-flex" >
-               <div @click="OpenMenu" class="py-3 mr-auto col-12 text-center">
-                    <img src="../../assets/logo/Logo.svg" width="40px">
-                    <img src="../../assets/images/up-arrow_red.svg" width="25px" id="menu_arrow">
-               </div>
-               <div id="sub-list" class="col-12 py-3">
-                    <a href='/' v-scroll-to="'#mainblock'" class="py-2 text-center d-block col-12">О ПРОДУКТЕ</a>
-                    <a href="/" v-scroll-to="'#advantages'" class="py-2 text-center d-block col-12">ПРИЕМУЩЕСТВА</a>
-                    <router-link to='' class="py-2 text-center d-block col-12">КОМАНДА</router-link>
-                    <a href="/" v-scroll-to="'#reviews'" class="py-2 text-center d-block col-12">ОТЗЫВЫ</a>
-                    <a  @click="SwitchLoginState" class="signin py-2 mt-5 text-center d-block col-12">ВОЙТИ</a>
-                    <a  @click="SwitchSignupState"  class="signup py-2 text-center d-block col-12">РЕГИСТРАЦИЯ</a>
-               </div>        
-        </header>
+         <unreg-head></unreg-head>
          <div id="mainblock" class="row">
              <img id="chart" class="d-xl-block d-lg-block d-md-block d-sm-none d-none" src="../../assets/images/charts.svg">
              <img id="connect" class="d-xl-block d-lg-block d-md-block d-sm-none d-none" src="../../assets/images/connect.svg">
@@ -59,8 +30,8 @@
             <div class="container py-5">
               <div class="row">
                 <div class="col-xl-9 col-lg-9 col-md-9 col-sm-8 col-6 pl-0 pl-xl-0 pl-lg-0 pl-md-0 pl-sm-0 pl-5">
-                    <h3 class="text-left d-xl-flex d-lg-flex d-md-flex d-sm-flex d-none">Начни прямо сейчас</h3>
-                    <p>Ты уже с нами?<a @click="SwitchLoginState" class="pl-2">Войти</a></p>
+                    <h3 class="text-left d-xl-flex d-lg-flex d-md-flex d-sm-flex d-none">Необходимо срочно создать резюме? </h3>
+                    <p>Приступай к созданию без регистрации прямо сейчас</p>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5 pr-0 text-right">
                     <button id="btn-second_create" class="my-0 button">СОЗДАТЬ РЕЗЮМЕ<img class=" d-xl-inline d-lg-inline d-md-inline d-sm-inline d-none" src="../../assets/images/up-arrow_white.svg"></button>
@@ -91,49 +62,20 @@
               </div>  
              </div> 
          </div>
-         <footer class="row px-5 py-4 text-center">
-                <ul class="order-2 col-xl-2 col-lg-2 col-md-2 col-sm-12 col-12  text-xl-left text-lg-left text-md-left text-sm-center text-center pl-xl-5 pl-lg-5">
-                    <li><a href='/' v-scroll-to="'#mainblock'">О Продукте</a></li>
-                    <li><a href='/' v-scroll-to="'#advantages'">Приемущества</a></li>
-                    <router-link tag='li' to=''><a>Команда</a></router-link>
-                    <li><a href='/' v-scroll-to="'#reviews'">Отзывы</a></li>
-                </ul>
-                <ul class="order-xl-1 order-lg-1 order-md-1 order-sm-3 order-3 col-3 col-xl-2 col-lg-2 col-md-3 col-sm-12 col-12 text-xl-left text-lg-left text-md-left text-sm-center text-center">
-                    <router-link tag='li' to=''><a>Инструкция пользователя</a></router-link>
-                    <router-link tag='li' to=''><a>Условия пользования</a></router-link>
-                    <li><a href="https://firebase.google.com/docs/hosting/">Наш хостинг</a></li>
-                    <router-link tag='li' to=''><a>Открытые вакансии</a></router-link>
-                </ul>
-                <span id="copyright" class="order-xl-3 order-lg-3 order-md-3 order-sm-1 col-4 col-xl-4 col-lg-4 col-md-1 col-sm-12 col-12 mt-2 mb-5 text-center order-1">RESUMEBUILDER &#169; 2018</span>
-                <ul class="order-5 contacts col-xl-2 col-lg-2 col-md-2 col-sm-12 col-12 text-xl-left text-lg-left text-md-left text-sm-center text-center  pl-xl-5 pl-lg-5  pl-md-5 ">
-                    <li class="name"><img src="../../assets/images/phone.svg" class="pr-2">Контакты</li>
-                    <li>+38050-748-78-10</li>
-                    <li>+38067-145-98-12</li>
-                    <li>+38063-874-11-36</li>
-                </ul>
-                <ul class="order-6 socials col-xl-2 col-lg-2 col-md-3 col-sm-12 col-12 text-xl-left text-lg-left text-md-left text-sm-center text-center  pl-xl-0 pl-lg-3  pl-md-5 ">
-                    <li><img src="../../assets/images/facebook.svg" class="pr-2">ResumeBuilderTeam</li>
-                    <li><img src="../../assets/images/telegram.svg" class="pr-2">@ResumeBuilder</li>
-                    <li><img src="../../assets/images/skype.svg" class="pr-2">ResumeBuilder</li>
-                    <li><img src="../../assets/images/envelope.svg" class="pr-2">RBhelp@gmail.com</li>
-                </ul>
-         </footer>
     </div>
 </template>
 
 <script>
-import Login from '@/components/Login'
-import SignUp from '@/components/SignUp'
-
+import UnregHead from '@/components/UnregHead'
 export default {
   name: 'landing',
+  components: {
+    UnregHead
+  },
   data: function () {
     return {
       currentSlide: 1,
-      login: false,
-      signup: false,
       interval: null,
-      open: false,
       reviews: [
         {
           class: 'anna',
@@ -199,37 +141,8 @@ export default {
         // eslint-disable-next-line  
         $('#review').css({ opacity: '1' })
       }, 600)
-    },
-    OpenMenu: function () {
-      if (!this.open) {
-        // eslint-disable-next-line  
-        $('#mobile-header').css({ height: '60vh' })
-      } else {
-        // eslint-disable-next-line
-        $('#mobile-header').css({ height: '9vh' })
-      }
-      this.open = !this.open
-    },
-    SwitchLoginState: function () {
-      if (this.signup) {
-        this.signup = !this.signup
-      }
-      this.login = !this.login
-      // eslint-disable-next-line
-      $('#mobile-header').css({ height: '9vh' })
-      this.open = false
-    },
-    SwitchSignupState: function () {
-      if (this.login) {
-        this.login = !this.login
-      }
-      this.signup = !this.signup
-      // eslint-disable-next-line
-      $('#mobile-header').css({ height: '9vh' })
-      this.open = false
     }
-  },
-  components: { Login, SignUp }
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -238,37 +151,11 @@ export default {
 $Playfair: "Playfair Display", serif;
 
 $grey_color: #fcfcfc;
-$footer_color: #838383;
 
-header {
-  display: flex;
-  align-items: center;
-  position: fixed;
-  width: 100vw;
-  background: rgba(255, 255, 255, 0.98);
-  z-index: 200;
-  border-bottom: 1px solid $block_grey_outline;
-  .signup {
-    color: $active;
-  }
-  a {
-    font-family: $Raleway;
-  }
-}
-#mobile-header {
-  height: 9vh;
-  overflow-y: hidden;
-  transition: 0.3s;
-  z-index: 200;
-  .signup {
-  color: $active;
-}
-}
 #menu_arrow {
   transform: rotate(180deg);
   transition: 0.3s;
 }
-
 a,
 .divider,
 h3 {
@@ -279,9 +166,6 @@ h3 {
   text-align: center;
   transition: 0.2s;
   letter-spacing: 1.1px;
-}
-.divider {
-  font-size: 16pt;
 }
 
 button {
@@ -307,11 +191,6 @@ button:hover {
   }
 }
 
-a:hover {
-  text-decoration: none;
-  color: $active;
-}
-
 #mainblock {
   display: flex;
   align-items: center;
@@ -320,7 +199,7 @@ a:hover {
   padding-top: 9vh;
 
   button {
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.3px;
     font-family: $Roboto;
   }
@@ -331,6 +210,7 @@ a:hover {
     transition: 0.3s;
   }
   img {
+    transition:0.3s;
     position: absolute;
   }
   #chart {
@@ -364,6 +244,9 @@ p {
   font-family: $Raleway;
   font-weight: 400;
 }
+#reviews{
+    min-height: 350px;
+} 
 @media (max-width: 1700px) {
   #mainblock {
     height: 100vh;
@@ -371,19 +254,6 @@ p {
       padding: 0px 140px;
       font-size: 2.9vw;
     }
-  }
-  ul:first-child a,
-  ul:nth-child(2) a {
-    font-size: 0.9vw;
-  }
-  .socials {
-    font-size: 0.9vw;
-  }
-  .contacts img {
-    width: 25px;
-  }
-  .contacts {
-    font-size: 0.9vw;
   }
 }
 @media (max-width: 1500px) {
@@ -399,18 +269,20 @@ p {
   h3 {
     font-size: 1vw;
   }
-  ul:first-child a,
-  ul:nth-child(2) a {
-    font-size: 1.1vw;
-  }
-  .socials img {
-    width: 25px;
-  }
-  .socials {
-    font-size: 0.8vw;
+  #mainblock { 
+    #trophy {
+      top: 75%;
+      right: 12%;
+    }
   }
 }
 @media (max-width: 1200px) {
+ #mainblock { 
+  #trophy {
+    top: 75%;
+    right: 12%;
+  }
+ }
   a {
     font-size: 0.9vw;
   }
@@ -419,19 +291,29 @@ p {
       font-size: 1.2vw;
     }
   }
-  ul:first-child a,
-  ul:nth-child(2) a {
-    font-size: 0.8vw;
-  }
+
 }
 @media (max-width: 990px) {
   #mainblock {
     h1 {
       font-size: 3.4vw;
     }
+    #chart {
+    top: 17%;
+    left: 4%;
   }
-  a {
-    font-size: 1.2vw;
+  #trophy {
+    top: 70%;
+    right: 12%;
+  }
+  #connect {
+    top: 24%;
+    right: 2%;
+  }
+  #table {
+    top: 80%;
+    left: 7%;
+  }
   }
   p,
   p > a {
@@ -448,16 +330,6 @@ p {
   #btn-second_create {
     padding: 15px 15px;
   }
-  ul:first-child a,
-  ul:nth-child(2) a {
-    font-size: 1.2vw;
-  }
-  .socials {
-    font-size: 0.9vw;
-  }
-  #copyright {
-    font-size: 0.8vw;
-  }
 }
 @media (max-width: 767px) {
   #mainblock {
@@ -465,9 +337,6 @@ p {
       margin-top: 5vh;
       font-size: 4vw;
     }
-  }
-  #sub-list a {
-    font-size: 2.2vw;
   }
   p,
   p > a {
@@ -481,23 +350,9 @@ p {
   h3 {
     font-size: 2.1vw;
   }
-  ul:first-child a,
-  ul:nth-child(2) a {
-    font-size: 2vw;
-  }
-  .socials img {
-    width: 25px;
-  }
-  .socials,
-  .contacts {
-    font-size: 2vw;
-  }
+
 }
 @media (max-width: 570px) {
-  #sub-list a {
-    font-size: 4vw;
-    letter-spacing: 0px;
-  }
   #mainblock {
     padding-bottom: 50px;
     h1 {
@@ -520,26 +375,15 @@ p {
   #btn-second_create {
     padding: 15px 10px;
   }
-  #copyright {
-    font-size: 1.1vw;
-  }
+  
   #reviews{
-      min-height: 500px;
-  }
-  ul:first-child a,
-  ul:nth-child(2) a,
-  .socials,
-  .contacts {
-    font-size: 3vw;
+      min-height: 410px;
   }
 }
 .ad_back {
   border-top: 1px solid $block_grey_outline;
   background: $grey_color;
 }
-  #reviews{
-      min-height: 350px;
-  }
 #advantages {
   border-radius: 6px 0px 0px 6px;
   padding: 50px;
@@ -556,9 +400,6 @@ p {
 }
 #ad_wrap {
   display: flex;
-}
-#down {
-  transform: rotate(-180deg);
 }
 #label {
   margin: 65px 0px;
@@ -588,12 +429,6 @@ p {
   h3 {
     font-family: $Roboto;
     text-transform: uppercase;
-  }
-  a {
-    font-family: $Raleway;
-    font-weight: 400;
-    text-decoration: underline;
-    color: $active;
   }
 }
 #reviews {
@@ -635,44 +470,6 @@ p {
   }
   #occupation {
     text-transform: uppercase;
-  }
-}
-footer {
-  background: #2f3030;
-  color: $footer_color;
-  a {
-    color: $footer_color;
-    font-family: $Raleway;
-    font-weight: 400;
-    transition: 0s;
-  }
-  span {
-    font-family: $Roboto;
-    font-weight: 500;
-    letter-spacing: 1px;
-    color: white;
-  }
-  li:hover a {
-    color: white;
-  }
-  ul {
-    list-style: none;
-    padding: 0;
-    font-family: $Roboto;
-    font-weight: 400;
-
-    li {
-      padding: 5px 0px;
-    }
-  }
-  .contacts {
-    font-family: $Roboto;
-    font-weight: 400;
-  }
-  .name,
-  .socials {
-    font-weight: 300;
-    color: white;
   }
 }
 </style>
