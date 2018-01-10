@@ -14,7 +14,7 @@ Vue.use(ScrollFeature, {
   container: 'body',
   duration: 500,
   easing: 'ease',
-  offset: 0,
+  offset: 200,
   cancelable: true,
   onDone: false,
   onCancel: false,

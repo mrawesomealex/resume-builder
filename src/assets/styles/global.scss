@@ -18,8 +18,16 @@ $block_grey_outline: #e3e3e3;
 //fonts
 $Raleway: 'Raleway', sans-serif;
 $Roboto:'Roboto', sans-serif;
+$Playfair: "Playfair Display", serif;
 
 //elements
+p {
+  font-size: 0.88vw;
+  color: $paragraphcolor;
+  line-height: 30px;
+  font-family: $Raleway;
+  font-weight: 400;
+}
 .block_neutral{
     border-radius: 6px;
     background:$block_grey_fill;
@@ -88,9 +96,10 @@ a:hover{
   .flowup-enter,
   .flowup-leave-active{
       opacity: 0;
-      padding-left:30px;
   }
-
+a{
+    transition: 0.3s;
+}
 .errorMessage{
     font-family: $Raleway !important;
     color:$active !important;

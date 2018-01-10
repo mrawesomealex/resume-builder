@@ -2,16 +2,16 @@
 <div class="container-fluid">
     <footer class="row px-5 py-4 text-center">
                 <ul class="order-2 col-xl-2 col-lg-2 col-md-2 col-sm-6 col-12  text-left pl-xl-5 ">
-                    <li><a href='/' v-scroll-to="'#mainblock'">О Продукте</a></li>
-                    <li><a href='/' v-scroll-to="'#advantages'">Приемущества</a></li>
-                    <router-link tag='li' to=''><a>Команда</a></router-link>
-                    <li><a href='/' v-scroll-to="'#reviews'">Отзывы</a></li>
+                    <router-link  tag='li' to='/'><a v-scroll-to="'#mainblock'">О Продукте</a></router-link>
+                    <router-link  tag='li' to='/'><a href='/' v-scroll-to="'#advantages'">Приемущества</a></router-link>
+                    <router-link tag='li' to='/team'><a>Команда</a></router-link>
+                    <router-link  tag='li' to='/'><a href='/' v-scroll-to="'#reviews'">Отзывы</a></router-link>
                 </ul>
                 <ul class="pl-xl-0 pl-lg-0 pl-md-0 pl-sm-0 pl-3 order-xl-1 order-lg-1 order-md-1 order-sm-3 order-3 col-3 col-xl-2 col-lg-3 col-md-3 col-sm-6 col-12 text-left ">
                     <router-link tag='li' to=''><a>Инструкция пользователя</a></router-link>
                     <router-link tag='li' to=''><a>Условия пользования</a></router-link>
                     <li><a href="https://firebase.google.com/docs/hosting/">Наш хостинг</a></li>
-                    <router-link tag='li' to=''><a>Открытые вакансии</a></router-link>
+                    <router-link tag='li' to='/team'><a>Открытые вакансии</a></router-link>
                 </ul>
                 <span id="copyright" class="order-xl-3 order-lg-3 order-md-3 order-sm-1 col-4 col-xl-4 col-lg-2 col-md-2 col-sm-12 col-12 mt-2 mb-5 order-1 pr-md-5">RESUMEBUILDER &#169; 2018</span>
                 <ul class="order-5 contacts col-xl-2 col-lg-2 col-md-2 col-sm-6 col-6 text-left mr-lg-0 pl-xl-5 pl-lg-5  pl-md-2 ">

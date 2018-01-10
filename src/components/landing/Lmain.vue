@@ -148,14 +148,12 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/styles/global";
 
-$Playfair: "Playfair Display", serif;
-
 $grey_color: #fcfcfc;
 
-#menu_arrow {
-  transform: rotate(180deg);
-  transition: 0.3s;
+#down {
+  transform: rotate(-180deg);
 }
+
 a,
 .divider,
 h3 {
@@ -236,13 +234,6 @@ button:hover {
     transform: rotate(-25deg);
     width: 10vw;
   }
-}
-p {
-  font-size: 0.88vw;
-  color: $paragraphcolor;
-  line-height: 30px;
-  font-family: $Raleway;
-  font-weight: 400;
 }
 #reviews{
     min-height: 350px;

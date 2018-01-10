@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Landing from '@/components/landing/Lmain'
-
+import Team from '@/components/landing/Team'
 Vue.use(Router)
 
 export default new Router({
@@ -15,7 +15,12 @@ export default new Router({
     {
       path: '/',
       name: 'landing',
-      component: Landing
+      component: Landing,
+    },
+    {
+      path:'/team', 
+      name:'team',
+      component: Team
     }
   ]
 })
