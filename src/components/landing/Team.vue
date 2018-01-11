@@ -88,7 +88,7 @@ ul{
   }
 }
 @media (max-width: 767px) {
-  #mainblock {
+  #message{
     h1 {
       margin-top: 5vh;
       font-size: 4vw;
