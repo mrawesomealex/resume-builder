@@ -9,7 +9,7 @@
                 </ul>
                 <ul class="pl-xl-0 pl-lg-0 pl-md-0 pl-sm-0 pl-3 order-xl-1 order-lg-1 order-md-1 order-sm-3 order-3 col-3 col-xl-2 col-lg-3 col-md-3 col-sm-6 col-12 text-left ">
                     <router-link tag='li' to=''><a>Инструкция пользователя</a></router-link>
-                    <router-link tag='li' to=''><a>Условия пользования</a></router-link>
+                    <router-link tag='li' to='/terms'><a>Условия пользования</a></router-link>
                     <li><a href="https://firebase.google.com/docs/hosting/">Наш хостинг</a></li>
                     <router-link tag='li' to='/team'><a>Открытые вакансии</a></router-link>
                 </ul>
