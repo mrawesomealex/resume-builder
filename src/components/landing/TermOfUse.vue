@@ -26,13 +26,13 @@
 </template>
 
 <script>
-import UnregHead from "@/components/UnregHead";
+import UnregHead from '@/components/UnregHead'
 export default {
-  name: "terms",
+  name: 'terms',
   components: {
     UnregHead
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

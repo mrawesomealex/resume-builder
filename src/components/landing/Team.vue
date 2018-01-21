@@ -25,19 +25,19 @@
 </template>
 
 <script>
-import UnregHead from "@/components/UnregHead"
+import UnregHead from '@/components/UnregHead'
 
 export default {
-  name: "team",
+  name: 'team',
   data: function () {
-      return {
-          jobs: []
-      }
+    return {
+      jobs: []
+    }
   },
   components: {
     UnregHead
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

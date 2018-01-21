@@ -16,17 +16,17 @@ export default new Router({
     {
       path: '/',
       name: 'landing',
-      component: Landing,
+      component: Landing
     },
     {
-      path:'/team', 
-      name:'team',
+      path: '/team',
+      name: 'team',
       component: Team
     },
     {
       path: '/terms',
-      name:'terms',
-      component:Terms
+      name: 'terms',
+      component: Terms
     }
   ]
 })
