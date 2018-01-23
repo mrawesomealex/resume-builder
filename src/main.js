@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import firebase from 'firebase'
 import ScrollFeature from 'vue-scrollto'
+import { store } from './components/StateManagement/store'
 
 Vue.config.productionTip = false
 
@@ -36,6 +37,7 @@ firebase.initializeApp(config)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   router,
   template: '<App/>',
   components: {App}

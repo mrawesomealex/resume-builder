@@ -41,40 +41,26 @@ export default {
   name: 'unreg-header',
   data: function () {
     return {
-      login: false,
-      signup: false,
-      open: false,
       anchors: true
     }
   },
   methods: {
     OpenMenu: function () {
-      if (!this.open) {
-        // eslint-disable-next-line
-        $("#mobile-header").css({ height: "60vh" })
-      } else {
-        // eslint-disable-next-line
-        $("#mobile-header").css({ height: "9vh" })
-      }
-      this.open = !this.open
+      this.$store.commit('OpenMenu')
     },
     SwitchLoginState: function () {
-      if (this.signup) {
-        this.signup = !this.signup
-      }
-      this.login = !this.login
-      // eslint-disable-next-line
-      $("#mobile-header").css({ height: "9vh" })
-      this.open = false
+      this.$store.commit('SwitchLoginState')
     },
     SwitchSignupState: function () {
-      if (this.login) {
-        this.login = !this.login
-      }
-      this.signup = !this.signup
-      // eslint-disable-next-line
-      $("#mobile-header").css({ height: "9vh" })
-      this.open = false
+      this.$store.commit('SwitchSignupState')
+    }
+  },
+  computed: {
+    login () {
+      return this.$store.state.head.login
+    },
+    signup () {
+      return this.$store.state.head.signup
     }
   },
   components: { Login, SignUp }
@@ -83,73 +69,5 @@ export default {
 
 <style lang="scss" scoped>
 @import "../assets/styles/global";
-a{
-    transition: opacity 0.3s;
-}
-header {
-  display: flex;
-  align-items: center;
-  position: fixed;
-  width: 100vw;
-  background: rgba(255, 255, 255, 0.98);
-  z-index: 200;
-  border-bottom: 1px solid $block_grey_outline;
-
-  .signup {
-    color: $active;
-  }
-  a {
-    font-family: $Raleway;
-  }
-  a:hover {
-    text-decoration: none;
-    color: $active;
-  }
-}
-#mobile-header {
-  height: 9vh;
-  overflow-y: hidden;
-  transition: 0.3s;
-  z-index: 200;
-  .signup {
-    color: $active;
-  }
-}
-a {
-  font-family: $Roboto;
-  font-weight: 700;
-  font-size: 0.8vw;
-  color: $main_black;
-  text-align: center;
-  transition: 0.2s;
-  letter-spacing: 1.1px;
-}
-.divider {
-  font-size: 16pt;
-}
-#menu_arrow {
-  transform: rotate(180deg);
-  transition: 0.3s;
-}
-@media (max-width: 1200px) {
-  a {
-    font-size: 0.9vw;
-  }
-}
-@media (max-width: 990px) {
-  a {
-    font-size: 1.2vw;
-  }
-}
-@media (max-width: 767px) {
-  #sub-list a {
-    font-size: 2.2vw;
-  }
-}
-@media (max-width: 570px) {
-  #sub-list a {
-    font-size: 4vw;
-    letter-spacing: 0px;
-  }
-}
+@import "../assets/styles/header";
 </style>

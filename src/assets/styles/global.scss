@@ -1,7 +1,9 @@
 //colors
+$back:rgb(248, 248, 248);
 $main_black:#2f3030;
 $paragraphcolor: #7b7b7b;
 $active:#ef4136;$active_hover:#ee7e76;
+$done: #43b27a;
 
 $btn_blue_inactive: #f5faff;
 $btn_blue_outline: #acd0f9;
@@ -46,6 +48,7 @@ p {
     border-radius: 6px;
     padding: 15px 30px;
     font-family: $Roboto;
+    transition: 0.1s;
     cursor:pointer;
 }
 .button:hover{
@@ -59,17 +62,19 @@ p {
     background: $btn_blue_inactive;
     color:$btn_blue_text;
 }
-
 .red{
     border: 1px solid $btn_red_outline;
     background: $btn_red_inactive;
+    color:$active;
 }
 .blue:hover{
     border: 1px solid $btn_blue_filled;
     background:$btn_blue_filled;
 }
 .red:hover{
+    border: 1px solid $active;
     background:$active;
+    color:white !important;
 }
 
 a:hover{

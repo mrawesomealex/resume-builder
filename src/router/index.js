@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Landing from '@/components/landing/Lmain'
 import Team from '@/components/landing/Team'
 import Terms from '@/components/landing/TermOfUse'
+import FormTemplate from '@/components/creator-forms/FormTemplate'
+
 Vue.use(Router)
 
 export default new Router({
@@ -27,6 +29,11 @@ export default new Router({
       path: '/terms',
       name: 'terms',
       component: Terms
+    },
+    {
+      path: '/creator',
+      name: 'creator',
+      component: FormTemplate
     }
   ]
 })
