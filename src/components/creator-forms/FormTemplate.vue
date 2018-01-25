@@ -2,21 +2,22 @@
     <div class="container-fluid">
         <creator-header></creator-header>
         <div id="content" class="row">
-           <div class="container">
+           <div class="container pt-5">
                 <nav class="white_block row ">
                     <router-link 
+                        @click.native="Change(key)"
                         v-for="(item,key) in nav_links" :key="key"
                         :class="['col-2', current[key] ? 'current' : '', done[key] ? 'done' : '', error[key] ? 'form_error' : '']"  
-                        to="">
+                        :to="item.path">
                         <div v-if="!done[key]" :class="item.class"></div>
                         <img v-if="done[key]" src="../../assets/step_icons/check.svg"/>
                         <span class="d-xl-inline d-lg-inline d-md-inline d-sm-none d-none">{{item.content}}</span>
                     </router-link >
                 </nav>
                 <div id="form" class="row white_block pt-4">
-                    <h4  v-for="(item,key) in nav_links" :key="key" v-if="current[key]" class="container-fluid d-xl-none d-lg-none d-md-none d-sm-block d-block">{{item.content}}</h4>
+                    <h3  v-for="(item,key) in nav_links" :key="key" v-if="current[key]" class="pt-3 pb-4 container-fluid d-xl-none d-lg-none d-md-none d-sm-block d-block">{{item.content}}</h3>
                     <router-view></router-view>
-                    <div id="controls" class="container-fluid">
+                    <div id="controls" class="container-fluid py-4">
                         <router-link tag="button" :disabled="current[0] ? true : false" to="" class="button blue"><a>Предыдущий шаг</a></router-link>
                         <router-link tag="button" :disabled="current[5] ? true : false" to="" class="button blue"><a>Перейти далее</a></router-link>
                     </div>
@@ -32,28 +33,37 @@ import CreatorHeader from '@/components/creator-forms/UnregAppHead'
 export default {
 
   data: function () {
-      return {
-          nav_links : [
-              {class : 'suitcase', content: 'Предпочтения' },
-              {class : 'dialogue', content: 'Основное'},
-              {class : 'graduate', content: 'Образование'},
-              {class : 'star', content: 'Навыки'},
-              {class : 'time', content: 'Опыт работы'},
-              {class : 'plus', content: 'Прочее'}
-          ]
+    return {
+      nav_links: [
+          {class: 'suitcase', content: 'Предпочтения', path: '/creator/preferences'},
+          {class: 'dialogue', content: 'Основное', path: '/creator/basic'},
+          {class: 'graduate', content: 'Образование', path: '/creator/education'},
+          {class: 'star', content: 'Навыки', path: '/creator/skills'},
+          {class: 'time', content: 'Опыт работы', path: '/creator/experience'},
+          {class: 'plus', content: 'Прочее', path: '/creator/additional'}
+      ]
+    }
+  },
+  methods: {
+    Change: function (k) {
+      for (let i = 0; i < this.nav_links.length; i++) {
+        if (i === k) {
+          this.$store.commit('CHANGE_STEP', i)
+        }
       }
-  }, 
-  computed:{ 
+    }
+  },
+  computed: {
     current () {
-        return this.$store.state.builder.currentStage
+      return this.$store.state.builder.currentStage
     },
     done () {
-        return this.$store.state.builder.done
+      return this.$store.state.builder.done
     },
     error () {
-        return this.$store.state.builder.error
+      return this.$store.state.builder.error
     }
-  },  
+  },
   components: {
     CreatorHeader
   }
@@ -62,12 +72,13 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/styles/global";
-$grey : #e3e3e3;
+
 $button-grey: #fcfcfc;
-    h4{
+    h3{
         font-family: $Roboto;
         text-align: center;
-        font-weight: 300;
+        font-weight: 400;
+        color:$btn_blue_text
     }
     a{
         font-family: $Roboto;
@@ -76,15 +87,12 @@ $button-grey: #fcfcfc;
     a:hover{
         text-decoration: none;
     }
-    .white_block{
-        background: white;
-        border-radius: 5px;
-        border: 1px solid $grey;
-    }
     #content{
+        transition: all 0.3s;
+        padding:25px 0px;
         display: flex;
         align-items: center;
-        height: 100vh;
+        min-height: 100vh;
         background: $back;
     }
     nav{
@@ -106,11 +114,11 @@ $button-grey: #fcfcfc;
         }
         a:before{
             content: '';
-            left:0px;
+            left:-100%;
             position: absolute;
             height: 4px;
-            width:100%;
-            animation: 0.3s left-appear cubic-bezier(.64,.06,.62,.38);                      
+            width:100%;   
+            transition: left 0.3s cubic-bezier(.33,.99,.48,1.01) ;                 
         }
         a:hover{
             background: $button-grey;
@@ -145,9 +153,10 @@ $button-grey: #fcfcfc;
         .current:before{
             background:  $btn_blue_text;
             top:0;  
+            left:0;
         }
         .current:hover{
-            background: $btn_blue_inactive;
+            background: $btn_blue_inactive ;
         }
         .form_error{
             color: $active;
@@ -174,17 +183,22 @@ $button-grey: #fcfcfc;
         .form_error:before{
             background:  $active;
             top:0;  
+            left:0;
         }
         .form_error:hover{
             background: $btn_red_inactive;
         }
-        .done{
+        a.done{
             color: $done;
             background:$button-grey ;
         }
         .done:before{
-            bottom: 0;
+            top:0; 
+            left:0;
             background: $done;
+        }
+        .done:hover{
+            background: rgb(252, 255, 252);
         }
         .check_line{
               stroke-dasharray: 5;
@@ -210,25 +224,26 @@ $button-grey: #fcfcfc;
         }
     }
     #form{
+        display: flex;
+        flex-direction: column;
         position: relative;
-        overflow: hidden;
+        overflow-x: hidden;
         min-height: 70vh;
-        box-shadow: 0 2px 4px 0px rgba($color: #000000, $alpha: 0.13);
+        box-shadow: $shadow_light;
     }
     #controls{
-        position: absolute;
         display: flex;
         align-items: center;
-        bottom: 0%;
-        height: 15%;
         background: $button-grey;
         border-top: 1px solid $grey;
         .blue:last-child{
+            font-family: $Roboto;
+            margin-left: auto
+        }
+        .blue{
             a{
                color:$btn_blue_text;
             }
-            font-family: $Roboto;
-            margin-left: auto
         }
         .blue:hover{
             a{
@@ -293,6 +308,7 @@ $button-grey: #fcfcfc;
             width: 100%;
             top:3.9vh;
             z-index: 2;
+            box-shadow: 0 2px 5px 0px rgba($color: #000000, $alpha: 0.05);
         }
     }
     @media (max-width: 320px){
@@ -300,11 +316,6 @@ $button-grey: #fcfcfc;
             a{
                 padding: 0;
             }
-        }
-    }
-    @keyframes left-appear {
-        0%{
-            left:-100%;
         }
     }
 </style>
