@@ -14,16 +14,16 @@ export default {
   created: function () {
     // это нужно убрать после создания модуля Профиля и кнопки "Выйти"
     firebase.auth().signOut()
-    //-----------------------------
+    // -----------------------------
     firebase.auth().onAuthStateChanged((user) => {
-      if(user) {
-        this.$store.commit('CHANGE_CURRENT_USER',user)
-      }else{
+      if (user) {
+        this.$store.commit('CHANGE_CURRENT_USER', user)
+      } else {
         this.$store.commit('CHANGE_CURRENT_USER', '')
       }
     })
   },
-  methods:{
+  methods: {
     ChooseBuilderView: function () {
       if (!this.$store.state.user.current) {
         this.$router.replace('/creator/preferences')

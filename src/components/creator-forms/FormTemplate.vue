@@ -48,7 +48,7 @@ export default {
     Change: function (k) {
       this.$store.commit('CHANGE_STEP', k)
     },
-    OpenMain: function () {  
+    OpenMain: function () {
       this.$emit('openBuilder')
     }
   },
