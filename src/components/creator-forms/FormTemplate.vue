@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid">
-        <creator-header></creator-header>
+        <creator-header @RequestMain="OpenMain"></creator-header>
         <div id="content" class="row">
            <div class="container pt-5">
                 <nav id="navigation" class="white_block row ">
@@ -18,8 +18,8 @@
                     <h3  v-for="(item,key) in nav_links" :key="key" v-if="current[key]" class="pt-3 pb-4 container-fluid d-xl-none d-lg-none d-md-none d-sm-block d-block">{{item.content}}</h3>
                     <router-view></router-view>
                     <div id="controls" class="container-fluid py-4">
-                        <router-link tag="button" :disabled="current[0] ? true : false" to="" class="button blue"><a>Предыдущий шаг</a></router-link>
-                        <router-link tag="button" :disabled="current[5] ? true : false" to="" class="button blue"><a>Перейти далее</a></router-link>
+                        <router-link tag="button" :disabled="current[0] ? true : false" :to="nav_links[previous]" @click.native="Change(previous)" class="button blue"><a>Предыдущий шаг</a></router-link>
+                        <router-link tag="button" :disabled="current[5] ? true : false" :to="nav_links[next]" @click.native="Change(next)" class="button blue"><a>Перейти далее</a></router-link>
                     </div>
                 </div>   
            </div>  
@@ -46,21 +46,29 @@ export default {
   },
   methods: {
     Change: function (k) {
-      for (let i = 0; i < this.nav_links.length; i++) {
-        if (i === k) {
-          this.$store.commit('CHANGE_STEP', i)
-        }
-      }
+      this.$store.commit('CHANGE_STEP', k)
+    },
+    OpenMain: function () {  
+      this.$emit('openBuilder')
     }
   },
+  beforeCreate: function () {
+    this.$router.replace('/creator/preferences')
+  },
   computed: {
-    current () {
+    current: function () {
       return this.$store.state.builder.currentStage
     },
-    done () {
+    previous: function () {
+      return this.$store.state.builder.previousStage
+    },
+    next: function () {
+      return this.$store.state.builder.nextStage
+    },
+    done: function () {
       return this.$store.state.builder.done
     },
-    error () {
+    error: function () {
       return this.$store.state.builder.error
     }
   },

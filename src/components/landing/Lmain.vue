@@ -10,7 +10,7 @@
              <div class="container">
                 <h1 class="mb-4 col-12 px-xl-5 px-lg-5 px-md-5 px-sm-0 px-1">Резюме - ваша визитная карточка, ваше первое представление работодателю </h1>
                 <p class=" offset-xl-1 offset-lg-1 offset-md-1 offset-sm-0 offset-xs-0 col-xl-10 col-lg-10 col-md-10 col-sm-12 col-12 px-xl-5 px-lg-5 px-md-0 px-sm-0 px-0">Resume Builder – современный, удобный в использовании конструктор резюме. Простой, но также одновременно многофункциональный и отвечающий всем требованиям, сервис позволит Вам выделиться среди прочих соискателей. От работы Вашей мечты Вас отделяют лишь несколько минут, которые Вы потратите на заполнение необходимых форм. Структурируйте Ваше образование, поделитесь опытом работы – и работодатель сам предоставит Вам возможность заниматься любимым делом. Помните, работа по призванию, не мечта, а реальность!</p>
-                <button class="mt-5 button">СОЗДАТЬ РЕЗЮМЕ<img  class=" d-xl-inline d-lg-inline d-md-inline d-sm-inline d-none"  src="../../assets/images/up-arrow_white.svg"></button>
+                <button class="mt-5 button" @click="OpenBuilder">СОЗДАТЬ РЕЗЮМЕ<img  class=" d-xl-inline d-lg-inline d-md-inline d-sm-inline d-none"  src="../../assets/images/up-arrow_white.svg"></button>
              </div>   
          </div>
          <div class="ad_back row">
@@ -34,7 +34,7 @@
                     <p>Приступай к созданию без регистрации прямо сейчас</p>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-5 pr-0 text-right">
-                    <button id="btn-second_create" class="my-0 button">СОЗДАТЬ РЕЗЮМЕ<img class=" d-xl-inline d-lg-inline d-md-inline d-sm-inline d-none" src="../../assets/images/up-arrow_white.svg"></button>
+                    <button @click="OpenBuilder" id="btn-second_create" class="my-0 button">СОЗДАТЬ РЕЗЮМЕ<img class=" d-xl-inline d-lg-inline d-md-inline d-sm-inline d-none" src="../../assets/images/up-arrow_white.svg"></button>
                 </div>
                </div> 
             </div>
@@ -56,7 +56,7 @@
                             <span class="divider">.</span>
                             <span id="occupation">{{reviews[currentSlide].occupation}}</span>
                         </h3>
-                        <p class="">{{reviews[currentSlide].text}}</p>
+                        <p>{{reviews[currentSlide].text}}</p>
                     </div>
                 </div>
               </div>  
@@ -141,6 +141,9 @@ export default {
         // eslint-disable-next-line  
         $('#review').css({ opacity: '1' })
       }, 600)
+    },
+    OpenBuilder: function () {
+      this.$emit('openBuilder')
     }
   }
 }

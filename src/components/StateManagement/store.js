@@ -2,7 +2,16 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 Vue.use(Vuex)
-
+const UserData = {
+  store: {
+    current: ''
+  },
+  mutations: {
+    CHANGE_CURRENT_USER: function (state, newUser) {
+      state.current = newUser
+    }
+  }
+}
 const Header = {
   state: {
     login: false,
@@ -40,9 +49,10 @@ const Header = {
     }
   }
 }
-
 const Builder = {
   state: {
+    previousStage: 0,
+    nextStage: 1,
     currentStage: [1, 0, 0, 0, 0, 0],
     done: [0, 0, 0, 0, 0, 0],
     error: [0, 0, 0, 0, 0, 0]
@@ -53,6 +63,8 @@ const Builder = {
         state.currentStage[i] = 0
       }
       state.currentStage[status] = 1
+      state.previousStage = status ? status - 1 : 0
+      state.nextStage = status !== state.currentStage.length - 1 ? status + 1 : 0
     }
   }
 }
@@ -106,6 +118,7 @@ const Resume = {
 
 export const store = new Vuex.Store({
   modules: {
+    user: UserData,
     head: Header,
     builder: Builder,
     resume: Resume,

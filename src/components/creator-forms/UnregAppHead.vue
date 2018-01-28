@@ -4,10 +4,10 @@
         <sign-up @SwitchToLogin="SwitchLoginState" @closeSignupWindow ="SwitchSignupState" v-if="signup"></sign-up>        
         <header  class="row  d-xl-flex d-lg-flex d-md-flex d-sm-none d-none" >
             <div class="py-3 mr-xl-5 col-lg-5  col-md-7 mr-md-5 col-sm-1 col-12">
-                <router-link to="/creator"><img src="../../assets/logo/LogoMain.svg" width="140px"></router-link>
+                <div @click="RequestMain"><img src="../../assets/logo/LogoMain.svg" width="140px"></div>
             </div>
             <div id="unreg-app-head" class=" py-3 pl-xl-4 ml-auto col-xl-3 col-4">
-                <router-link to="/" class="offset-xl-2 offset-lg-3 offset-md-0">Главная</router-link>
+                <a @click="RequestMain" class="offset-xl-2 offset-lg-3 offset-md-0">Главная</a>
                 <a @click="SwitchLoginState" class="px-4 signin">Войти</a>
                 <a @click="SwitchSignupState" class="button red signup"><img><span>Регистрация</span></a>
             </div>     
@@ -45,6 +45,9 @@ export default {
     },
     SwitchSignupState: function () {
       this.$store.commit('SwitchSignupState')
+    },
+    RequestMain: function () {
+      this.$emit('RequestMain')
     }
   },
   computed: {
