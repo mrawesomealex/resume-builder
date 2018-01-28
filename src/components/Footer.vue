@@ -2,10 +2,10 @@
 <div class="container-fluid">
     <footer class="row px-5 py-4 text-center">
                 <ul class="order-2 col-xl-2 col-lg-2 col-md-2 col-sm-6 col-12  text-left pl-xl-5 ">
-                    <router-link  tag='li' to='/'><a v-scroll-to="'#mainblock'">О Продукте</a></router-link>
-                    <router-link  tag='li' to='/'><a href='/' v-scroll-to="'#advantages'">Приемущества</a></router-link>
+                    <router-link  tag='li' to='/#mainblock'><a v-scroll-to="'#mainblock'">О Продукте</a></router-link>
+                    <router-link  tag='li' to='/#advantages'><a v-scroll-to="'#advantages'">Приемущества</a></router-link>
                     <router-link tag='li' to='/team'><a>Команда</a></router-link>
-                    <router-link  tag='li' to='/'><a href='/' v-scroll-to="'#reviews'">Отзывы</a></router-link>
+                    <router-link  tag='li' to='/#reviews'><a v-scroll-to="'#reviews'">Отзывы</a></router-link>
                 </ul>
                 <ul class="pl-xl-0 pl-lg-0 pl-md-0 pl-sm-0 pl-3 order-xl-1 order-lg-1 order-md-1 order-sm-3 order-3 col-3 col-xl-2 col-lg-3 col-md-3 col-sm-6 col-12 text-left ">
                     <router-link tag='li' to=''><a>Инструкция пользователя</a></router-link>

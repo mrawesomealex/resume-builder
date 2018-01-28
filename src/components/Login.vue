@@ -2,8 +2,9 @@
  <transition name="modal">
   <div class="row login">
     <div @click="Close" class="wrap_block">
-      <div class=" col-xl-4 col-lg-6 col-md-8 col-sm-12 col-12 mx-auto text-center">
+      <div class=" col-xl-4 col-lg-6 col-md-8 col-sm-10 col-12 mx-auto text-center">
         <div class="window pt-5 pb-2 mb-4 container">
+          <img src="../assets/images/cancel.svg" class="d-xl-none d-lg-none d-md-none d-sm-none " id="close-btn">
           <h2 class="pb-4">Вход</h2>
           <input class="col-xl-8 col-lg-8 col-md-8 col-sm-11 col-11 mx-auto mt-4 mb-3 py-3 pl-3 d-block block_neutral" type="text" placeholder="Ваш E-mail" v-model="email">
           <input class="col-xl-8 col-lg-8 col-md-8 col-sm-11 col-11 mx-auto mt-4 mb-3 py-3 pl-3 d-block block_neutral" type="password" placeholder="Пароль" v-model="password">
@@ -47,7 +48,7 @@ export default {
         )
     },
     Close: function (e) {
-      if (e.target.className === 'wrap_block') {
+      if (e.target.className === 'wrap_block' || e.target.id === 'close-btn') {
         this.$emit('closeLoginWindow')
       }
     },
