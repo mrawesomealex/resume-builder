@@ -104,8 +104,8 @@ export default {
   }
 }
 h2 {
-  font-family: $Raleway;
-  font-weight: 400;
+  font-family: $Roboto;
+  font-weight: 300;
 }
 .link-text {
   color: $active;

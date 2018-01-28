@@ -65,7 +65,7 @@ export default {
 
 #unreg-app-head{
     a{
-        font-family: $Raleway;
+        font-family: $Roboto;
         font-weight: 500;
         letter-spacing: 0;
     }

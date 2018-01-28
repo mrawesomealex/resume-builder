@@ -46,7 +46,7 @@ footer {
   color: $footer_color;
   a {
     color: $footer_color;
-    font-family: $Raleway;
+    font-family: $Roboto;
     font-weight: 400;
     transition: 0s;
     transition: 0.2s;

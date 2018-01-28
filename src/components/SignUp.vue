@@ -121,14 +121,14 @@ export default {
   }
   p {
     color: grey;
-    font-family: $Raleway;
+    font-family: $Roboto;
     letter-spacing: -0.2px;
     font-weight: 400;
   }
 }
 h2 {
-  font-family: $Raleway;
-  font-weight: 400;
+  font-family: $Roboto;
+  font-weight: 300;
 }
 .link-text {
   color: $active;

@@ -20,7 +20,6 @@ $block_grey_fill: #f5f7f8;
 $block_grey_outline: #e3e3e3;
 
 //fonts
-$Raleway: 'Raleway', sans-serif;
 $Roboto:'Roboto', sans-serif;
 $Playfair: "Playfair Display", serif;
 
@@ -30,8 +29,8 @@ p {
   font-size: 0.88vw;
   color: $paragraphcolor;
   line-height: 30px;
-  font-family: $Raleway;
-  font-weight: 400;
+  font-family: $Roboto;
+  font-weight: 300;
 }
 .block_neutral{
     border-radius: 6px;
@@ -109,7 +108,7 @@ a{
     transition: 0.3s;
 }
 .errorMessage{
-    font-family: $Raleway !important;
+    font-family: $Roboto !important;
     color:$active !important;
     transition: 0.3s;
     letter-spacing: 0.1px !important;
