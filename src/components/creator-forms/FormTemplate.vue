@@ -3,7 +3,7 @@
         <creator-header></creator-header>
         <div id="content" class="row">
            <div class="container pt-5">
-                <nav class="white_block row ">
+                <nav id="navigation" class="white_block row ">
                     <router-link 
                         @click.native="Change(key)"
                         v-for="(item,key) in nav_links" :key="key"
@@ -97,6 +97,7 @@ $button-grey: #fcfcfc;
     }
     nav{
         display: flex;
+        overflow: hidden;
         height: 8.5vh;
         margin-bottom: 2vh;
         margin-top: 5vh;

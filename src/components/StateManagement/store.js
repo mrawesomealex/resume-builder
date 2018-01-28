@@ -64,40 +64,42 @@ const Areas = {
 }
 const Resume = {
   state: {
-    work_status: [0, 0, 0],
-    area: '',
-    salary_type: [0, 0],
-    salary: 0,
-    work_term: [0, 0, 0],
-    hours: 0
+    preferences: {
+      work_status: [0, 0, 0],
+      area: '',
+      salary_type: [0, 0],
+      salary: 0,
+      work_term: [0, 0, 0],
+      hours: 0
+    }
   },
   mutations: {
-    CHANGE_WS: function (state, newStatus) {
-      for (let i = 0; i < state.work_status.length; i++) {
-        state.work_status[i] = 0
+    CHANGE_WORK_STATUS: function (state, newStatus) {
+      for (let i = 0; i < state.preferences.work_status.length; i++) {
+        state.preferences.work_status[i] = 0
       }
-      state.work_status[newStatus] = 1
+      state.preferences.work_status[newStatus] = 1
     },
     CHANGE_AREA: function (state, value) {
-      state.area = value
+      state.preferences.area = value
     },
-    CHANGE_ST: function (state, newType) {
-      for (let i = 0; i < state.salary_type.length; i++) {
-        state.salary_type[i] = 0
+    CHANGE_SALARY_TYPE: function (state, newType) {
+      for (let i = 0; i < state.preferences.salary_type.length; i++) {
+        state.preferences.salary_type[i] = 0
       }
-      state.salary_type[newType] = 1
+      state.preferences.salary_type[newType] = 1
     },
     CHANGE_SALARY: function (state, value) {
-      state.salary = value
+      state.preferences.salary = value
     },
-    CHANGE_WT: function (state, newTerm) {
-      for (let i = 0; i < state.work_term.length; i++) {
-        state.work_term[i] = 0
+    CHANGE_WORK_TERM: function (state, newTerm) {
+      for (let i = 0; i < state.preferences.work_term.length; i++) {
+        state.preferences.work_term[i] = 0
       }
-      state.work_term[newTerm] = 1
+      state.preferences.work_term[newTerm] = 1
     },
     CHANGE_HOURS: function (state, value) {
-      state.hours = value
+      state.preferences.hours = value
     }
   }
 }
