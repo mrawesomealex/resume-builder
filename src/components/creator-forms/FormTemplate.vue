@@ -220,7 +220,9 @@ $button-grey: #fcfcfc;
             background: $btn_red_inactive;
         }
         a.done{
-            color: $done !important;
+            span{ 
+                color: $done !important;
+            }
             background:$button-grey ;
         }
         .done:before{

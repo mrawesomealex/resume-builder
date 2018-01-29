@@ -49,7 +49,7 @@ export default {
             state[step].validated = true
           }
         } else {
-          state[step].validated = !!parseInt(state[step][property])
+          state[step].validated = (state[step][property].length === 1 ? !!parseInt(state[step][property]) : !!state[step][property])
           if (!state[step].validated) { return }
         }
       }
