@@ -3,23 +3,24 @@
         <creator-header @RequestMain="OpenMain"></creator-header>
         <div id="content" class="row">
            <div class="container pt-5">
-                <nav id="navigation" class="white_block row ">
-                    <router-link 
-                        @click.native="Change(key)"
-                        v-for="(item,key) in nav_links" :key="key"
-                        :class="['col-2', current[key] ? 'current' : '', done[key] ? 'done' : '', error[key] ? 'form_error' : '']"  
-                        :to="item.path">
-                        <div v-if="!done[key]" :class="item.class"></div>
-                        <img v-if="done[key]" src="../../assets/step_icons/check.svg"/>
+                 <nav id="navigation" class="white_block row ">
+                 <a @click.native="Change(key, step, 1)"
+                    v-for="(item,key) in nav_links" :key="key"
+                    :class="['col-2', { current: steps['step'+key].current, 
+                                        done: steps['step'+key].done, 
+                                        form_error : steps['step'+key].error 
+                }]">
+                        <div v-if="!steps['step'+key].done" :class="item.class"></div>
+                        <img v-if="steps['step'+key].done" src="../../assets/step_icons/check.svg"/>
                         <span class="d-xl-inline d-lg-inline d-md-inline d-sm-none d-none">{{item.content}}</span>
-                    </router-link >
+                    </a>                                         
                 </nav>
                 <div id="form" class="row white_block pt-4">
-                    <h3  v-for="(item,key) in nav_links" :key="key" v-if="current[key]" class="pt-3 pb-4 container-fluid d-xl-none d-lg-none d-md-none d-sm-block d-block">{{item.content}}</h3>
-                    <router-view></router-view>
+                    <h3  v-for="(item,key) in nav_links" :key="key" v-if="steps['step'+key].current" class="pt-3 pb-4 container-fluid d-xl-none d-lg-none d-md-none d-sm-block d-block">{{item.content}}</h3>
+                    <router-view :status="steps"></router-view>
                     <div id="controls" class="container-fluid py-4">
-                        <router-link tag="button" :disabled="current[0] ? true : false" :to="nav_links[previous]" @click.native="Change(previous)" class="button blue"><a>Предыдущий шаг</a></router-link>
-                        <router-link tag="button" :disabled="current[5] ? true : false" :to="nav_links[next]" @click.native="Change(next)" class="button blue"><a>Перейти далее</a></router-link>
+                        <button :disabled="steps.step0.current ? true : false" @click="Change(previous, step, 1)" class="button blue"><a>Предыдущий шаг</a></button>
+                        <button :disabled="steps.step5.current ? true : false" @click="Change(next,step, 0)" class="button blue"><a>Перейти далее</a></button>
                     </div>
                 </div>   
            </div>  
@@ -31,7 +32,6 @@
 import CreatorHeader from '@/components/creator-forms/UnregAppHead'
 
 export default {
-
   data: function () {
     return {
       nav_links: [
@@ -45,8 +45,28 @@ export default {
     }
   },
   methods: {
-    Change: function (k) {
-      this.$store.commit('CHANGE_STEP', k)
+    Change: function (k, last, type) {
+      let isValidated = this.Validate(last)
+      if (isValidated || type) {
+        this.$store.commit('CHANGE_STEP', {
+          from: last,
+          next: k
+        })
+        this.$router.replace(this.nav_links[k].path)
+      }else{
+        this.$scrollTo('#content')  
+      }
+    },
+    Validate: function (k) {
+      let step = this.nav_links[k].path.substr(9)
+      this.$store.commit('VALIDATE_STEP', step)
+      if (this.$store.state.resume[step].validated) {
+        this.$store.commit('CHANGE_DONE', k)
+        return true
+      } else {
+        this.$store.commit('CHANGE_ERROR', k)
+        return false
+      }
     },
     OpenMain: function () {
       this.$emit('openBuilder')
@@ -56,20 +76,20 @@ export default {
     this.$router.replace('/creator/preferences')
   },
   computed: {
-    current: function () {
-      return this.$store.state.builder.currentStage
+    step: function () {
+      return this.$store.state.builder.currentStep
+    },
+    steps: function () {
+      return this.$store.state.builder.steps
     },
     previous: function () {
-      return this.$store.state.builder.previousStage
+      return this.$store.state.builder.currentStep ? this.$store.state.builder.currentStep - 1 : 0
     },
     next: function () {
-      return this.$store.state.builder.nextStage
+      return this.$store.state.builder.currentStep < this.steps.length - 1 ? this.$store.state.builder.currentStep + 1 : 0
     },
-    done: function () {
-      return this.$store.state.builder.done
-    },
-    error: function () {
-      return this.$store.state.builder.error
+    last: function () {
+      return this.$store.state.builder.lastStep
     }
   },
   components: {
@@ -87,10 +107,6 @@ $button-grey: #fcfcfc;
         text-align: center;
         font-weight: 400;
         color:$btn_blue_text
-    }
-    a{
-        font-family: $Roboto;
-        color: $paragraphcolor;
     }
     a:hover{
         text-decoration: none;
@@ -117,6 +133,10 @@ $button-grey: #fcfcfc;
             align-items: center;
             justify-content: center;
             transition: color 0.3s;
+            font-family: $Roboto;
+        }
+        a:not(.current):not(.form_error){
+            color: $paragraphcolor;
         }
         a:not(:last-child){
             border-right: 1px solid $grey;
@@ -137,9 +157,10 @@ $button-grey: #fcfcfc;
             width: 40px;
         }
 
-        .current{
-            color: $btn_blue_text;
-
+        a.current{
+            span{
+                color: $btn_blue_text ;
+            }
             .suitcase{
                 background: url('../../assets/step_icons/bsuitcase.svg') no-repeat;
             }
@@ -168,25 +189,26 @@ $button-grey: #fcfcfc;
             background: $btn_blue_inactive ;
         }
         .form_error{
-            color: $active;
-
+            span{        
+                color: $active !important;
+            }
             .suitcase{
-                background: url('../../assets/step_icons/rsuitcase.svg') no-repeat;
+                background: url('../../assets/step_icons/rsuitcase.svg') no-repeat !important;
             }
             .dialogue{
-                background: url('../../assets/step_icons/rdialogue.svg') no-repeat;    
+                background: url('../../assets/step_icons/rdialogue.svg') no-repeat !important;    
             }
             .graduate{
-                background: url('../../assets/step_icons/rgraduate.svg') no-repeat;
+                background: url('../../assets/step_icons/rgraduate.svg') no-repeat !important;
             }
             .star{
-                background: url('../../assets/step_icons/rstar.svg') no-repeat;
+                background: url('../../assets/step_icons/rstar.svg') no-repeat !important;
             }
             .time{
-                background: url('../../assets/step_icons/rtime.svg') no-repeat;
+                background: url('../../assets/step_icons/rtime.svg') no-repeat !important;
             }
             .plus{
-                background: url('../../assets/step_icons/rplus.svg') no-repeat;    
+                background: url('../../assets/step_icons/rplus.svg') no-repeat !important;    
             }            
         }
         .form_error:before{
@@ -198,7 +220,7 @@ $button-grey: #fcfcfc;
             background: $btn_red_inactive;
         }
         a.done{
-            color: $done;
+            color: $done !important;
             background:$button-grey ;
         }
         .done:before{

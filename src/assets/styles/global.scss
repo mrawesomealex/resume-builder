@@ -38,6 +38,7 @@ p {
     border:1px solid $block_grey_outline;
     font-family: $Roboto;
     font-weight: 300;
+    transition: 0.1s;
 }
 .block_neutral:focus{
     background: white;
@@ -109,13 +110,25 @@ a{
 }
 .errorMessage{
     font-family: $Roboto !important;
+    font-weight: 300 !important;
     color:$active !important;
     transition: 0.3s;
     letter-spacing: 0.1px !important;
 }
 .error{
+    position: relative;
     border: 1px solid $btn_red_outline;
     background: $btn_red_inactive;
+    color:$active;
+    animation: 0.3s shake;
+    *{
+        color:$active !important;
+    }
+    input[type='range']::-webkit-slider-thumb {
+        background: $active
+    }
+}
+.error::-webkit-input-placeholder{
     color:$active;
 }
 .error:focus{
@@ -260,4 +273,16 @@ input[type="range"]::-ms-fill-upper {
                 }
             }
         }   
+    }
+
+    @keyframes shake {
+        0%{
+            left: -10px
+        }
+        50%{
+            left: 10px;
+        }
+        100%{
+            left:0px
+        }
     }

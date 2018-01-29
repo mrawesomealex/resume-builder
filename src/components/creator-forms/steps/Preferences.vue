@@ -31,7 +31,7 @@
           </div>
         </label>
         <div id="work_area"  class="row input-group">
-            <input id="w_area_field" placeholder="Найти сферу деятельности..." class="block_neutral pl-4 py-3 col-12 mr-3" @input="update_area()" @keyup="update_area()" :value="area">
+            <input id="w_area_field" placeholder="Найти сферу деятельности..." :class="['block_neutral pl-4 py-3 col-12 mr-3',{ error : (status.step0.error && val) || (status.step0.error && !area)}]" @input="update_area()" @keyup="update_area()" :value="area">
             <button :disabled="!new_area" class="d-xl-block d-lg-block d-md-block d-sm-none d-none add-btn">+</button>
             <ul id="w_area_list" class="white_block col-12">
                 <i v-if="new_area">
@@ -70,16 +70,16 @@
         </div>
         <div>  
             <h5>Выберите желаемый примерный уровень зарплаты</h5>
-            <h6>Выберите зарплату без учета НДС, для будущего работодателя</h6>
+            <h6>Выберите зарплату без учета НДС, для будущего работодателя, <a v-scroll-to='"#work_area"'> тип должен быть уже указан </a></h6>
         </div>
         <div id="salary_counts"  class="row input-group">
-            <div class="container block_neutral align-middle p-3">
+            <div :class="['container block_neutral align-middle p-3',{ error : status.step0.error && !parseInt(min_salary)}]">
                 <div v-if="salary_type[0] || salary_type[1]" class="pb-2 salary-info">
                     <span>от </span>
                     <strong>{{salaryInfo.local_salary}} у.е</strong>
                     <span>{{this.salary_type[0] ? '/в час' : '/за проект'}}</span>
                 </div>
-                <input id="salary" class=" px-0 col-12" type="range" min="0" :step="salaryInfo.step" :max="salaryInfo.max" v-model="salaryInfo.local_salary" @change="choose_salary()">
+                <input id="salary" class="px-0 col-12" type="range" min="0" :step="salaryInfo.step" :max="salaryInfo.max" v-model="salaryInfo.local_salary" @change="choose_salary()">
             </div>             
         </div>
         <div>
@@ -110,7 +110,7 @@
                     </label>
                 </div>
               </div> 
-              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 block_neutral p-3 ml-auto ">  
+              <div :class="['col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 block_neutral p-3 ml-auto',{ error : status.step0.error && !parseInt(hours)}]">  
                 <span class="label_hours"><strong>{{salaryInfo.local_hours}}</strong> часов</span>
                 <input id="hours" class="px-0 col-12" type="range" min="0" :max="this.salaryInfo.max_work_term"  v-model="salaryInfo.local_hours" @change="choose_hours()">
               </div>            
@@ -133,6 +133,7 @@ export default {
       }
     }
   },
+  props:['status'],
   methods: {
     choose_status: function (value) {
       this.work_status = value
@@ -175,6 +176,7 @@ export default {
     },
     change_max_wt: function (newTerm) {
       let max = this.$store.state.resume.preferences.work_status[2] ? 20 : 40
+      if(!this.$store.state.resume.preferences.work_status.filter(value => { return value}).length){max = 0}
       if (newTerm.length) {
         for (let i = 0; i < newTerm.length; i++) {
           if (newTerm[i]) {
@@ -422,6 +424,9 @@ h6,
   font-family: $Roboto;
   font-weight: 400;
   color: $paragraphcolor;
+}
+#w_area_field.error{
+  color:$active
 }
 #w_area_field:focus,
 #w_area_field:focus::-webkit-input-placeholder {

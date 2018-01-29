@@ -113,6 +113,7 @@ export default {
     }
   },
   mounted: function () {
+    this.$scrollTo(this.$route.hash)
     this.interval = setInterval(() => {
       this.NextSlide()
     }, 5000)
