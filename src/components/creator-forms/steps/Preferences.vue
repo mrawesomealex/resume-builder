@@ -133,7 +133,7 @@ export default {
       }
     }
   },
-  props:['status'],
+  props: ['status'],
   methods: {
     choose_status: function (value) {
       this.work_status = value
@@ -176,7 +176,7 @@ export default {
     },
     change_max_wt: function (newTerm) {
       let max = this.$store.state.resume.preferences.work_status[2] ? 20 : 40
-      if(!this.$store.state.resume.preferences.work_status.filter(value => { return value}).length){max = 0}
+      if (!this.$store.state.resume.preferences.work_status.filter(value => { return value }).length) { max = 0 }
       if (newTerm.length) {
         for (let i = 0; i < newTerm.length; i++) {
           if (newTerm[i]) {
@@ -251,7 +251,7 @@ export default {
     },
     area: {
       get: function () {
-        return this.val.length === 0 ? this.$store.state.resume.preferences.area : this.val
+        return this.val.length === 0 || this.$store.state.resume.preferences.area ? this.$store.state.resume.preferences.area : this.val
       },
       set: function (value) {
         // eslint-disable-next-line
@@ -321,21 +321,9 @@ i {
 i label {
   color: $active;
 }
-input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-  z-index: -10;
-}
-.checkbox {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-}
+
 #work_status {
   position: relative;
-}
-.align-middle * {
-  vertical-align: middle;
 }
 #work_status > div {
   display: inline-block;
@@ -346,13 +334,7 @@ input[type="radio"] {
 label:hover {
   cursor: pointer;
 }
-input[type="radio"]:checked ~ label {
-  span,
-  div {
-    animation: 0.15s skew forwards;
-    transition: 0.15s;
-  }
-}
+
 #w_area_list {
   position: absolute;
   width: 100%;
@@ -360,11 +342,11 @@ input[type="radio"]:checked ~ label {
   overflow-y: scroll;
   .option {
     color: $paragraphcolor;
-    transition: 0.3s;
+    transition: 0.2s;
+    padding-top: 3px;
   }
   .option:hover {
     color: $active;
-    padding-left: 10px;
   }
 }
 #w_area_list::-webkit-scrollbar {
@@ -419,11 +401,12 @@ input[type="radio"]:checked ~ label {
   outline: none !important;
 }
 label span,
-h6,
 #w_area_field {
-  font-family: $Roboto;
+  font-family: $Exo;
   font-weight: 400;
+  letter-spacing: 0.1px;
   color: $paragraphcolor;
+  transition: 0.3s;
 }
 #w_area_field.error{
   color:$active
@@ -432,25 +415,8 @@ h6,
 #w_area_field:focus::-webkit-input-placeholder {
   color: $btn_blue_text;
 }
-h6 {
-  font-family: $Roboto;
-  line-height: 22px;
-  font-size: 11pt;
-  font-weight: 300;
 
-  a {
-    border-bottom: 1px dashed $paragraphcolor;
-  }
-}
-input[type="radio"]:checked ~ label > span {
-  color: $btn_blue_text;
-}
-input[type="radio"]:checked ~ label > div {
-  background: $btn_blue_text url("../../../assets/step_icons/checked.svg")
-    no-repeat;
-  background-size: contain;
-  border: 1px solid $btn_blue_text;
-}
+
 input[name="work_salarytype"]:checked ~ label {
   border: 1px solid $btn_blue_outline;
   background: $btn_blue_inactive;
@@ -473,7 +439,11 @@ input::-webkit-calendar-picker-indicator {
   font-family: $Roboto;
   font-weight: 400;
 }
-
+input[type="radio"]:checked ~ label > div {
+    background: $btn_blue_text url("../../../assets/step_icons/checked.svg") no-repeat;
+    background-size: contain;
+    border: 1px solid $btn_blue_text;
+}
 .white_block {
   box-shadow: $shadow_light;
   list-style: none;
@@ -511,14 +481,5 @@ input::-webkit-calendar-picker-indicator {
     padding-left: 13px !important;
   }
 }
-@keyframes skew {
-  0% {
-    -webkit-transform: scale(0.8);
-    transform: scale(0.8);
-  }
-  100% {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-  }
-}
+
 </style>

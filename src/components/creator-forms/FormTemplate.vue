@@ -4,7 +4,7 @@
         <div id="content" class="row">
            <div class="container pt-5">
                  <nav id="navigation" class="white_block row ">
-                 <a @click.native="Change(key, step, 1)"
+                 <a @click="Change(key, step, 1)"
                     v-for="(item,key) in nav_links" :key="key"
                     :class="['col-2', { current: steps['step'+key].current, 
                                         done: steps['step'+key].done, 
@@ -15,8 +15,8 @@
                         <span class="d-xl-inline d-lg-inline d-md-inline d-sm-none d-none">{{item.content}}</span>
                     </a>                                         
                 </nav>
-                <div id="form" class="row white_block pt-4">
-                    <h3  v-for="(item,key) in nav_links" :key="key" v-if="steps['step'+key].current" class="pt-3 pb-4 container-fluid d-xl-none d-lg-none d-md-none d-sm-block d-block">{{item.content}}</h3>
+                <div id="form" class="row white_block  pt-xl-4 pt-lg-4 pt-md-4 pt-sm-0 pt-0">
+                    <h3  v-for="(item,key) in nav_links" :key="key" v-if="steps['step'+key].current" class="container-fluid d-xl-none d-lg-none d-md-none d-sm-block d-block">{{item.content}}</h3>
                     <router-view :status="steps"></router-view>
                     <div id="controls" class="container-fluid py-4">
                         <button :disabled="steps.step0.current ? true : false" @click="Change(previous, step, 1)" class="button blue"><a>Предыдущий шаг</a></button>
@@ -53,8 +53,8 @@ export default {
           next: k
         })
         this.$router.replace(this.nav_links[k].path)
-      }else{
-        this.$scrollTo('#content')  
+      } else {
+        this.$scrollTo('#content')
       }
     },
     Validate: function (k) {
@@ -86,7 +86,7 @@ export default {
       return this.$store.state.builder.currentStep ? this.$store.state.builder.currentStep - 1 : 0
     },
     next: function () {
-      return this.$store.state.builder.currentStep < this.steps.length - 1 ? this.$store.state.builder.currentStep + 1 : 0
+      return this.$store.state.builder.currentStep < Object.getOwnPropertyNames(this.steps).length - 1 ? this.$store.state.builder.currentStep + 1 : 0
     },
     last: function () {
       return this.$store.state.builder.lastStep
@@ -103,10 +103,13 @@ export default {
 
 $button-grey: #fcfcfc;
     h3{
-        font-family: $Roboto;
+        font-family: $Exo;
         text-align: center;
         font-weight: 400;
-        color:$btn_blue_text
+        color:$btn_blue_text;
+        padding : 7% 0px;
+        border-bottom: 1px solid $divider;
+        background:$button-grey; 
     }
     a:hover{
         text-decoration: none;
@@ -134,6 +137,7 @@ $button-grey: #fcfcfc;
             justify-content: center;
             transition: color 0.3s;
             font-family: $Roboto;
+            font-weight: 400;
         }
         a:not(.current):not(.form_error){
             color: $paragraphcolor;
@@ -321,7 +325,7 @@ $button-grey: #fcfcfc;
             border-radius: 0px;
         }
         #form{ 
-            margin-top: 10vh;
+            margin-top: 9vh;
             box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
         }
         #controls{
@@ -341,7 +345,7 @@ $button-grey: #fcfcfc;
             width: 100%;
             top:3.9vh;
             z-index: 2;
-            box-shadow: 0 2px 5px 0px rgba($color: #000000, $alpha: 0.05);
+            box-shadow: 0 1px 10px 0px rgba($color: #000000, $alpha: 0.1);
         }
     }
     @media (max-width: 320px){

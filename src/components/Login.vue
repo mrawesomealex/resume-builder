@@ -99,13 +99,13 @@ export default {
   }
   p {
     color: grey;
-    font-family: $Roboto;
+    font-family: $Exo;
     letter-spacing: -0.2px;
     font-weight: 300;
   }
 }
 h2 {
-  font-family: $Roboto;
+  font-family: $Exo;
   font-weight: 300;
 }
 .link-text {

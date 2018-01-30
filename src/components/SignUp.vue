@@ -5,7 +5,7 @@
       <div class="col-xl-4 col-lg-6 col-md-8 col-sm-10 col-12 mx-auto text-center">
         <div class="window pt-5 pb-2 mb-4 container">
           <img src="../assets/images/cancel.svg" class="d-xl-none d-lg-none d-md-none d-sm-none " id="close-btn">
-          <h2 class="pb-4">Cоздание аккаунта</h2>
+          <h2 class="pb-4">Регистрация</h2>
           <transition name="flowup">
             <p class="errorMessage col-xl-8 col-lg-8 col-md-8 col-sm-11 col-11 mx-auto text-left px-0" v-if="!this.validation.email && this.BLUR_FLAG_EMAIL">E-mail введен неккоректно</p>
           </transition>
@@ -122,13 +122,13 @@ export default {
   }
   p {
     color: grey;
-    font-family: $Roboto;
+    font-family: $Exo;
     letter-spacing: -0.2px;
     font-weight: 400;
   }
 }
 h2 {
-  font-family: $Roboto;
+  font-family: $Exo;
   font-weight: 300;
 }
 .link-text {
