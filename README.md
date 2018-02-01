@@ -8,9 +8,11 @@
 
 > Vue-Router@v3.0.1
 
-> Vue-scrollTo@1.0.1
+> Vue-scrollTo@1.0.1 / Vue-simple-svg@1.2.3
 
 > Bootsrap 4.0.0/ Jquery 3.2.1
+
+> Axios 0.17.1
 
 ## Build Setup
 
