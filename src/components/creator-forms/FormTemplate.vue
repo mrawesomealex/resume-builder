@@ -8,13 +8,15 @@
                     v-for="(item,key) in nav_links" :key="key"
                     :class="['col-2', { current: steps['step'+key].current, 
                                         done: steps['step'+key].done, 
-                                        form_error : steps['step'+key].error 
+                                        form_error: steps['step'+key].error,
+                                        'no-border': steps['step'+(key+1)] ? (steps['step'+key].error &&  steps['step'+(key+1)].error) || (steps['step'+key].done &&  steps['step'+(key+1)].done) : false
                 }]">
                         <div v-if="!steps['step'+key].done" :class="item.class"></div>
                         <img v-if="steps['step'+key].done" src="../../assets/step_icons/check.svg"/>
                         <span class="d-xl-inline d-lg-inline d-md-inline d-sm-none d-none">{{item.content}}</span>
                     </a>                                         
                 </nav>
+                <div id="wrap"></div>
                 <div id="form" class="row white_block  pt-xl-4 pt-lg-4 pt-md-4 pt-sm-0 pt-0">
                     <h3  v-for="(item,key) in nav_links" :key="key" v-if="steps['step'+key].current" class="container-fluid d-xl-none d-lg-none d-md-none d-sm-block d-block">{{item.content}}</h3>
                     <router-view :status="steps"></router-view>
@@ -46,6 +48,7 @@ export default {
   },
   methods: {
     Change: function (k, last, type) {
+      if (k === last) { return }
       let isValidated = this.Validate(last)
       if (isValidated || type) {
         this.$store.commit('CHANGE_STEP', {
@@ -53,9 +56,8 @@ export default {
           next: k
         })
         this.$router.replace(this.nav_links[k].path)
-      } else {
-        this.$scrollTo('#content')
       }
+      this.$scrollTo('#content')
     },
     Validate: function (k) {
       let step = this.nav_links[k].path.substr(9)
@@ -102,6 +104,7 @@ export default {
 @import "../../assets/styles/global";
 
 $button-grey: #fcfcfc;
+
     h3{
         font-family: $Exo;
         text-align: center;
@@ -122,13 +125,17 @@ $button-grey: #fcfcfc;
         min-height: 100vh;
         background: $back;
     }
+    nav.white_block{
+        border: 1px solid $block_grey_outline
+    }
     nav{
+        position: relative;
         display: flex;
         overflow: hidden;
         height: 8.5vh;
         margin-bottom: 2vh;
         margin-top: 5vh;
-
+        z-index: 10;
         a{
             position: relative;
             overflow: hidden;
@@ -148,6 +155,7 @@ $button-grey: #fcfcfc;
         a:before{
             content: '';
             left:-100%;
+            top:0;
             position: absolute;
             height: 4px;
             width:100%;   
@@ -185,12 +193,14 @@ $button-grey: #fcfcfc;
             }            
         }
         .current:before{
-            background:  $btn_blue_text;
-            top:0;  
+            background:  $btn_blue_text;  
             left:0;
         }
         .current:hover{
             background: $btn_blue_inactive ;
+        }
+        .no-border{
+            border-right: none !important;
         }
         .form_error{
             span{        
@@ -217,7 +227,6 @@ $button-grey: #fcfcfc;
         }
         .form_error:before{
             background:  $active;
-            top:0;  
             left:0;
         }
         .form_error:hover{
@@ -230,7 +239,6 @@ $button-grey: #fcfcfc;
             background:$button-grey ;
         }
         .done:before{
-            top:0; 
             left:0;
             background: $done;
         }
@@ -294,6 +302,15 @@ $button-grey: #fcfcfc;
             }
         }
     }
+    #wrap{
+        position: absolute;
+        background: rgba(90, 90, 121, 0.062);
+        z-index: 0;
+        width:100%;
+        height: 25vh;
+        left:0;
+        top:0px;
+    }
     @media (max-width: 1200px){
         nav{
             font-size: 10pt;
@@ -345,6 +362,9 @@ $button-grey: #fcfcfc;
             width: 100%;
             top:3.9vh;
             z-index: 2;
+            border-top: none !important;
+            border-left:none !important;
+            border-right: none !important;
             box-shadow: 0 1px 10px 0px rgba($color: #000000, $alpha: 0.1);
         }
     }

@@ -31,7 +31,7 @@
           </div>
         </label>
         <div id="work_area"  class="row input-group">
-            <input id="w_area_field" placeholder="Найти сферу деятельности..." :class="['block_neutral pl-4 py-3 col-12 mr-3',{ error : (status.step0.error && val) || (status.step0.error && !area)}]" @input="update_area()" @keyup="update_area()" :value="area">
+            <input id="w_area_field" type="text" placeholder="Найти сферу деятельности..." :class="['block_neutral pl-4 py-3 col-12 mr-3',{ error : (status.step0.error && val) || (status.step0.error && !area)}]" @input="update_area()" @keyup="update_area()" :value="area">
             <button :disabled="!new_area" class="d-xl-block d-lg-block d-md-block d-sm-none d-none add-btn">+</button>
             <ul id="w_area_list" class="white_block col-12">
                 <i v-if="new_area">
@@ -110,7 +110,7 @@
                     </label>
                 </div>
               </div> 
-              <div :class="['col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 block_neutral p-3 ml-auto',{ error : status.step0.error && !parseInt(hours)}]">  
+              <div :class="['col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 block_neutral p-3 ml-auto ',{ error : status.step0.error && !parseInt(hours)}]">  
                 <span class="label_hours"><strong>{{salaryInfo.local_hours}}</strong> часов</span>
                 <input id="hours" class="px-0 col-12" type="range" min="0" :max="this.salaryInfo.max_work_term"  v-model="salaryInfo.local_hours" @change="choose_hours()">
               </div>            
@@ -411,10 +411,7 @@ label span,
 #w_area_field.error{
   color:$active
 }
-#w_area_field:focus,
-#w_area_field:focus::-webkit-input-placeholder {
-  color: $btn_blue_text;
-}
+
 
 
 input[name="work_salarytype"]:checked ~ label {

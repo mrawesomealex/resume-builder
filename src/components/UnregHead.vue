@@ -70,4 +70,8 @@ export default {
 <style lang="scss" scoped>
 @import "../assets/styles/global";
 @import "../assets/styles/header";
+
+header{
+  border-bottom: 1px solid $block_grey_outline;
+}
 </style>

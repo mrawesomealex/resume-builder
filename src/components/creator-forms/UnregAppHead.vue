@@ -65,7 +65,9 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/styles/global";
 @import "../../assets/styles/header";
-
+header{
+  background: rgba(41, 41, 43, 0.98);
+}
 #unreg-app-head{
     a{
         font-family: $Roboto;
@@ -75,10 +77,27 @@ export default {
     a:not(.signup){
         color: $paragraphcolor;
     }
+    a:hover{
+      color:white;
+    }
+    .button.red{
+            background: $active;
+            border:none;
+            color: white;
+            transition: 0.3s;
+          }
+                    .button.red:hover{
+            background:  rgb(253, 82, 82)
+          }
+}
+#sub-list{
+  color:white;
 }
 @media (min-width: 1200px){
         #unreg-app-head{
           padding: 0;
+      
+
         }
 }
 </style>
