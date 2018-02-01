@@ -6,8 +6,11 @@ import router from './router'
 import firebase from 'firebase'
 import ScrollFeature from 'vue-scrollto'
 import { store } from './components/StateManagement/store'
+import VueSimpleSVG from 'vue-simple-svg'
 
 Vue.config.productionTip = false
+
+Vue.use(VueSimpleSVG)
 
 //  initialization of smooth scroll
 Vue.use(ScrollFeature)
