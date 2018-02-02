@@ -9,7 +9,7 @@
                     :class="['col-2', { current: steps['step'+key].current, 
                                         done: steps['step'+key].done, 
                                         form_error: steps['step'+key].error,
-                                        'no-border': steps['step'+(key+1)] ? (steps['step'+key].error &&  steps['step'+(key+1)].error) || (steps['step'+key].done &&  steps['step'+(key+1)].done) : false
+                                        'no-border': steps['step'+(key+1)] ? ((steps['step'+key].error &&  steps['step'+(key+1)].error) || (steps['step'+key].done &&  steps['step'+(key+1)].done)) && !steps['step'+key].current && !steps['step'+(key+1)].current : false
                 }]">
                         <div v-if="!steps['step'+key].done" :class="item.class"></div>
                         <img v-if="steps['step'+key].done" src="../../assets/step_icons/check.svg"/>
@@ -17,9 +17,19 @@
                     </a>                                         
                 </nav>
                 <div id="wrap"></div>
-                <div id="form" class="row white_block  pt-xl-4 pt-lg-4 pt-md-4 pt-sm-0 pt-0">
+                <div id="form" class="row white_block pt-0">
                     <h3  v-for="(item,key) in nav_links" :key="key" v-if="steps['step'+key].current" class="container-fluid d-xl-none d-lg-none d-md-none d-sm-block d-block">{{item.content}}</h3>
-                    <router-view :status="steps"></router-view>
+                    <div class="d-flex">
+                        <input id="open-menu" class="d-none" type="checkbox">
+                        <div id="menu-trigger" :class="['d-xl-flex d-lg-flex d-md-flex d-sm-none d-none',
+                                                       {menu_current : steps['step'+step].current && !steps['step'+step].error && !steps['step'+step].done },
+                                                       {menu_complete: steps['step'+step].done},{menu_error: steps['step'+step].error}]" @click.self="ForceClose()"> 
+                            <label id="btn-open" for="open-menu">
+                                <simple-svg class="d-flex" :stroke="'none'" :fill="menu_btn_status" :filepath="require('@/assets/step_icons/menu.svg')" :width="'25px'" :height="'25px'"/>
+                            </label>
+                        </div>
+                        <router-view :status="steps" class="pt-5 pl-xl-5 pl-lg-4 pl-md-4 pr-5 pl-sm-4 pl-4 "></router-view>
+                    </div>
                     <div id="controls" class="container-fluid py-4">
                         <button :disabled="steps.step0.current ? true : false" @click="Change(previous, step, 1)" class="button blue"><a>Предыдущий шаг</a></button>
                         <button :disabled="steps.step5.current ? true : false" @click="Change(next,step, 0)" class="button blue"><a>Перейти далее</a></button>
@@ -72,10 +82,28 @@ export default {
     },
     OpenMain: function () {
       this.$emit('openBuilder')
+    },
+    ForceClose: function () {
+      if (document.getElementById('open-menu').checked) {
+        document.getElementById('open-menu').checked = false
+      }
     }
   },
   beforeCreate: function () {
     this.$router.replace('/creator/preferences')
+  },
+  created: function () {
+    window.addEventListener('scroll', () => {
+      // eslint-disable-next-line   
+      let scroll = $(window).scrollTop()
+      if (scroll >= 140) {
+        // eslint-disable-next-line 
+        $('#btn-open').addClass('fixed')
+      } else {
+        // eslint-disable-next-line 
+        $('#btn-open').removeClass('fixed')
+      }
+    })
   },
   computed: {
     step: function () {
@@ -92,6 +120,17 @@ export default {
     },
     last: function () {
       return this.$store.state.builder.lastStep
+    },
+    menu_btn_status () {
+      if (this.steps['step' + this.step].current && !this.steps['step' + this.step].error && !this.steps['step' + this.step].done) {
+        return '#4b92e2'
+      }
+      if (this.steps['step' + this.step].error) {
+        return '#ef4136'
+      }
+      if (this.steps['step' + this.step].done) {
+        return '#43b27a'
+      }
     }
   },
   components: {
@@ -104,6 +143,54 @@ export default {
 @import "../../assets/styles/global";
 
 $button-grey: #fcfcfc;
+#menu-trigger{
+    flex-direction: column;
+    z-index: 3;
+    min-width:5%;
+    border-top-left-radius: 6px; 
+    transition: 0.2s;
+    cursor: pointer;
+    label{
+        cursor: pointer;
+        height: 55px;
+        width:55px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    box-shadow:none;
+}
+input[type="checkbox"]:checked~#menu-trigger{
+    min-width: 20%;
+}
+.menu_error{
+   background: $btn_red_inactive;
+}
+input[type="checkbox"]:checked~#menu-trigger.menu_error{
+   box-shadow: 11px 0px 10px $btn_red_inactive inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset;
+}
+
+.menu_current{
+   background: $btn_blue_inactive;
+}
+input[type="checkbox"]:checked~#menu-trigger.menu_current{
+   box-shadow: 11px 0px 10px $btn_blue_inactive inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset;
+}
+
+.menu_complete{
+   background: #f2fff8;
+}
+input[type="checkbox"]:checked~#menu-trigger.menu_complete{
+   box-shadow: 11px 0px 10px #f2fff8 inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset;
+}
+
+.fixed{
+    position: fixed;
+    top: 75px;
+    height: 100%;
+    transition: min-width 0s;
+}
+
 
     h3{
         font-family: $Exo;
@@ -169,36 +256,6 @@ $button-grey: #fcfcfc;
             width: 40px;
         }
 
-        a.current{
-            span{
-                color: $btn_blue_text ;
-            }
-            .suitcase{
-                background: url('../../assets/step_icons/bsuitcase.svg') no-repeat;
-            }
-            .dialogue{
-                background: url('../../assets/step_icons/bdialogue.svg') no-repeat;    
-            }
-            .graduate{
-                background: url('../../assets/step_icons/bgraduate.svg') no-repeat;
-            }
-            .star{
-                background: url('../../assets/step_icons/bstar.svg') no-repeat;
-            }
-            .time{
-                background: url('../../assets/step_icons/btime.svg') no-repeat;
-            }
-            .plus{
-                background: url('../../assets/step_icons/bplus.svg') no-repeat;    
-            }            
-        }
-        .current:before{
-            background:  $btn_blue_text;  
-            left:0;
-        }
-        .current:hover{
-            background: $btn_blue_inactive ;
-        }
         .no-border{
             border-right: none !important;
         }
@@ -231,6 +288,36 @@ $button-grey: #fcfcfc;
         }
         .form_error:hover{
             background: $btn_red_inactive;
+        }
+        a.current{
+            span{
+                color: $btn_blue_text !important;
+            }
+            .suitcase{
+                background: url('../../assets/step_icons/bsuitcase.svg') no-repeat !important;
+            }
+            .dialogue{
+                background: url('../../assets/step_icons/bdialogue.svg') no-repeat !important;    
+            }
+            .graduate{
+                background: url('../../assets/step_icons/bgraduate.svg') no-repeat !important;
+            }
+            .star{
+                background: url('../../assets/step_icons/bstar.svg') no-repeat !important;
+            }
+            .time{
+                background: url('../../assets/step_icons/btime.svg') no-repeat !important;
+            }
+            .plus{
+                background: url('../../assets/step_icons/bplus.svg') no-repeat !important;   
+            }            
+        }
+        .current:before{
+            background:  $btn_blue_text;  
+            left:0;
+        }
+        .current:hover{
+            background: $btn_blue_inactive ;
         }
         a.done{
             span{ 
@@ -279,7 +366,7 @@ $button-grey: #fcfcfc;
     #controls{
         display: flex;
         align-items: center;
-        background: $button-grey;
+        background: $block_grey_fill;
         border-top: 1px solid $grey;
         .blue:last-child{
             font-family: $Roboto;
@@ -315,8 +402,14 @@ $button-grey: #fcfcfc;
         nav{
             font-size: 10pt;
         }
+        #menu-trigger{
+            min-width:6%;
+        }
     }
     @media (max-width:992px) and (min-width: 768px) {
+    #menu-trigger{
+      min-width:8%;
+    }
         nav{
             line-height: 2px;
             a{
@@ -342,7 +435,7 @@ $button-grey: #fcfcfc;
             border-radius: 0px;
         }
         #form{ 
-            margin-top: 9vh;
+            margin-top: 8vh;
             box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
         }
         #controls{
@@ -360,7 +453,7 @@ $button-grey: #fcfcfc;
         nav{
             position: fixed;
             width: 100%;
-            top:3.9vh;
+            top:4vh;
             z-index: 2;
             border-top: none !important;
             border-left:none !important;
