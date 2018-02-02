@@ -156,8 +156,8 @@ h5{
 .step{
     padding: 20px 4% 20px 5.2%;
     min-height: 60vh;
+    min-width:95%; 
 }
-
 .step>div{
     margin: 40px 0px; 
 }
@@ -238,8 +238,8 @@ label span{
     color: $paragraphcolor;
     transition: 0.3s;
 }
-input[type="radio"]:checked ~ label,
-input[type="checkbox"]:checked ~ label{
+input[type="radio"]:not([name="sex"]):checked ~ label,
+input[type="checkbox"]:not([name="sex"]):checked ~ label{
     span,
     div {
       animation: 0.15s skew forwards;
@@ -249,6 +249,10 @@ input[type="checkbox"]:checked ~ label{
 input[type="radio"]:checked ~ label > span,
 input[type="checkbox"]:checked ~ label > span {
    color: $btn_blue_text;
+   animation: none;
+}
+input[type="checkbox"]:checked ~ label .simple-svg-wrapper {
+    transition: 0s !important;
 }
 .choosed input[type="checkbox"]:checked ~ label > span{
     color:white;
@@ -260,7 +264,7 @@ input[type="checkbox"] {
     z-index: -10;
   }
   h6 {
-    font-family: $Exo;
+    font-family: $Exo !important;
     font-weight: 300;
     color: $paragraphcolor;
     letter-spacing: 0.1px;
@@ -277,19 +281,26 @@ input[type="checkbox"] {
     .sign_up span{
       font-size: 1.1vw;
     }
+    .step{
+        min-width:94%; 
+        margin-left: 20px !important;
+    }
   }
-  @media (max-width: 990px) {
+  @media (max-width: 992px) {
     label>span,
     .login span,
     .sign_up span {
       font-size: 1.5vw;
     }
+    .step{
+        min-width:92%; 
+    }
   }
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     label>span,
     .login span,
     .sign_up span {
-      font-size: 2.2vw;
+      font-size: 2.0vw;
     }
     .step{
       padding: 20px 7% 20px 7%;  
@@ -299,7 +310,7 @@ input[type="checkbox"] {
     label>span,
     .login span,
     .sign_up span {
-      font-size: 3vw;
+      font-size: 2.9vw;
       letter-spacing: 0px;
     }
 }

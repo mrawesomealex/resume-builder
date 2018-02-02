@@ -9,7 +9,7 @@
                     <span>Трудоустроен, в поиске дополнительного заработка</span>
                 </label>
             </div> 
-            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 pl-0 pb-xl-0 pb-lg-0 pb-md-4 pb-sm-4 pb-4">   
+            <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 pl-0 pb-xl-0 pb-lg-0 pb-md-4 pb-sm-4 pb-4 pr-0">   
                 <input name="work_status" id="full_time" value="1" type="radio" :checked="work_status[1]" @change="choose_status(1)"/>
                 <label for="full_time">
                     <div class="checkbox block_neutral mr-3"></div>

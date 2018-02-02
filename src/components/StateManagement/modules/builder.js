@@ -20,9 +20,11 @@ export default{
     },
     CHANGE_DONE: function (state, status) {
       state.steps['step' + status].done = 1
+      state.steps['step' + status].error = 0
     },
     CHANGE_ERROR: function (state, status) {
       state.steps['step' + status].error = 1
+      state.steps['step' + status].done = 0
     }
   }
 }

@@ -8,9 +8,15 @@ export default {
       work_term: [0, 0, 0],
       hours: 0,
       validated: false
-    }
+    },
+    basic: {},
+    education: {},
+    skills: {},
+    experience: {},
+    additional: {}
   },
   mutations: {
+    // мутации Предпочтения
     CHANGE_WORK_STATUS: function (state, newStatus) {
       for (let i = 0; i < state.preferences.work_status.length; i++) {
         state.preferences.work_status[i] = 0
