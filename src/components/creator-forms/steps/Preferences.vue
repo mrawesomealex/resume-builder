@@ -3,21 +3,21 @@
         <h5 id="ws_anchor">Выберите ваш текущий статус</h5>
         <div id="work_status" class="row input-group align-middle">
             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 px-0  pb-xl-0 pb-lg-0 pb-md-4 pb-sm-4 pb-4">
-                <input name="work_status" id="part_time" type="radio" value="0" :checked="work_status[0]" @change="choose_status(0)"/>
+                <input name="work_status" id="part_time" type="radio" value="0" :checked="work_status[0]" @change="work_status = 0"/>
                 <label for="part_time">
                     <div class="checkbox block_neutral mr-3"></div>
                     <span>Трудоустроен, в поиске дополнительного заработка</span>
                 </label>
             </div> 
             <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12 pl-0 pb-xl-0 pb-lg-0 pb-md-4 pb-sm-4 pb-4 pr-0">   
-                <input name="work_status" id="full_time" value="1" type="radio" :checked="work_status[1]" @change="choose_status(1)"/>
+                <input name="work_status" id="full_time" value="1" type="radio" :checked="work_status[1]" @change="work_status = 1"/>
                 <label for="full_time">
                     <div class="checkbox block_neutral mr-3"></div>
                     <span>В поиске основного рабочего места</span>
                 </label>
             </div>
             <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 col-12  px-0 o text-xl-right text-lg-right text-md-left text-sm-left text-left">
-                <input name="work_status" id="educate" value="2" type="radio" :checked="work_status[2]"  @change="choose_status(2)"/>
+                <input name="work_status" id="educate" value="2" type="radio" :checked="work_status[2]"  @change="work_status = 2"/>
                 <label for="educate">
                     <div class="checkbox block_neutral mr-3"></div>
                     <span>Учащийся</span>
@@ -51,7 +51,7 @@
         <div id="work_salary"  class="container-fluid input-group px-0">    
             <div id="type" class="align-middle row col-xl-7 col-lg-7 col-md-12 pl-xl-3 pl-lg-3 px-md-0 px-sm-0 px-0">
                 <div class="col-xl-6 col-lg-6 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-0 pr-sm-0 pr-0 ml-xl-0 ml-lg-0 ml-3">
-                    <input name="work_salarytype" id="hourly" type="radio" value="1" :checked="salary_type[0]"  @change="choose_type(0)" />
+                    <input name="work_salarytype" id="hourly" type="radio" value="1" :checked="salary_type[0]"  @change="salary_type = 0" />
                     <label for="hourly" class="d-block button block_neutral col-12 px-0  pt-xl-4 pt-lg-4  text-xl-center text-lg-center text-md-left text-sm-left ">
                         <div class="checkbox block_neutral mr-3"></div>
                         <span>Почасовая оплата</span>
@@ -59,7 +59,7 @@
                     </label>
                 </div>
                 <div class='col-xl-6 col-lg-6 col-12 pl-0 pr-xl-3 pr-lg-3 pr-0 ml-xl-0 ml-lg-0 ml-3'>  
-                    <input name="work_salarytype" id="milestone" type="radio"  value="2" :checked="salary_type[1]"   @change="choose_type(1)">
+                    <input name="work_salarytype" id="milestone" type="radio"  value="2" :checked="salary_type[1]"   @change="salary_type = 1">
                     <label for="milestone" class="d-block button block_neutral col-12 px-0  pt-xl-4 pt-lg-4 text-xl-center text-lg-center text-md-left text-sm-left ">
                         <div class="checkbox block_neutral mr-3"></div>
                         <span class="pl-xl-0 pl-lg-0 pl-md-1 pl-sm-1 pl-1 col-12">Сдельная оплата</span>
@@ -89,21 +89,21 @@
         <div id="work_hours"  class="row input-group">
               <div class=" row col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 pt-3 pr-3 pb-3  align-middle">
                 <div class="px-0 pb-xl-0 pb-lg-0 pb-md-3 pb-sm-3 pb-3 col-xl-4 col-lg-4 col-md-3 col-sm-12 col-12 ">   
-                    <input name="term" id="week" type="radio" value="0" :checked="work_term[0]" @change="choose_term(0)"/>
-                    <label for="week" class="mr-4 mb-0 pt-3">
+                    <input name="term" id="week" type="radio" value="0" :checked="work_term[0]" @change="work_term = 0"/>
+                    <label for="week" class="mr-3 mb-0 pt-3">
                         <div class="checkbox block_neutral mr-3"></div>
                         <span>В неделю</span>
                     </label>
                 </div>
                 <div class="px-0 pb-xl-0 pb-lg-0 pb-md-3 pb-sm-3 pb-3  col-xl-4 col-lg-4 col-md-3 col-sm-12 col-12">
-                    <input name="term" id="month" type="radio" value="1" :checked="work_term[1]" @change="choose_term(1)"/>
+                    <input name="term" id="month" type="radio" value="1" :checked="work_term[1]" @change="work_term = 1"/>
                     <label for="month"  class="mr-4 mb-0 pt-3">
                         <div class="checkbox block_neutral mr-3"></div>
                         <span>В месяц</span>
                     </label>
                 </div>
                 <div class="px-0 pb-xl-0 pb-lg-0 pb-md-3 pb-sm-3 pb-3  col-xl-4 col-lg-4 col-md-3 col-sm-12 col-12">
-                    <input name="term" id="quater" type="radio" value="2" :checked="work_term[2]" @change="choose_term(2)"/>
+                    <input name="term" id="quater" type="radio" value="2" :checked="work_term[2]" @change="work_term = 2"/>
                     <label for="quater" class="pt-3 mb-0">
                         <div class="checkbox block_neutral mr-3"></div>
                         <span>За квартал</span>
@@ -135,9 +135,6 @@ export default {
   },
   props: ['status'],
   methods: {
-    choose_status: function (value) {
-      this.work_status = value
-    },
     update_area: function () {
       // eslint-disable-next-line
       let content = $('#w_area_field').val()
@@ -159,12 +156,6 @@ export default {
           this.$store.commit('CHANGE_AREA', content)
         }
       }
-    },
-    choose_type: function (value) {
-      this.salary_type = value
-    },
-    choose_term: function (value) {
-      this.work_term = value
     },
     choose_salary: function () {
       // eslint-disable-next-line
@@ -451,7 +442,7 @@ input[type="radio"]:checked ~ label > div {
   z-index: -1;
   transition: 0.3s;
 }
-@media (max-width: 990px) {
+@media (max-width: 991px) {
   #work_salary label {
     padding-left: 25px !important;
   }
