@@ -3,30 +3,30 @@
         <h5>Выберите тип желаемой работы</h5>
         <div id="work_type" class="row input-group align-middle">
             <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 px-0  pb-xl-0 pb-lg-0 pb-md-4 pb-sm-4 pb-4">
-                <input name="work_type" id="full-time" type="radio" value="0" :checked="work_type[0]" @change="work_type = 0"/>
+                <input name="work_type" id="full-time" type="radio" value="0" :checked="work_type[0]" @change="work_type = 0" />
                 <label for="full-time">
-                    <div class="checkbox block_neutral mr-3"></div>
+                    <div :class="['checkbox block_neutral mr-3',{error: status.step1.error && !work_type[0] && !work_type[1] && !work_type[2] && !work_type[3]}]"></div>
                     <span>Полная занятость</span>
                 </label>
             </div>
             <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 px-0  pb-xl-0 pb-lg-0 pb-md-4 pb-sm-4 pb-4 text-xl-center text-lg-center text-md-left text-sm-left text-left">
                 <input name="work_type" id="part-time" type="radio" value="1" :checked="work_type[1]" @change="work_type = 1"/>
                 <label for="part-time">
-                    <div class="checkbox block_neutral mr-3"></div>
+                    <div :class="['checkbox block_neutral mr-3',{error: status.step1.error && !work_type[0] && !work_type[1] && !work_type[2] && !work_type[3]}]"></div>
                     <span>Частичная занятость</span>
                 </label>
             </div>
             <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 px-0  pb-xl-0 pb-lg-0 pb-md-4 pb-sm-4 pb-4 text-xl-center text-lg-center text-md-left text-sm-left text-left">
                 <input name="work_type" id="intern" type="radio" value="2" :checked="work_type[2]" @change="work_type = 2"/>
                 <label for="intern">
-                    <div class="checkbox block_neutral mr-3"></div>
+                    <div :class="['checkbox block_neutral mr-3',{error: status.step1.error && !work_type[0] && !work_type[1] && !work_type[2] && !work_type[3]}]"></div>
                     <span>Интернатура</span>
                 </label>
             </div>
             <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12  px-0 o text-xl-right text-lg-right text-md-left text-sm-left text-left">
                 <input name="work_type" id="remote" value="3" type="radio" :checked="work_type[3]" @change="work_type = 3"/>
                 <label for="remote">
-                    <div class="checkbox block_neutral mr-3"></div>
+                    <div :class="['checkbox block_neutral mr-3',{error: status.step1.error && !work_type[0] && !work_type[1] && !work_type[2] && !work_type[3]}]"></div>
                     <span>Удаленная работа</span>
                 </label>
             </div>
@@ -65,16 +65,14 @@
                             <span class="d-xl-inline d-lg-inline d-md-inline d-sm-inline d-none">День</span>
                         </label>
                     </td>
-                    <td :class="{choosed:shifts['day' + (key+1)].evening}">
-                        <!-- @change="(0)" -->                
+                    <td :class="{choosed:shifts['day' + (key+1)].evening}">             
                         <input :id="'evening-shift-' + key" type="checkbox" value="2"  :checked="shifts['day' + (key+1)].evening" @change="setShift(key+1, 'evening')"/>
                         <label :for="'evening-shift-' + key">
                             <div class="checkbox block_neutral mr-xl-3 mr-lg-3 mr-md-3 mr-sm-3 mx-auto"></div>
                             <span class="d-xl-inline d-lg-inline d-md-inline d-sm-inline d-none">Вечер</span>
                         </label>
                     </td>
-                    <td :class="{choosed:shifts['day' + (key+1)].night}"> 
-                        <!-- @change="(0)" -->               
+                    <td :class="{choosed:shifts['day' + (key+1)].night}">               
                         <input :id="'night-shift-' + key" type="checkbox" value="3"  :checked="shifts['day' + (key+1)].night" @change="setShift(key+1, 'night')"/>
                         <label :for="'night-shift-' + key">
                             <div class="checkbox block_neutral mr-xl-3 mr-lg-3 mr-md-3 mr-sm-3 mx-auto"></div>
@@ -87,7 +85,7 @@
         <h5>Введите цель вашего резюме</h5>
         <h6>Данный текст будет указываться сразу после вашего имени и фамилии , например: «Ищу работу в IT» </h6>
         <div id="resume_goal" class="row input-group">
-           <input id="resume_goal_field" type="text" maxlength="135" placeholder="Введите цель..." class="block_neutral pl-4 py-3 col-12 mr-3" v-model="goal_unsaved"  @change="save_goal()"/>
+           <input id="resume_goal_field" type="text" maxlength="135" placeholder="Введите цель..." :class="['block_neutral pl-4 py-3 col-12 mr-3',{error: status.step1.error && !goal_unsaved}]" v-model="goal_unsaved"  @change="save_goal()"/>
            <div class="max-length text-center py-1">{{charactersLeft}} / 135</div>
         </div>
         <h5>Введите ваш адрес проживания</h5>
@@ -95,26 +93,26 @@
             <div  class="container-fluid ">
                 <div class="row pl-0">
                     <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-0 pr-0 mb-4">
-                        <input id="country" class="block_neutral col-12 pl-4 py-3" type="text" placeholder="Страна" :value="address.country" @change="change_address('country')">
+                        <input id="country" :class="['block_neutral col-12 pl-4 py-3',{error: status.step1.error && !address.country}]" type="text" placeholder="Страна" :value="address.country" @change="change_address('country')">
                     </div>
                     <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12 text-right mr-0 pr-0 pl-xl-3 pl-lg-3 pl-md-3 pl-sm-0 pl-0 mb-4">    
-                        <input id="street" class="block_neutral col-12 pl-4 py-3"  type="text" placeholder="Улица  ( пример: пр. Центральный 55 )"  :value="address.street" @change="change_address('street')">
+                        <input id="street" :class="['block_neutral col-12 pl-4 py-3',{error: status.step1.error && !address.street}]"  type="text" placeholder="Улица  ( пример: пр. Центральный 55 )"  :value="address.street" @change="change_address('street')">
                     </div>
                 </div>
             </div>
             <div  class="container-fluid">
                 <div class="row pl-0">    
                     <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-0 pr-0 mb-4">
-                        <input  id="city" class="col-12 block_neutral pl-4 py-3 d-block"  type="text" placeholder="Город"  :value="address.city" @change="change_address('city')">
+                        <input  id="city" :class="['col-12 block_neutral pl-4 py-3 d-block',{error: status.step1.error && !address.city}]"  type="text" placeholder="Город"  :value="address.city" @change="change_address('city')">
                     </div>
                     <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12 text-right mr-0 pr-0 pl-xl-3 pl-lg-3 pl-md-3 pl-sm-0 pl-0 mb-4">    
                       <div  class="container-fluid"> 
                         <div class="row pl-0">
                           <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-0 pr-0 mb-4">
-                            <input id="state" class="col-12 block_neutral pl-4  py-3" type="text" placeholder="Область"  :value="address.state" @change="change_address('state')">
+                            <input id="state" :class="['col-12 block_neutral pl-4  py-3',{error: status.step1.error && !address.state}]" type="text" placeholder="Область"  :value="address.state" @change="change_address('state')">
                           </div>
                           <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12 text-right mr-0 pr-0 pl-xl-3 pl-lg-3 pl-md-3 pl-sm-0 pl-0 mb-4">  
-                            <input id="index" class="col-12 block_neutral pl-4 py-3 " type="text" placeholder="Индекс"  :value="address.index" @change="change_address('index')">
+                            <input id="index" :class="['col-12 block_neutral pl-4 py-3',{error: status.step1.error && !address.index}]" type="text" placeholder="Индекс"  :value="address.index" @change="change_address('index')">
                           </div>
                         </div> 
                       </div>  
@@ -143,7 +141,7 @@
                     <span>Женщина</span>
                 </label>
             </div>
-            <input id="fio" type="text"  placeholder="ФИО" class="block_neutral pl-4 py-3 col-xl-7 col-lg-5 col-md-12 col-sm-12 col-12 ml-auto mr-0 mb-4"  :value="fio" @change="set_fio()"/>             
+            <input id="fio" type="text"  placeholder="ФИО" :class="['block_neutral pl-4 py-3 col-xl-7 col-lg-5 col-md-12 col-sm-12 col-12 ml-auto mr-0 mb-4',{error: status.step1.error && !fio}]"  :value="fio" @change="set_fio()"/>             
         </div>
         <h5>Контакты</h5>
         <h6>Телефон считается введенным корректно, если появился флаг страны в поле код</h6>     
@@ -154,14 +152,14 @@
                         <input id="portfolio_link" type="text" placeholder="Укажите адрес онлайн-портфолио (необязательно)" :class="['block_neutral col-12 pl-4 py-3',{error: !validatePortfolio && current_portfolio.length && first.portfolio}]" :value="current_portfolio" @change="set_portfolio_link()" @input="update_portfolio_link()"/>
                     </div>    
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 text-right mr-0 pr-0 pl-0 pl-xl-3 pl-lg-3 pl-md-3 pl-sm-0 pl-0 mb-4" id="email">
-                        <input id="email_value" type="email" placeholder="Укажите email" :class="['block_neutral col-12 pl-4 py-3',{error: !validateEmail && current_email && first.email}]" :value="current_email" @change="set_email()" @input="update_email()"/>
+                        <input id="email_value" type="email" placeholder="Укажите email" :class="['block_neutral col-12 pl-4 py-3',{error: !validateEmail && !current_email && (first.email || status.step1.error)}]" :value="current_email" @change="set_email()" @input="update_email()"/>
                     </div>
                 </div>
             </div>
             <div class="container-fluid"> 
                 <div class="row pl-0">
                     <div class="phone-style col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-0 pr-0 mb-4" id="phone1">
-                        <input id="phone1_code" :class="['country-code py-3 mr-0 block_neutral',{'pl-4' : !country1}, {error : phone_code_invalid.phone1}]" type="tel" placeholder="+ Код" @change="get_country_code(1)" v-model="phone_codes_local.code1"/><input id="phone1_number" :class="['block_neutral col-9 pl-4 py-3', {error: phone_invalid.phone1 }]" type="tel"  placeholder="Мобильный тел." @change="processPhone(1)" v-model="phone_numbers_local.phone1"/>
+                        <input id="phone1_code" :class="['country-code py-3 mr-0 block_neutral',{'pl-4' : !country1}, {error : phone_code_invalid.phone1 || (!phone1.code && status.step1.error)}]" type="tel" placeholder="+ Код" @change="get_country_code(1)" v-model="phone_codes_local.code1"/><input id="phone1_number" :class="['block_neutral col-9 pl-4 py-3', {error: phone_invalid.phone1 || (!phone2.number && status.step1.error)}]" type="tel"  placeholder="Мобильный тел." @change="processPhone(1)" v-model="phone_numbers_local.phone1"/>
                         <label v-if="country1" for="phone1_code">
                             <img class="flag" :src="country1" width="25px"/>
                         </label>
@@ -206,7 +204,7 @@
                 <div class="row pl-0">
                     <div class="col-xl-6 col-lg-6 col-md-4 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-0 pr-0 mb-4">  
                         <input id="profileImg_picker" class="d-none" type="file" accept=".png, .jpg, .jpeg" @change="readAsButton()">
-                        <label @dragover.stop.prevent="dragClass=true" @dragleave.stop.prevent.self="dragClass=false" @drop.stop.prevent="fileHandler($event)" id="drop-zone"  :class="['d-block block_neutral text-center py-xl-5 py-lg-5 py-md-5 py-sm-3 py-3 mb-0',{drag_zone: dragClass},{error : file_error}]" for="profileImg_picker">
+                        <label @dragover.stop.prevent="dragClass=true" @dragleave.stop.prevent.self="dragClass=false" @drop.stop.prevent="fileHandler($event)" id="drop-zone"  :class="['d-block block_neutral text-center py-xl-5 py-lg-5 py-md-5 py-sm-3 py-3 mb-0',{drag_zone: dragClass},{error : file_error || (!photo && status.step1.error)}]" for="profileImg_picker">
                             <simple-svg :stroke="'none'" class="mt-0" :fill="dragClass ? '#64a4ee' : 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/photo.svg')" :width="'30px'" :height="'30px'" />
                             <span class="d-block mt-1">Загрузить</span>
                             <h6 class="mb-0 col-12">Нажмите или перетяните нужный файл</h6>
@@ -227,6 +225,7 @@
 <script>
     import axios from 'axios'
     export default {
+      props: ['status'],
       data: function () {
         return {
           country1: '',

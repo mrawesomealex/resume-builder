@@ -232,6 +232,7 @@ input[type="checkbox"]:checked~#menu-trigger.menu_complete{
             transition: color 0.3s;
             font-family: $Roboto;
             font-weight: 400;
+            background-size: contain;
         }
         a:not(.current):not(.form_error){
             color: $paragraphcolor;

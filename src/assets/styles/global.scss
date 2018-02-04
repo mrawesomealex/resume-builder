@@ -137,6 +137,9 @@ a{
         background: $active
     }
 }
+.error~span{
+    color: $active
+}
 .error::-webkit-input-placeholder{
     color:$active;
 }
@@ -160,9 +163,12 @@ h5{
 }
 
 .step{
+    position: relative;
+    top: 0px;
     padding: 20px 4% 20px 5.2%;
     min-height: 60vh;
-    min-width:95%; 
+    min-width:95%;
+    animation: stepAppear 0.2s;
 }
 .step>div{
     margin: 40px 0px; 
@@ -250,6 +256,9 @@ input[type="checkbox"]:not([name="sex"]):checked ~ label{
     div {
       animation: 0.15s skew forwards;
       transition: 0.15s;
+    }
+    div{
+      border: 1px solid $btn_blue_text !important;
     }
 }
 input[type="radio"]:checked ~ label > span,
@@ -368,4 +377,14 @@ input[type="checkbox"] {
           -webkit-transform: scale(1);
           transform: scale(1);
         }
-      }
+    }
+    @keyframes stepAppear {
+        0%{
+            opacity: 0;
+            top: -10px
+        }
+        100%{
+            opacity: 1;
+            top: 0px;
+        }
+    }
