@@ -167,21 +167,21 @@ input[type="checkbox"]:checked~#menu-trigger{
    background: $btn_red_inactive;
 }
 input[type="checkbox"]:checked~#menu-trigger.menu_error{
-   box-shadow: 11px 0px 10px $btn_red_inactive inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset;
+   box-shadow: 11px 7px 10px $btn_red_inactive inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset;
 }
 
 .menu_current{
    background: $btn_blue_inactive;
 }
 input[type="checkbox"]:checked~#menu-trigger.menu_current{
-   box-shadow: 11px 0px 10px $btn_blue_inactive inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset;
+   box-shadow: 11px 7px 10px $btn_blue_inactive inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset;
 }
 
 .menu_complete{
    background: #f2fff8;
 }
 input[type="checkbox"]:checked~#menu-trigger.menu_complete{
-   box-shadow: 11px 0px 10px #f2fff8 inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset;
+   box-shadow: 11px 7px 10px #f2fff8 inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset;
 }
 
 .fixed{
@@ -373,17 +373,19 @@ input[type="checkbox"]:checked~#menu-trigger.menu_complete{
             margin-left: auto
         }
         .blue{
+            background: $btn_blue_text;
+            border: 1px solid $btn_blue_text;
             a{
-               color:$btn_blue_text;
+               color: white;
             }
         }
         .blue:hover{
-            a{
-                color: white;
-            }
+            background: $blue_filled_hover
         }
         .blue[disabled = "disabled"]{
-            a{
+            background: $grey;
+            border: 1px solid $block_grey_outline;
+            a{   
              color: $paragraphcolor;
              cursor: default;
             }

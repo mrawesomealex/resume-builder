@@ -11,7 +11,7 @@ $done: #43b27a;
 $btn_blue_inactive: #f5faff;
 $btn_blue_outline: #acd0f9;
 $btn_blue_text:#4b92e2;
-
+$blue_filled_hover: #64a4ee;
 $btn_red_inactive: #fef7f9;
 $btn_red_outline: #f99a94;
 //active = brn_red_filled
@@ -42,7 +42,7 @@ p {
     font-weight: 300;
     transition: 0.1s;
 }
-.block_neutral:focus{
+.block_neutral:not(.new_btn):focus{
     background: white;
     border: 1px solid $btn_blue_text;
     outline:none;
@@ -107,7 +107,12 @@ a:hover{
   .flowup-leave-active{
       opacity: 0;
   }
-
+  .openForm-enter #resource_form,
+  .openForm-leave-active #resource_form{
+      height: 0px;
+      opacity: 0;
+      transition: 0.3s;
+  }
 a{
     transition: 0.3s;
 }
@@ -120,10 +125,11 @@ a{
 }
 .error{
     position: relative;
-    border: 1px solid $btn_red_outline;
+    border: 1px solid $btn_red_outline !important;
     background: $btn_red_inactive;
     color:$active;
     animation: 0.3s shake;
+    z-index: 2;
     *{
         color:$active !important;
     }

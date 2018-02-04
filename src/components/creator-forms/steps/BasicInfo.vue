@@ -3,32 +3,28 @@
         <h5>Выберите тип желаемой работы</h5>
         <div id="work_type" class="row input-group align-middle">
             <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 px-0  pb-xl-0 pb-lg-0 pb-md-4 pb-sm-4 pb-4">
-                <!-- :checked="[0]" @change="(0)" -->
-                <input name="work_type" id="full-time" type="radio" value="0" />
+                <input name="work_type" id="full-time" type="radio" value="0" :checked="work_type[0]" @change="work_type = 0"/>
                 <label for="full-time">
                     <div class="checkbox block_neutral mr-3"></div>
                     <span>Полная занятость</span>
                 </label>
             </div>
             <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 px-0  pb-xl-0 pb-lg-0 pb-md-4 pb-sm-4 pb-4 text-xl-center text-lg-center text-md-left text-sm-left text-left">
-                <!-- :checked="[0]" @change="(0)" -->
-                <input name="work_type" id="part-time" type="radio" value="1"/>
+                <input name="work_type" id="part-time" type="radio" value="1" :checked="work_type[1]" @change="work_type = 1"/>
                 <label for="part-time">
                     <div class="checkbox block_neutral mr-3"></div>
                     <span>Частичная занятость</span>
                 </label>
             </div>
             <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 px-0  pb-xl-0 pb-lg-0 pb-md-4 pb-sm-4 pb-4 text-xl-center text-lg-center text-md-left text-sm-left text-left">
-                <!-- :checked="[0]" @change="(0)" -->
-                <input name="work_type" id="intern" type="radio" value="2"/>
+                <input name="work_type" id="intern" type="radio" value="2" :checked="work_type[2]" @change="work_type = 2"/>
                 <label for="intern">
                     <div class="checkbox block_neutral mr-3"></div>
                     <span>Интернатура</span>
                 </label>
             </div>
             <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12  px-0 o text-xl-right text-lg-right text-md-left text-sm-left text-left">
-                <!-- :checked="[0]" @change="(0)" -->
-                <input name="work_type" id="remote" value="3" type="radio"/>
+                <input name="work_type" id="remote" value="3" type="radio" :checked="work_type[3]" @change="work_type = 3"/>
                 <label for="remote">
                     <div class="checkbox block_neutral mr-3"></div>
                     <span>Удаленная работа</span>
@@ -41,33 +37,29 @@
             <table class="col-xl-8 col-lg-9 col-md-12">
                 <tr class="text-center align-middle ">
                     <th></th>
-                    <!-- @change="(all_day)" -->
-                    <th class="pb-4 pt-3"> 
+                    <th class="pb-4 pt-3" @click="setShift(0, 'day', false, true)"> 
                         <img class="isAvailable d-xl-inline d-lg-inline d-md-inline d-sm-inline  d-block mx-auto"  v-if="shiftsStatus.day" src="../../../assets/step_icons/shifts/sun.svg"/>
                         <img class="d-xl-inline d-lg-inline d-md-inline d-sm-inline  d-block mx-auto"  v-else src="../../../assets/step_icons/shifts/gsun.svg"/>
                         <span class="pr-2">c 8:00</span>
                     </th>
-                    <!-- @change="(all_eve)" -->
-                    <th class="pb-4 pt-3">
+                    <th class="pb-4 pt-3" @click="setShift(0, 'evening', false, true)">
                         <img class="isAvailable d-xl-inline d-lg-inline d-md-inline d-sm-inline  d-block mx-auto"   v-if="shiftsStatus.evening" src="../../../assets/step_icons/shifts/sunset.svg"/>
                         <img class="d-xl-inline d-lg-inline d-md-inline d-sm-inline  d-block mx-auto"  v-else src="../../../assets/step_icons/shifts/gsunset.svg"/>
                         <span class="pr-2">c 17:00</span>
                     </th>
-                    <!-- @change="(all_night)" -->
-                    <th class="pb-4 pt-3">
+                    <th class="pb-4 pt-3" @click="setShift(0, 'night', false, true)">
                         <img class="isAvailable d-xl-inline d-lg-inline d-md-inline d-sm-inline  d-block mx-auto"  v-if="shiftsStatus.night" src="../../../assets/step_icons/shifts/moon.svg"/>
                         <img class="d-xl-inline d-lg-inline d-md-inline d-sm-inline  d-block mx-auto" v-else src="../../../assets/step_icons/shifts/gmoon.svg"/>
                         <span class="pr-2">c 23:00</span>
                     </th>
                 </tr>
                 <tr class="align-middle text-center" v-for="(day,key) in week_days" :key="key">
-                    <td :class="['text-left py-4', { isAvailable: shifts['day' + (key+1)].day || shifts['day' + (key+1)].evening || shifts['day' + (key+1)].night }]">
+                    <td :class="['text-left py-4', { isAvailable: shifts['day' + (key+1)].day || shifts['day' + (key+1)].evening || shifts['day' + (key+1)].night }]" @click="setShift((key+1), '', true, false)">
                         <span class="d-xl-block d-lg-block d-md-block d-sm-none d-none">{{day}}</span> 
                         <span class="d-xl-none d-lg-none d-md-none d-sm-block d-block pr-4">{{subDays[key]}}</span>
                     </td>
-                    <td :class="{choosed:shifts['day' + (key+1)].day}">
-                        <!-- @change="(0)" -->                
-                        <input :id="'day-shift-' + key" type="checkbox" value="1" :checked="shifts['day' + (key+1)].day"/>
+                    <td :class="{choosed:shifts['day' + (key+1)].day}"> 
+                        <input :id="'day-shift-' + key" type="checkbox" value="1" :checked="shifts['day' + (key+1)].day" @change="setShift(key+1,'day')"/>
                         <label :for="'day-shift-' + key">
                             <div class="checkbox block_neutral mr-xl-3 mr-lg-3 mr-md-3 mr-sm-3 mx-auto"></div>
                             <span class="d-xl-inline d-lg-inline d-md-inline d-sm-inline d-none">День</span>
@@ -75,7 +67,7 @@
                     </td>
                     <td :class="{choosed:shifts['day' + (key+1)].evening}">
                         <!-- @change="(0)" -->                
-                        <input :id="'evening-shift-' + key" type="checkbox" value="2"  :checked="shifts['day' + (key+1)].evening"/>
+                        <input :id="'evening-shift-' + key" type="checkbox" value="2"  :checked="shifts['day' + (key+1)].evening" @change="setShift(key+1, 'evening')"/>
                         <label :for="'evening-shift-' + key">
                             <div class="checkbox block_neutral mr-xl-3 mr-lg-3 mr-md-3 mr-sm-3 mx-auto"></div>
                             <span class="d-xl-inline d-lg-inline d-md-inline d-sm-inline d-none">Вечер</span>
@@ -83,7 +75,7 @@
                     </td>
                     <td :class="{choosed:shifts['day' + (key+1)].night}"> 
                         <!-- @change="(0)" -->               
-                        <input :id="'night-shift-' + key" type="checkbox" value="3"  :checked="shifts['day' + (key+1)].night"/>
+                        <input :id="'night-shift-' + key" type="checkbox" value="3"  :checked="shifts['day' + (key+1)].night" @change="setShift(key+1, 'night')"/>
                         <label :for="'night-shift-' + key">
                             <div class="checkbox block_neutral mr-xl-3 mr-lg-3 mr-md-3 mr-sm-3 mx-auto"></div>
                             <span class="d-xl-inline d-lg-inline d-md-inline d-sm-inline d-none">Ночь</span>
@@ -95,35 +87,34 @@
         <h5>Введите цель вашего резюме</h5>
         <h6>Данный текст будет указываться сразу после вашего имени и фамилии , например: «Ищу работу в IT» </h6>
         <div id="resume_goal" class="row input-group">
-            <!-- @change="(0)" -->  
-           <input id="resume_goal_field" type="text" maxlength="135" placeholder="Введите цель..." class="block_neutral pl-4 py-3 col-12 mr-3"/>
-           <div class="max-length px-3 py-1">{{charactersLeft}} / 135</div>
+           <input id="resume_goal_field" type="text" maxlength="135" placeholder="Введите цель..." class="block_neutral pl-4 py-3 col-12 mr-3" v-model="goal_unsaved"  @change="save_goal()"/>
+           <div class="max-length text-center py-1">{{charactersLeft}} / 135</div>
         </div>
         <h5>Введите ваш адрес проживания</h5>
         <div id="resume_goal" class="input-group pb-4">
             <div  class="container-fluid ">
                 <div class="row pl-0">
                     <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-0 pr-0 mb-4">
-                        <input class="block_neutral col-12 pl-4 py-3" type="text" placeholder="Страна">
+                        <input id="country" class="block_neutral col-12 pl-4 py-3" type="text" placeholder="Страна" :value="address.country" @change="change_address('country')">
                     </div>
                     <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12 text-right mr-0 pr-0 pl-xl-3 pl-lg-3 pl-md-3 pl-sm-0 pl-0 mb-4">    
-                        <input  class="block_neutral col-12 pl-4 py-3"  type="text" placeholder="Улица  ( пример: пр. Центральный 55 )">
+                        <input id="street" class="block_neutral col-12 pl-4 py-3"  type="text" placeholder="Улица  ( пример: пр. Центральный 55 )"  :value="address.street" @change="change_address('street')">
                     </div>
                 </div>
             </div>
             <div  class="container-fluid">
                 <div class="row pl-0">    
                     <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-0 pr-0 mb-4">
-                        <input class="col-12 block_neutral pl-4 py-3 d-block"  type="text" placeholder="Город">
+                        <input  id="city" class="col-12 block_neutral pl-4 py-3 d-block"  type="text" placeholder="Город"  :value="address.city" @change="change_address('city')">
                     </div>
                     <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12 text-right mr-0 pr-0 pl-xl-3 pl-lg-3 pl-md-3 pl-sm-0 pl-0 mb-4">    
                       <div  class="container-fluid"> 
                         <div class="row pl-0">
                           <div class="col-xl-7 col-lg-7 col-md-7 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-0 pr-0 mb-4">
-                            <input  class="col-12 block_neutral pl-4  py-3" type="text" placeholder="Область">
+                            <input id="state" class="col-12 block_neutral pl-4  py-3" type="text" placeholder="Область"  :value="address.state" @change="change_address('state')">
                           </div>
                           <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12 text-right mr-0 pr-0 pl-xl-3 pl-lg-3 pl-md-3 pl-sm-0 pl-0 mb-4">  
-                            <input  class="col-12 block_neutral pl-4 py-3 " type="text" placeholder="Индекс">
+                            <input id="index" class="col-12 block_neutral pl-4 py-3 " type="text" placeholder="Индекс"  :value="address.index" @change="change_address('index')">
                           </div>
                         </div> 
                       </div>  
@@ -135,8 +126,7 @@
         <h6>Пол соискателя является необязательным полем</h6>   
         <div id="personal_info" class="row input-group align-middle">  
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 pr-0  pb-0 mb-4">
-                <!-- :checked="[0]" @change="(0)" -->
-                <input name="sex" id="man" type="radio" value="0" />
+                <input name="sex" id="man" type="radio" value="0" :checked="sex.man" @change="sex='man'"/>
                 <label for="man" class="col-12 row px-0 ">
                     <div class="checkbox block_neutral mr-3 ">
                         <simple-svg class="d-flex mx-auto" :stroke="'none'" :fill="sex.man ? 'white' : 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/businessman.svg')" :width="'35px'" :height="'35px'"/>
@@ -145,8 +135,7 @@
                 </label>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 pr-0  pb-0 mb-4">
-                <!-- :checked="[0]" @change="(0)" -->
-                <input name="sex" id="woman" type="radio" value="1"/>
+                <input name="sex" id="woman" type="radio" value="1" :checked="sex.woman" @change="sex='woman'"/>
                 <label for="woman" class="col-12 row px-0">
                     <div class="checkbox block_neutral mr-3 ">
                         <simple-svg class="d-flex mx-auto" :stroke="'none'" :fill="sex.woman ? 'white' : 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/buisnesswoman.svg')" :width="'35px'" :height="'35px'"/>
@@ -154,30 +143,31 @@
                     <span>Женщина</span>
                 </label>
             </div>
-            <input id="fio" type="text"  placeholder="ФИО" class="block_neutral pl-4 py-3 col-xl-7 col-lg-5 col-md-12 col-sm-12 col-12 ml-auto mr-0 mb-4"/>             
+            <input id="fio" type="text"  placeholder="ФИО" class="block_neutral pl-4 py-3 col-xl-7 col-lg-5 col-md-12 col-sm-12 col-12 ml-auto mr-0 mb-4"  :value="fio" @change="set_fio()"/>             
         </div>
-        <h5>Контакты</h5>    
+        <h5>Контакты</h5>
+        <h6>Телефон считается введенным корректно, если появился флаг страны в поле код</h6>     
         <div id="contacts" class="container-fluid px-0 input-group">
             <div class="container-fluid"> 
                 <div class="row pl-0">
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-0 pr-0 mb-4" id="portfolio_adress">
-                        <input type="text" placeholder="Укажите адрес онлайн-портфолио (необязательно)" class="block_neutral col-12 pl-4 py-3"/>
+                        <input id="portfolio_link" type="text" placeholder="Укажите адрес онлайн-портфолио (необязательно)" :class="['block_neutral col-12 pl-4 py-3',{error: !validatePortfolio && current_portfolio.length && first.portfolio}]" :value="current_portfolio" @change="set_portfolio_link()" @input="update_portfolio_link()"/>
                     </div>    
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 text-right mr-0 pr-0 pl-0 pl-xl-3 pl-lg-3 pl-md-3 pl-sm-0 pl-0 mb-4" id="email">
-                        <input type="email" placeholder="Укажите email" class="block_neutral col-12 pl-4 py-3"/>
+                        <input id="email_value" type="email" placeholder="Укажите email" :class="['block_neutral col-12 pl-4 py-3',{error: !validateEmail && current_email && first.email}]" :value="current_email" @change="set_email()" @input="update_email()"/>
                     </div>
                 </div>
             </div>
             <div class="container-fluid"> 
                 <div class="row pl-0">
                     <div class="phone-style col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-0 pr-0 mb-4" id="phone1">
-                        <input id="phone1_code" :class="['country-code py-3 mr-0 block_neutral',{'pl-4' : !country1}]" type="tel" placeholder="+ Код" @change="get_country_code(1)"/><input class="block_neutral col-9 pl-4 py-3 " type="tel"  placeholder="Мобильный тел."/>
+                        <input id="phone1_code" :class="['country-code py-3 mr-0 block_neutral',{'pl-4' : !country1}, {error : phone_code_invalid.phone1}]" type="tel" placeholder="+ Код" @change="get_country_code(1)" v-model="phone_codes_local.code1"/><input id="phone1_number" :class="['block_neutral col-9 pl-4 py-3', {error: phone_invalid.phone1 }]" type="tel"  placeholder="Мобильный тел." @change="processPhone(1)" v-model="phone_numbers_local.phone1"/>
                         <label v-if="country1" for="phone1_code">
                             <img class="flag" :src="country1" width="25px"/>
                         </label>
                     </div>
                     <div class="phone-style col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 text-right mr-0 pr-0 pl-0 pl-xl-3 pl-lg-3 pl-md-3 pl-sm-0 pl-0" id="phone2">
-                        <input id="phone2_code"  :class="['country-code py-3 mr-0 col-3 block_neutral',{'pl-4' : !country2}]" type="tel" placeholder="+ Код" @change="get_country_code(2)"/><input class="block_neutral col-9 pl-4 py-3" type="tel"  placeholder="Доп. телефон (необязательно)"/>
+                        <input id="phone2_code"  :class="['country-code py-3 mr-0 col-3 block_neutral',{'pl-4' : !country2}, {error : phone_code_invalid.phone2}]" type="tel" placeholder="+ Код" @change="get_country_code(2)"  v-model="phone_codes_local.code2"/><input id="phone2_number" :class="['block_neutral col-9 pl-4 py-3', {error: phone_invalid.phone2 }]" type="tel"  placeholder="Доп. телефон (необязательно)" @change="processPhone(2)" v-model="phone_numbers_local.phone2"/>
                         <label v-if="country2" for="phone2_code">
                             <img class="flag" :src="country2" width="25px"/>
                         </label>
@@ -189,41 +179,42 @@
         <h6>Используйте кнопки "+" для добавление дополнительных ресурсов к вашему резюме</h6>        
         <div id="additional_resources" class="row input-group px-0 pb-3"> 
             <div class="container-fluid px-0 mb-4 pb-3 text-xl-left text-lg-left text-md-left text-sm-center text-center">
-                <button @focus="focus_color(1, index)" @blur="focus_color(0, index)" v-for="(resource,key,index) in resources" :key="key" :class="['mb-4  py-3 px-4 resourse-btn block_neutral',{'mr-3':index < 13},{social_filled: resource.source},{new_btn: !resource.role}]">
+                <button @click="resource.role ? set_current(index) : new_resource()" v-for="(resource,key,index) in resources" :key="key" :class="['mb-4  py-3 px-4 resourse-btn block_neutral',{'mr-3':index < 13},{social_filled: resource.source},{new_btn: !resource.role},{focused: index === current_resource}]">
                     <span class="px-1" v-if="!resource.role">+</span>
-                    <simple-svg v-if="index < 5" class="d-flex mx-auto my-auto" :stroke="'none'" :fill="resources['resource'+index].source ? 'white' : colors['el'+index] " :filepath="require('@/assets/step_icons/'+svg_socials[index]+'.svg')" :width="'20px'" :height="'20px'" />
+                    <span class="px-1" v-if="resource.role && index > 4">{{resource.role.substr(0,2)}}</span>
+                    <simple-svg v-if="index < 5" class="d-flex mx-auto my-auto" :stroke="'none'" :fill="resource.source && index !== current_resource ? 'white' : colors['el'+index] " :filepath="require('@/assets/step_icons/'+svg_socials[index]+'.svg')" :width="'20px'" :height="'20px'" />
                 </button>
-                <div v-if="resources[current_resource]" id="resource_form" class="container-fluid my-4">
+                <div v-if="resources['resource'+current_resource] && resources['resource'+current_resource].role" id="resource_form" class="container-fluid my-4">
                     <div class="row">
-                        <input class="col-xl-6 col-lg-6 col-md-7 col-sm-12 col-12 block_neutral py-3 pl-4 mb-4" type="text" placeholder="Название ресурса" maxlength="60"/>
+                        <input id="role_field" :class="['col-xl-6 col-lg-6 col-md-7 col-sm-12 col-12 block_neutral py-3 pl-4 mb-4',{error: source_invalid}]" type="text" placeholder="Название ресурса" maxlength="60" :value="resources['resource'+current_resource].role" @change="set_resource(true)"/>
                     </div>
                     <div class="container-fluid col-xl-10 col-lg-12 col-md-12 col-sm-12 px-0 mr-0 ml-0">
-                      <div class="row">  
-                        <label id="link_icon" for="link-field" :class="['block_neutral col-xl-1 col-lg-1 col-md-1 col-sm-2 col-2 mb-0 pt-1',{active_link : resources[current_resource].source }]">
-                            <simple-svg :stroke="'none'" :fill="resources[current_resource].source ? 'white' : 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/link.svg')" :width="'20px'" :height="'20px'"/>
-                        </label>
-                        <input id="link-field" class="col-xl-11 col-lg-11 col-md-11 col-sm-10 col-10 block_neutral py-3 pl-4" type="text" placeholder="Введите адрес ресурса"/>
-                      </div>
+                    <div class="row">  
+                            <label id="link_icon" for="link_field" :class="['block_neutral col-xl-1 col-lg-1 col-md-1 col-sm-2 col-2 mb-0 pt-1',{active_link : resources['resource'+current_resource].source }]">
+                                <simple-svg :stroke="'none'" :fill="resources['resource'+current_resource].source ? 'white' : 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/link.svg')" :width="'20px'" :height="'20px'"/>
+                            </label>
+                            <input id="link_field" class="col-xl-11 col-lg-11 col-md-11 col-sm-10 col-10 block_neutral py-3 pl-4" type="text" placeholder="Введите адрес ресурса" :value="resources['resource'+current_resource].source"  @change="set_resource(false)"/>
+                    </div>
                     </div>
                 </div>
             </div>
         </div>
         <h5>Выберите фотографию</h5>
-        <h6>Загрузите файл в формате .jpg, .jpeg, .png</h6>
+        <h6>Загрузите файл в формате .jpg, .jpeg, .png, и менее 3Мб</h6>
         <div id="photo" class="container-fluid px-0 input-group">
             <div class="container-fluid"> 
                 <div class="row pl-0">
                     <div class="col-xl-6 col-lg-6 col-md-4 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-0 pr-0 mb-4">  
-                        <input id="profileImg_picker" class="d-none" type="file" accept=".png, .jpg, .jpeg" >
-                        <label class="d-block block_neutral text-center py-xl-5 py-lg-5 py-md-5 py-sm-3 py-3 mb-0" for="profileImg_picker">
-                            <simple-svg :stroke="'none'" class="mt-0" :fill=" 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/photo.svg')" :width="'30px'" :height="'30px'" />
+                        <input id="profileImg_picker" class="d-none" type="file" accept=".png, .jpg, .jpeg" @change="readAsButton()">
+                        <label @dragover.stop.prevent="dragClass=true" @dragleave.stop.prevent.self="dragClass=false" @drop.stop.prevent="fileHandler($event)" id="drop-zone"  :class="['d-block block_neutral text-center py-xl-5 py-lg-5 py-md-5 py-sm-3 py-3 mb-0',{drag_zone: dragClass},{error : file_error}]" for="profileImg_picker">
+                            <simple-svg :stroke="'none'" class="mt-0" :fill="dragClass ? '#64a4ee' : 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/photo.svg')" :width="'30px'" :height="'30px'" />
                             <span class="d-block mt-1">Загрузить</span>
                             <h6 class="mb-0 col-12">Нажмите или перетяните нужный файл</h6>
                         </label>
                     </div> 
                     <div id="crop" class="d-flex col-xl-6 col-lg-6 col-md-8 col-sm-12 col-12 text-right mr-0 pr-0 pl-0 pl-xl-3 pl-lg-3 pl-md-3 pl-sm-0 pl-0 ">   
                         <div id="preview_block" class="d-flex text-center block_neutral col-xl-5 col-lg-5 col-md-6 col-sm-5 col-6 mb-xl-4 mb-lg-4 mb-md-4 mb-sm-4 mb-0">
-                            <simple-svg :stroke="'none'" :fill="'#6d6d6d' " :filepath="require('@/assets/step_icons/preview.svg')" :width="'40px'" :height="'40px'"/>
+                            <simple-svg :stroke="'none'" :fill=" !photo ?'#6d6d6d' : 'rgba(0,0,0,0)' " :filepath="require('@/assets/step_icons/preview.svg')" :width="'40px'" :height="'40px'"/>
                         </div>
                         <h6 class="d-block block_neutral col-xl-7 col-lg-7 col-md-6 col-sm-7 col-6 text-left p-xl-4 p-lg-4 p-md-4 p-sm-5 p-5 mb-xl-4 mb-lg-4 mb-md-4 mb-sm-4 mb-0">Предварительный  просмотр показывает как ваше фото будет смотрется на странице резюме</h6>
                     </div>     
@@ -248,69 +239,327 @@
             el3: 'rgba(41, 41, 43, 0.98)',
             el4: 'rgba(41, 41, 43, 0.98)'
           },
+          first: {
+            portfolio: false,
+            email: false
+          },
+          current_portfolio: '',
+          current_email: '',
+          goal_unsaved: '',
           resourses_max: 14,
+          phone_invalid: {
+            phone1: false,
+            phone2: false
+          },
+          phone_code_invalid: {
+            phone1: false,
+            phone2: false
+          },
+          phone_codes_local: {
+            code1: '',
+            code2: ''
+          },
+          phone_numbers_local: {
+            phone1: '',
+            phone2: ''
+          },
+          source_invalid: 0,
+          dragClass: false,
+          file_error: false,
+          maxFileSize: 3153827,
           svg_socials: ['instagram', 'facebook', 'telegram', 'skype', 'vk'],
-          week_days: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
+          week_days: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
+          VALID_EMAIL_REG: /^(([^<>()[\]\\.,;:\s@]+(\.[^<>()[\]\\.,;:\s@]+)*)|(.+))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+          VALID_WEBSITE_REG: /((http|https):\/\/){0,1}(\w\.){0,1}www\.(.+\.)+[a-zA-Z]{2,}$/,
+          VALID_PHONE_REG: /^((-{0,1}\(\d+\)-)|(\(\d+\))){0,1}\d{3,}(-\d+)*$/
+        }
+      },
+      mounted: function () {
+        this.goal_unsaved = this.goal
+        this.current_portfolio = this.portfolio_link
+        this.current_email = this.email
+        if (this.phone1.code) {
+          this.phone_codes_local.code1 = this.phone1.code
+        }
+        if (this.phone2.code) {
+          this.phone_codes_local.code2 = this.phone2.code
+        }
+        if (this.phone1.number) {
+          this.phone_numbers_local.phone1 = this.phone1.number
+        }
+        if (this.phone2.number) {
+          this.phone_numbers_local.phone2 = this.phone2.number
+        }
+        if (this.photo) {
+          // eslint-disable-next-line  
+          $('#preview_block').css({'background':'url("'+this.photo+'") no-repeat 50% 50%','background-size':'contain'})
         }
       },
       methods: {
         get_country_code: function (phoneId) {
           phoneId === 1 ? this.country1 = '' : this.country2 = ''
           // eslint-disable-next-line
-          let code = $('#phone' + phoneId + '>input.country-code').val() 
+          let code = $('#phone' + phoneId + '_code').val().trim() 
           if (code.indexOf('+') >= 0) {
             code = code.substr(1)
           }
           // eslint-disable-next-line 
           axios.get('https://restcountries.eu/rest/v2/callingcode/' + code + '?fields=flag')
           .then(response => {
+            this.phone_code_invalid['phone' + phoneId] = false
             phoneId === 1 ? this.country1 = response.data[0].flag : this.country2 = response.data[0].flag
           })
           .catch(e => {
+            this.phone_code_invalid['phone' + phoneId] = true
           })
         },
-        focus_color (focusStatus, el) {
-          if (!this.resources['resource' + el].source.length) {
-            this.colors['el' + el] = focusStatus ? '#4b92e2' : 'rgba(41, 41, 43, 0.98)'
+        focus_color (el) {
+          this.colors['el' + el] = this.current_resource === el ? '#4b92e2' : 'rgba(41, 41, 43, 0.98)'
+        },
+        set_current (index) {
+          this.source_invalid = 0
+          if (this.current_resource === index) {
+            this.current_resource = -1
+            for (let i = 0; i < 6; i++) {
+              this.focus_color(i)
+            }
+          } else {
+            this.current_resource = index
+            for (let i = 0; i < 6; i++) {
+              this.focus_color(i)
+            }
+            this.focus_color(index)
+          }
+        },
+        setShift (day, shift, allDay = false, allShift = false) {
+          this.$store.commit('CHANGE_SHIFTS', {
+            newDay: day,
+            newShift: shift,
+            flagAllDay: allDay,
+            flagAllShift: allShift
+          })
+        },
+        save_goal () {
+          this.$store.commit('CHANGE_GOAL', this.goal_unsaved.trim())
+        },
+        change_address (field) {
+          // eslint-disable-next-line
+          let val = $('#'+field).val().trim()
+          this.$store.commit('CHANGE_HOME_ADDRESS', {
+            field,
+            content: val
+          })
+        },
+        set_fio () {
+          // eslint-disable-next-line
+          let val = $('#fio').val().trim()
+          this.$store.commit('CHANGE_FIO', val)
+        },
+        update_portfolio_link () {
+         // eslint-disable-next-line   
+          this.current_portfolio = $('#portfolio_link').val().trim()
+        },
+        update_email () {
+          // eslint-disable-next-line  
+          this.current_email = $('#email_value').val().trim()
+        },
+        set_portfolio_link () {
+          if (!this.first.portfolio) { this.first.portfolio = true }
+          if (this.validatePortfolio) { this.$store.commit('CHANGE_PORTFOLIO_LINK', this.current_portfolio) }
+        },
+        set_email () {
+          if (!this.first.email) { this.first.email = true }
+          if (this.validateEmail) { this.$store.commit('CHANGE_EMAIL', this.current_email) }
+        },
+        processPhone (num) {
+          if (!this.phone_code_invalid['phone' + num] && !this.phone_codes_local['phone' + num]) {
+            // eslint-disable-next-line     
+            let phone_code = $('#phone' + num + '_code').val().trim()
+            // eslint-disable-next-line   
+            let phone_number = $('#phone' + num + '_number').val().trim()
+            if (!this.VALID_PHONE_REG.test(phone_number)) {
+              this.phone_invalid['phone' + num] = true
+              return
+            } else {
+              this.phone_invalid['phone' + num] = false
+            }
+            if (num === 1) {
+              this.$store.commit('CHANGE_PRIMARY_PHONE', {
+                code: phone_code,
+                number: phone_number
+              })
+            } else {
+              this.$store.commit('CHANGE_SECOND_PHONE', {
+                code: phone_code,
+                number: phone_number
+              })
+            }
+          } else {
+            this.phone_code_invalid['phone' + num] = true
+          }
+        },
+        new_resource () {
+          let quantity = 0
+          this.current_resource = -1
+          // eslint-disable-next-line
+          for (let key in this.resources) {
+            quantity++
+          }
+          for (let i = 0; i < 6; i++) {
+            this.focus_color(i)
+          }
+          if (quantity < 14) {
+            if (this.resources['resource' + (quantity - 2)].role.indexOf('custom') === -1) {
+              this.$store.commit('CHANGE_ADDITIONAL_RESOURCES', {
+                createNew: true,
+                newRole: '',
+                newSource: ''
+              })
+            }
+            return
+          }
+          if (quantity < 15 && this.resources.resource14.role) {
+            this.$store.commit('CHANGE_ADDITIONAL_RESOURCES', {
+              createNew: false,
+              newRole: 'custom',
+              newSource: ''
+            })
+          }
+        },
+        set_resource (updateSource) {
+          let role = ''
+          let source = ''
+          // eslint-disable-next-line
+          role = $('#role_field').val().trim()
+          // eslint-disable-next-line
+          source = $('#link_field').val().trim()
+          if (updateSource) {
+            for (let key in this.resources) {
+              if (this.resources[key].role.indexOf(role) >= 0 && this.resources[key].role.length === role.length) {
+                this.source_invalid = 1
+              }
+            }
+          }
+          if (!this.source_invalid) {
+            this.$store.commit('CHANGE_ADDITIONAL_RESOURCES', {
+              createNew: false,
+              newRole: role,
+              newSource: source
+            })
+          }
+        },
+        readAsButton () {
+          let reader = new FileReader()
+          // eslint-disable-next-line 
+          let input = $('#profileImg_picker')[0].files[0]
+          reader.onload = (e) => {
+            this.loading = true
+            // eslint-disable-next-line
+            $('#preview_block').css({'background':'url("'+e.target.result+'") no-repeat 50% 50%','background-size':'contain'})
+            this.photo = e.target.result
+          }
+          if (input.size > this.maxFileSize && (input.type.indexOf('image/png') === -1 || input.type.indexOf('image/jpeg') === -1)) {
+            this.file_error = true
+          } else {
+            this.file_error = false
+            reader.readAsDataURL(input)
+          }
+        },
+        fileHandler (e) {
+          let reader = new FileReader()
+          this.dragClass = false
+          let file = e.dataTransfer.files[0]
+          reader.onload = (e) => {
+            this.loading = true
+            // eslint-disable-next-line
+            $('#preview_block').css({'background':'url("'+e.target.result+'") no-repeat 50% 50%','background-size':'contain'})
+            this.photo = e.target.result
+          }
+          if (file.size > this.maxFileSize && (file.type.indexOf('image/png') === -1 || file.type.indexOf('image/jpeg') === -1)) {
+            this.file_error = true
+          } else {
+            this.file_error = false
+            reader.readAsDataURL(file)
           }
         }
       },
       computed: {
+        work_type: {
+          get: function () {
+            return this.$store.state.resume.basic.work_type
+          },
+          set: function (typeIndex) {
+            this.$store.commit('CHANGE_WORK_TYPE', typeIndex)
+          }
+        },
         shifts: {
           get: function () {
-            return {
-              day1: {day: 0, evening: 0, night: 0},
-              day2: {day: 0, evening: 0, night: 0},
-              day3: {day: 0, evening: 0, night: 0},
-              day4: {day: 0, evening: 0, night: 0},
-              day5: {day: 0, evening: 0, night: 0},
-              day6: {day: 0, evening: 0, night: 0},
-              day7: {day: 0, evening: 0, night: 0}
-            }
-          },
-          set: function (value) {
-            // setter for shifts
+            return this.$store.state.resume.basic.shifts
+          }
+        },
+        goal: {
+          get: function () {
+            return this.goal_unsaved.length ? this.goal_unsaved : this.$store.state.resume.basic.goal
+          }
+        },
+        address: {
+          get: function () {
+            return this.$store.state.resume.basic.home_address
           }
         },
         sex: {
           get: function () {
-            return {man: 0, woman: 0}
+            return {
+              man: this.$store.state.resume.basic.sex.man,
+              woman: this.$store.state.resume.basic.sex.woman
+            }
           },
           set: function (value) {
+            this.$store.commit('CHANGE_SEX', value)
+          }
+        },
+        fio: {
+          get: function () {
+            return this.$store.state.resume.basic.fio
+          }
+        },
+        portfolio_link: {
+          get: function () {
+            return this.$store.state.resume.basic.portfolio_link
+          }
+        },
+        email: {
+          get: function () {
+            return this.$store.state.resume.basic.email
+          }
+        },
+        phone1: {
+          get: function () {
+            let phoneNumber = {}
+            phoneNumber.number = this.phone_numbers_local.phone1 ? this.phone_numbers_local.phone1 : this.$store.state.resume.basic.phone1.number
+            phoneNumber.code = this.phone_codes_local.code1 ? this.phone_codes_local.code1 : this.$store.state.resume.basic.phone1.code
+            return phoneNumber
+          }
+        },
+        phone2: {
+          get: function () {
+            let phoneNumber = {}
+            phoneNumber.number = this.phone_numbers_local.phone2 ? this.phone_numbers_local.phone2 : this.$store.state.resume.basic.phone2.value.number
+            phoneNumber.code = this.phone_codes_local.code2 ? this.phone_codes_local.code2 : this.$store.state.resume.basic.phone2.value.code
+            return phoneNumber
           }
         },
         resources: {
           get: function () {
-            return {
-              resource0: {role: 'instagram', source: ''},
-              resource1: {role: 'facebook', source: ''},
-              resource2: {role: 'telegram', source: ''},
-              resource3: {role: 'skype', source: ''},
-              resource4: {role: 'vk', source: ''},
-              resource5: {role: '', source: ''}
-            }
+            return this.$store.state.resume.basic.additional
+          }
+        },
+        photo: {
+          get: function () {
+            return this.$store.state.resume.basic.photo
           },
-          set: function (value) {
+          set: function (content) {
+            this.$store.commit('CHANGE_PHOTO', content)
           }
         },
         shiftsStatus () {
@@ -331,7 +580,13 @@
           return weekDs
         },
         charactersLeft () {
-          return 0
+          return 135 - this.goal.length
+        },
+        validatePortfolio () {
+          return this.VALID_WEBSITE_REG.test(this.current_portfolio)
+        },
+        validateEmail () {
+          return this.VALID_EMAIL_REG.test(this.current_email)
         }
       }
     }
@@ -369,6 +624,9 @@
 }
 table{
     tr{
+        span,image{
+            cursor: pointer;
+        }
         td:nth-child(2):not(.choosed),
         td:nth-child(3):not(.choosed),
         td:nth-child(4):not(.choosed){
@@ -390,7 +648,6 @@ table{
         }
         .isAvailable{
             color: $btn_blue_text !important;
-            font-weight: 400 !important;
         }
         .isAvailable~span{
             color: $btn_blue_text
@@ -432,12 +689,13 @@ input[type="text"]:focus~.max-length{
 .max-length{
     opacity: 0;
     position: absolute;
-    top: -15px;
-    left: 92%;
+    top: -11%;
+    left: 90%;
     color: $btn_blue_text; 
     background: white;
     font-size: 0.7vw;
     font-family: $Exo;
+    width:8%;
 }
 input[type="radio"]:checked ~ label > div,
 input[type="checkbox"]:checked ~ label > div{
@@ -504,20 +762,34 @@ input[type="checkbox"]:checked ~ label > div{
 }
 .resourse-btn:not(:last-child){
     margin-right:2.95%;
-}
-button.social_filled{
-    background:$btn_blue_text;
-    border: 1px solid $btn_blue_text; 
+    span{
+        font-family: $Roboto!important;
+        font-weight: 700 !important;
+        text-transform: uppercase;
+    }
 }
 #additional_resources button{
     vertical-align: top;
     height: 60px;
 }
-#additional_resources button:not(.new_btn):hover{
+#additional_resources button:not(.new_btn):not(:focus):not(.social_filled):hover{
     background: rgba(204, 204, 209, 0.281);
     cursor: pointer;
 }
-
+button.social_filled{
+    background:$btn_blue_text;
+    border: 1px solid $btn_blue_text;
+    color:white;
+}
+button.social_filled:hover{
+    cursor: pointer;
+    background: $blue_filled_hover;
+    border: 1px solid $blue_filled_hover;
+}
+#resource_form{
+    animation: appear 0.3s forwards;
+    overflow: hidden;
+}
 #resource_form #link_icon{
     display:flex;
     align-items: center;
@@ -527,20 +799,20 @@ button.social_filled{
     justify-content: center;
     z-index: 1;
 }
-#link-field{
+#link_field{
     margin-left: -1px;
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
     background: white;
 }
-#link-field:focus{
+#link_field:focus{
     border: 1px solid $block_grey_outline
 }
 .active_link{
     background: $btn_blue_text; 
     border: 1px solid $btn_blue_text; 
 }
-.active_link~#link-field:focus{
+.active_link~#link_field:focus{
     border: 1px solid $btn_blue_text;
 }
 .new_btn{
@@ -549,11 +821,24 @@ button.social_filled{
     color: $paragraphcolor;
     transition: 0.1s;
 }
+#additional_resources button:focus,
 .new_btn:hover{
     cursor: pointer;
     border: 1px solid $btn_blue_outline;
     background: $btn_blue_inactive;
     color:$btn_blue_text;
+}
+.focused{
+    border: 1px solid $btn_blue_outline !important;
+    background: $btn_blue_inactive  !important;
+    color:$btn_blue_text !important;
+}
+.new_btn:focus{
+    background: white !important;
+    border:1px dashed $block_grey_outline !important;
+    color: $main_black!important;
+    outline:none;
+    transition: 0.1s;
 }
 label[for="profileImg_picker"]{
     background: none;
@@ -586,15 +871,30 @@ label[for="profileImg_picker"]:hover{
         align-items: center;
     }
 }
+.drag_zone{
+    span{
+    color: $btn_blue_text !important;
+    }
+    .simple-svg-wrapper{
+      position: relative;  
+      animation: bounce 3s infinite;
+      animation-delay: 0.5s;
+    }
+    border: 1px dashed $btn_blue_text !important;
+}
 @media (max-width: 990px) and (min-width: 768px){
     @include flag_inputs;
     #phone2 input:nth-child(2)~label{
         left: 12%
     }
+    .max-length{
+     font-size: 1vw;
+    }
 }
 @media (max-width: 767px) {
     .phone-style:last-child{
         label{
+            top:25%;
             left: 4%
         }
         input:first-child:focus~label{
@@ -606,6 +906,11 @@ label[for="profileImg_picker"]:hover{
     label[for="profileImg_picker"] > span[data-v-0f1af499]{
         font-size: 3vw
     }
+    .max-length{
+     font-size: 1.5vw;
+     width: 15%;
+     left: 82%;
+    }
 }
 @media (max-width: 545px) {
     @include flag_inputs;
@@ -614,6 +919,12 @@ label[for="profileImg_picker"]:hover{
     }
     #phone2 input:nth-child(2)~label{
         left: 7%
+    }
+    .max-length{
+     font-size: 2.3vw;
+     top:-12%;
+     width: 15%;
+     left: 82%;
     }
 }
 @media (max-width: 514px){
@@ -640,5 +951,33 @@ label[for="profileImg_picker"]:hover{
         }
 
     }
+}
+@keyframes appear{
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@keyframes bounce {
+   0%{
+       top: 0px
+   }
+   5%{
+       top:10px;
+   }
+   10%{
+       top:0px
+   }
+   15%{
+       top:10px
+   }
+   20%{
+       top:0px
+   }
+   100%{
+       top:0px
+   }
 }
 </style>
