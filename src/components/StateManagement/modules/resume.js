@@ -1,3 +1,4 @@
+import Vue from 'vue'
 export default {
   state: {
     preferences: {
@@ -34,7 +35,10 @@ export default {
         not_required: true
       },
       fio: '',
-      portfolio_link: '',
+      portfolio_link: {
+        value: '',
+        not_required: true
+      },
       email: '',
       phone1: { code: '', number: '' },
       phone2: {
@@ -52,7 +56,23 @@ export default {
       photo: '',
       validated: false
     },
-    education: {},
+    education: {
+      schools: {
+        school0: {
+          name: 'rgdfsgds',
+          major: 'hgjjk',
+          beginYear: '',
+          endYear: { 
+            val: '',
+            not_required: false
+          },
+          degreeType: '',
+          correct: false,
+          inProgress: false,
+        }
+      },
+      validated: false
+    },
     skills: {},
     experience: {},
     additional: {}
@@ -89,29 +109,57 @@ export default {
       state.preferences.hours = value
     },
     VALIDATE_STEP: function (state, step) {
+      let isValue
       for (let property in state[step]) {
-        let isValue = 0
-        for (let value in state[step][property]) {
-          if (typeof (state[step][property]) !== 'string' && typeof state[step][property][value] === 'object') {
-            for (let subValue in state[step][property][value]) {
-              if (state[step][property][value][subValue] || state[step][property][value].source) {
+        if (state[step][property].not_required || property === 'validated') {
+          continue
+        }
+        isValue = 0
+        if (typeof state[step][property] === 'object' && !Array.isArray(state[step][property])) {
+          for (let value in state[step][property]) {
+            if (typeof state[step][property][value] === 'object') {
+              if (!state[step][property][value] && value.indexOf('resource') === -1) {
+                state[step].validated = false
+                return
+              }
+              if (state[step][property][value].source && value.indexOf('resource') >= 0) {
                 isValue = 1
                 break
               }
-              if (state[step][property].not_required) {
-                continue
-              } else if (!isValue) {
-                state[step].validated = false
-                return
-              } else {
-                state[step].validated = true
-                return
+              if (value.indexOf('resource') === -1 && property.indexOf('school') === -1) {
+                for (let subValue1 in state[step][property][value]) {
+                  if (state[step][property][value][subValue1] || state[step][property][value].source) {
+                    isValue = 1
+                    break
+                  }
+                }
+              }
+              if(property.indexOf('school') !== -1){
+                for (let subValue2 in state[step][property][value]) {
+                  if (state[step][property][value][subValue2]) {
+                    isValue = 1
+                  } else {
+                    isValue = 0
+                    break
+                  }
+                }
               }
             }
+            if (typeof state[step][property][value] === 'string') {
+              isValue = state[step][property][value].length > 0
+            }
+          }
+          if (!isValue) {
+            state[step].validated = false
+            return
+          } else {
+            if(property.indexOf('school') >= 0 ){
+              state[step].validated = true
+            }
+            continue
           }
         }
-        if (property.indexOf('validated') > 0 || state[step][property].not_required) { continue }
-        if (state[step][property].length && typeof (state[step][property]) !== 'string') {
+        if (state[step][property].length && typeof state[step][property] !== 'string') {
           if (!state[step][property].filter(value => { return value }).length) {
             state[step].validated = false
             return
@@ -119,7 +167,7 @@ export default {
             state[step].validated = true
           }
         } else {
-          state[step].validated = (state[step][property].length === 1 ? !!parseInt(state[step][property]) : !!state[step][property])
+          state[step].validated = !!state[step][property]
           if (!state[step].validated) { return }
         }
       }
@@ -172,7 +220,7 @@ export default {
       state.basic.fio = value
     },
     CHANGE_PORTFOLIO_LINK: function (state, value) {
-      state.basic.portfolio_link = value
+      state.basic.portfolio_link.value = value
     },
     CHANGE_EMAIL: function (state, value) {
       state.basic.email = value
@@ -197,18 +245,43 @@ export default {
           state.basic.additional['resource' + quantity] = {role: '', source: ''}
         }
         return
+      }else{
+        Vue.set(state.basic.additional['resource' + value.index], 'source', value.newSource)
+        Vue.set(state.basic.additional['resource' + value.index], 'role', value.newRole)
       }
-      for (let resource in state.basic.additional) {
-        if (state.basic.additional[resource].role.indexOf(value.newRole) >= 0 && state.basic.additional[resource].role.length === value.newRole.length) {
-          state.basic.additional[resource].source = value.newSource
-          return
-        }
-      }
-      state.basic.additional['resource' + (quantity - 2)].role = value.newRole
-      state.basic.additional['resource' + (quantity - 2)].source = value.newSource
     },
     CHANGE_PHOTO: function (state, photoData) {
       state.basic.photo = photoData
+    },
+
+    // мутации Образование
+
+    CHANGE_SCHOOL_DATA: function (state, schoolData) {
+      if (schoolData.property === 'inProgress') {
+        state.education.schools['school' + schoolData.number].endYear.not_required = schoolData.value
+        state.education.schools['school' + schoolData.number].endYear.val = ''
+      }
+      if (schoolData.property !== 'endYear') {
+        state.education.schools['school' + schoolData.number][schoolData.property] = schoolData.value
+      } else {
+        state.education.schools['school' + schoolData.number].endYear.val = schoolData.value
+      }
+    },
+    ADD_NEW_SCHOOL: function (state) {
+      let length = Object.keys(state.education.schools).length
+      let content = {
+        name: '',
+        major: '',
+        beginYear: '',
+        endYear: { 
+          val: '',
+          not_required: false
+        },
+        degreeType: '',
+        correct: false,
+        inProgress: false,
+      }
+      Vue.set(state.education.schools, 'school' + length, content)
     }
   }
 }

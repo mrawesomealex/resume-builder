@@ -159,7 +159,7 @@
             <div class="container-fluid"> 
                 <div class="row pl-0">
                     <div class="phone-style col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-0 pr-0 mb-4" id="phone1">
-                        <input id="phone1_code" :class="['country-code py-3 mr-0 block_neutral',{'pl-4' : !country1}, {error : phone_code_invalid.phone1 || (!phone1.code && status.step1.error)}]" type="tel" placeholder="+ Код" @change="get_country_code(1)" v-model="phone_codes_local.code1"/><input id="phone1_number" :class="['block_neutral col-9 pl-4 py-3', {error: phone_invalid.phone1 || (!phone2.number && status.step1.error)}]" type="tel"  placeholder="Мобильный тел." @change="processPhone(1)" v-model="phone_numbers_local.phone1"/>
+                        <input id="phone1_code" :class="['country-code py-3 mr-0 block_neutral',{'pl-4' : !country1}, {error : phone_code_invalid.phone1 || (!phone1.code && status.step1.error)}]" type="tel" placeholder="+ Код" @change="get_country_code(1)" v-model="phone_codes_local.code1"/><input id="phone1_number" :class="['block_neutral col-9 pl-4 py-3', {error: phone_invalid.phone1 || (!phone1.number && status.step1.error)}]" type="tel"  placeholder="Мобильный тел." @change="processPhone(1)" v-model="phone_numbers_local.phone1"/>
                         <label v-if="country1" for="phone1_code">
                             <img class="flag" :src="country1" width="25px"/>
                         </label>
@@ -177,21 +177,21 @@
         <h6>Используйте кнопки "+" для добавление дополнительных ресурсов к вашему резюме</h6>        
         <div id="additional_resources" class="row input-group px-0 pb-3"> 
             <div class="container-fluid px-0 mb-4 pb-3 text-xl-left text-lg-left text-md-left text-sm-center text-center">
-                <button @click="resource.role ? set_current(index) : new_resource()" v-for="(resource,key,index) in resources" :key="key" :class="['mb-4  py-3 px-4 resourse-btn block_neutral',{'mr-3':index < 13},{social_filled: resource.source},{new_btn: !resource.role},{focused: index === current_resource}]">
+                <button @click="resource.role ? set_current(index) : new_resource()" v-for="(resource,key,index) in resources" :key="resource.role" :class="['mb-4  py-3 px-4 resourse-btn block_neutral',{'mr-3':index < 13},{social_filled: resource.source},{new_btn: !resource.role},{focused: index === current_resource}]">
                     <span class="px-1" v-if="!resource.role">+</span>
                     <span class="px-1" v-if="resource.role && index > 4">{{resource.role.substr(0,2)}}</span>
                     <simple-svg v-if="index < 5" class="d-flex mx-auto my-auto" :stroke="'none'" :fill="resource.source && index !== current_resource ? 'white' : colors['el'+index] " :filepath="require('@/assets/step_icons/'+svg_socials[index]+'.svg')" :width="'20px'" :height="'20px'" />
                 </button>
                 <div v-if="resources['resource'+current_resource] && resources['resource'+current_resource].role" id="resource_form" class="container-fluid my-4">
                     <div class="row">
-                        <input id="role_field" :class="['col-xl-6 col-lg-6 col-md-7 col-sm-12 col-12 block_neutral py-3 pl-4 mb-4',{error: source_invalid}]" type="text" placeholder="Название ресурса" maxlength="60" :value="resources['resource'+current_resource].role" @change="set_resource(true)"/>
+                        <input id="role_field" :class="['col-xl-6 col-lg-6 col-md-7 col-sm-12 col-12 block_neutral py-3 pl-4 mb-4',{error: source_invalid}]" type="text" placeholder="Название ресурса" maxlength="60" :value="resources['resource'+current_resource].role" @change="set_resource(true, current_resource)"/>
                     </div>
                     <div class="container-fluid col-xl-10 col-lg-12 col-md-12 col-sm-12 px-0 mr-0 ml-0">
                     <div class="row">  
                             <label id="link_icon" for="link_field" :class="['block_neutral col-xl-1 col-lg-1 col-md-1 col-sm-2 col-2 mb-0 pt-1',{active_link : resources['resource'+current_resource].source }]">
                                 <simple-svg :stroke="'none'" :fill="resources['resource'+current_resource].source ? 'white' : 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/link.svg')" :width="'20px'" :height="'20px'"/>
                             </label>
-                            <input id="link_field" class="col-xl-11 col-lg-11 col-md-11 col-sm-10 col-10 block_neutral py-3 pl-4" type="text" placeholder="Введите адрес ресурса" :value="resources['resource'+current_resource].source"  @change="set_resource(false)"/>
+                            <input id="link_field" class="col-xl-11 col-lg-11 col-md-11 col-sm-10 col-10 block_neutral py-3 pl-4" type="text" placeholder="Введите адрес ресурса" :value="resources['resource'+current_resource].source"  @change="set_resource(false, current_resource)"/>
                     </div>
                     </div>
                 </div>
@@ -290,19 +290,16 @@
           this.phone_numbers_local.phone2 = this.phone2.number
         }
         if (this.photo) {
-          // eslint-disable-next-line  
-          $('#preview_block').css({'background':'url("'+this.photo+'") no-repeat 50% 50%','background-size':'contain'})
+          $('#preview_block').css({'background': 'url("' + this.photo + '") no-repeat 50% 50%', 'background-size': 'contain'})
         }
       },
       methods: {
         get_country_code: function (phoneId) {
           phoneId === 1 ? this.country1 = '' : this.country2 = ''
-          // eslint-disable-next-line
-          let code = $('#phone' + phoneId + '_code').val().trim() 
+          let code = $('#phone' + phoneId + '_code').val().trim()
           if (code.indexOf('+') >= 0) {
             code = code.substr(1)
           }
-          // eslint-disable-next-line 
           axios.get('https://restcountries.eu/rest/v2/callingcode/' + code + '?fields=flag')
           .then(response => {
             this.phone_code_invalid['phone' + phoneId] = false
@@ -342,24 +339,20 @@
           this.$store.commit('CHANGE_GOAL', this.goal_unsaved.trim())
         },
         change_address (field) {
-          // eslint-disable-next-line
-          let val = $('#'+field).val().trim()
+          let val = $('#' + field).val().trim()
           this.$store.commit('CHANGE_HOME_ADDRESS', {
             field,
             content: val
           })
         },
         set_fio () {
-          // eslint-disable-next-line
           let val = $('#fio').val().trim()
           this.$store.commit('CHANGE_FIO', val)
         },
         update_portfolio_link () {
-         // eslint-disable-next-line   
           this.current_portfolio = $('#portfolio_link').val().trim()
         },
         update_email () {
-          // eslint-disable-next-line  
           this.current_email = $('#email_value').val().trim()
         },
         set_portfolio_link () {
@@ -372,11 +365,9 @@
         },
         processPhone (num) {
           if (!this.phone_code_invalid['phone' + num] && !this.phone_codes_local['phone' + num]) {
-            // eslint-disable-next-line     
-            let phone_code = $('#phone' + num + '_code').val().trim()
-            // eslint-disable-next-line   
-            let phone_number = $('#phone' + num + '_number').val().trim()
-            if (!this.VALID_PHONE_REG.test(phone_number)) {
+            let phoneCode = $('#phone' + num + '_code').val().trim()
+            let phoneNumber = $('#phone' + num + '_number').val().trim()
+            if (!this.VALID_PHONE_REG.test(phoneNumber)) {
               this.phone_invalid['phone' + num] = true
               return
             } else {
@@ -384,13 +375,13 @@
             }
             if (num === 1) {
               this.$store.commit('CHANGE_PRIMARY_PHONE', {
-                code: phone_code,
-                number: phone_number
+                code: phoneCode,
+                number: phoneNumber
               })
             } else {
               this.$store.commit('CHANGE_SECOND_PHONE', {
-                code: phone_code,
-                number: phone_number
+                code: phoneCode,
+                number: phoneNumber
               })
             }
           } else {
@@ -400,7 +391,7 @@
         new_resource () {
           let quantity = 0
           this.current_resource = -1
-          // eslint-disable-next-line
+          // eslint-disable-next-line 
           for (let key in this.resources) {
             quantity++
           }
@@ -425,12 +416,10 @@
             })
           }
         },
-        set_resource (updateSource) {
+        set_resource (updateSource, i) {
           let role = ''
           let source = ''
-          // eslint-disable-next-line
           role = $('#role_field').val().trim()
-          // eslint-disable-next-line
           source = $('#link_field').val().trim()
           if (updateSource) {
             for (let key in this.resources) {
@@ -443,18 +432,17 @@
             this.$store.commit('CHANGE_ADDITIONAL_RESOURCES', {
               createNew: false,
               newRole: role,
-              newSource: source
+              newSource: source,
+              index: i
             })
           }
         },
         readAsButton () {
           let reader = new FileReader()
-          // eslint-disable-next-line 
           let input = $('#profileImg_picker')[0].files[0]
           reader.onload = (e) => {
             this.loading = true
-            // eslint-disable-next-line
-            $('#preview_block').css({'background':'url("'+e.target.result+'") no-repeat 50% 50%','background-size':'contain'})
+            $('#preview_block').css({'background': 'url("' + e.target.result + '") no-repeat 50% 50%', 'background-size': 'contain'})
             this.photo = e.target.result
           }
           if (input.size > this.maxFileSize && (input.type.indexOf('image/png') === -1 || input.type.indexOf('image/jpeg') === -1)) {
@@ -470,8 +458,7 @@
           let file = e.dataTransfer.files[0]
           reader.onload = (e) => {
             this.loading = true
-            // eslint-disable-next-line
-            $('#preview_block').css({'background':'url("'+e.target.result+'") no-repeat 50% 50%','background-size':'contain'})
+            $('#preview_block').css({'background': 'url("' + e.target.result + '") no-repeat 50% 50%', 'background-size': 'contain'})
             this.photo = e.target.result
           }
           if (file.size > this.maxFileSize && (file.type.indexOf('image/png') === -1 || file.type.indexOf('image/jpeg') === -1)) {
@@ -524,7 +511,7 @@
         },
         portfolio_link: {
           get: function () {
-            return this.$store.state.resume.basic.portfolio_link
+            return this.$store.state.resume.basic.portfolio_link.value
           }
         },
         email: {

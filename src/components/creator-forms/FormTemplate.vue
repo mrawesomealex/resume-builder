@@ -4,22 +4,27 @@
         <div id="content" class="row">
            <div class="container pt-5">
                  <nav id="navigation" class="white_block row ">
-                 <a @click="Change(key, step, 1)"
-                    v-for="(item,key) in nav_links" :key="key"
-                    :class="['col-2', { current: steps['step'+key].current, 
-                                        done: steps['step'+key].done, 
-                                        form_error: steps['step'+key].error,
-                                        'no-border': steps['step'+(key+1)] ? ((steps['step'+key].error &&  steps['step'+(key+1)].error) || (steps['step'+key].done &&  steps['step'+(key+1)].done)) && !steps['step'+key].current && !steps['step'+(key+1)].current : false
-                }]">
+                    <a @click="Change(key, step, 1)"
+                        v-for="(item,key) in nav_links" :key="key"
+                        :class="['col-2', { current: steps['step'+key].current, 
+                                            done: steps['step'+key].done, 
+                                            form_error: steps['step'+key].error,
+                                            'no-border': steps['step'+(key+1)] ? ((steps['step'+key].error &&  steps['step'+(key+1)].error) || (steps['step'+key].done &&  steps['step'+(key+1)].done)) && !steps['step'+key].current && !steps['step'+(key+1)].current : false
+                    }]">
                         <div v-if="!steps['step'+key].done" :class="item.class"></div>
                         <img v-if="steps['step'+key].done" src="../../assets/step_icons/check.svg"/>
                         <span class="d-xl-inline d-lg-inline d-md-inline d-sm-none d-none">{{item.content}}</span>
                     </a>                                         
                 </nav>
                 <div id="wrap"></div>
-                <div id="form" class="row white_block pt-0">
-                    <h3  v-for="(item,key) in nav_links" :key="key" v-if="steps['step'+key].current" class="container-fluid d-xl-none d-lg-none d-md-none d-sm-block d-block">{{item.content}}</h3>
-                    <div class="d-flex">
+                <div id="form" class="row white_block">
+                    <h3  @click="Open_Menu()"  v-for="(item,key) in nav_links" :key="key" v-if="steps['step'+key].current" :class="['container-fluid d-xl-none d-lg-none d-md-none d-sm-flex d-flex text-left py-0', {menuOpen: mobile_subMenu},{fixed: fixedSub}]">
+                        <header class="container-fluid d-flex  px-3 pt-sm-2 py-4 align-middle">
+                            <simple-svg class="d-flex open-menu ml-3 mr-2" :stroke="'none'" fill="#4b92e2" :filepath="require('@/assets/step_icons/menu.svg')" :width="'25px'" :height="'25px'"/>
+                            <span class="d-flex ml-0">{{item.content}}</span>
+                        </header>
+                    </h3>
+                    <div class="d-flex pt-xl-0 pt-lg-0 pt-md-0 pt-sm-5 mt-5 mt-xl-0 mt-lg-0 mt-md-0 mt-sm-5 mt-5">
                         <input id="open-menu" class="d-none" type="checkbox">
                         <div id="menu-trigger" :class="['d-xl-flex d-lg-flex d-md-flex d-sm-none d-none',
                                                        {menu_current : steps['step'+step].current && !steps['step'+step].error && !steps['step'+step].done },
@@ -53,31 +58,51 @@ export default {
           {class: 'star', content: 'Навыки', path: '/creator/skills'},
           {class: 'time', content: 'Опыт работы', path: '/creator/experience'},
           {class: 'plus', content: 'Прочее', path: '/creator/additional'}
-      ]
+      ],
+      mobile_subMenu: false,
+      fixedSub: false
     }
   },
   methods: {
     Change: function (k, last, type) {
+      let isValidated
+      let firstError = -1
       if (k === last) { return }
-      let isValidated = this.Validate(last)
-      if (isValidated || type) {
+      if (k < last) {
+        isValidated = this.Validate(k)
+      }
+      for (let i = k - 1; i >= 0; i--) {
+        isValidated = this.Validate(i)
+        if (!isValidated) {
+          firstError = i
+        }
+      }
+      if ((isValidated && firstError === -1) || type) {
         this.$store.commit('CHANGE_STEP', {
           from: last,
           next: k
         })
         this.$router.replace(this.nav_links[k].path)
+      } else {
+        this.$store.commit('CHANGE_STEP', {
+          from: last,
+          next: firstError
+        })
+        this.$router.replace(this.nav_links[firstError].path)
       }
       this.$scrollTo('#content')
     },
     Validate: function (k) {
       let step = this.nav_links[k].path.substr(9)
-      this.$store.commit('VALIDATE_STEP', step)
-      if (this.$store.state.resume[step].validated) {
-        this.$store.commit('CHANGE_DONE', k)
-        return true
-      } else {
-        this.$store.commit('CHANGE_ERROR', k)
-        return false
+      if (!this.$store.state.resume[step].validated) {
+        this.$store.commit('VALIDATE_STEP', step)
+        if (this.$store.state.resume[step].validated) {
+          this.$store.commit('CHANGE_DONE', k)
+          return true
+        } else {
+          this.$store.commit('CHANGE_ERROR', k)
+          return false
+        }
       }
     },
     OpenMain: function () {
@@ -87,6 +112,9 @@ export default {
       if (document.getElementById('open-menu').checked) {
         document.getElementById('open-menu').checked = false
       }
+    },
+    Open_Menu: function () {
+      this.mobile_subMenu = !this.mobile_subMenu
     }
   },
   beforeCreate: function () {
@@ -94,15 +122,21 @@ export default {
   },
   created: function () {
     window.addEventListener('scroll', () => {
-      // eslint-disable-next-line   
+      this.fixedSub = false
       let scroll = $(window).scrollTop()
-      if (scroll >= 140) {
-        // eslint-disable-next-line 
-        $('#btn-open').addClass('fixed')
+      if (scroll >= 137 && $(window).width() > 575) {
+        let width = $('#form').width()
+        $('#form>h3').width(width)
+        this.fixedSub = true
       } else {
-        // eslint-disable-next-line 
-        $('#btn-open').removeClass('fixed')
+        if (scroll > 1500 && $(window).width() < 575 && !$('#form>h3').hasClass('hideBlock')) {
+          $('#form>h3').addClass('hideBlock')
+        } else if (scroll < 1500 && $('#form>h3').hasClass('hideBlock')) {
+          $('#form>h3').removeClass('hideBlock')
+        }
+        this.fixedSub = false
       }
+      scroll >= 140 ? $('#btn-open').addClass('fixed') : $('#btn-open').removeClass('fixed')
     })
   },
   computed: {
@@ -143,6 +177,14 @@ export default {
 @import "../../assets/styles/global";
 
 $button-grey: #fcfcfc;
+.hideBlock{
+    top: 141.031px;
+    animation: top 0.3s forwards;
+}
+.open-menu{
+    justify-self:flex-end; 
+    transition: 0.3s;
+}
 #menu-trigger{
     flex-direction: column;
     z-index: 3;
@@ -167,21 +209,21 @@ input[type="checkbox"]:checked~#menu-trigger{
    background: $btn_red_inactive;
 }
 input[type="checkbox"]:checked~#menu-trigger.menu_error{
-   box-shadow: 11px 7px 10px $btn_red_inactive inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset;
+   box-shadow: 11px 7px 10px $btn_red_inactive inset,0px -10px 10px $btn_red_inactive inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset ;
 }
 
 .menu_current{
    background: $btn_blue_inactive;
 }
 input[type="checkbox"]:checked~#menu-trigger.menu_current{
-   box-shadow: 11px 7px 10px $btn_blue_inactive inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset;
+   box-shadow: 11px 7px 10px $btn_blue_inactive inset,0px -10px 10px $btn_blue_inactive inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset ;
 }
 
 .menu_complete{
    background: #f2fff8;
 }
 input[type="checkbox"]:checked~#menu-trigger.menu_complete{
-   box-shadow: 11px 7px 10px #f2fff8 inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset;
+   box-shadow: 11px 7px 10px #f2fff8 inset,0px -10px 10px #f2fff8 inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset;
 }
 
 .fixed{
@@ -190,16 +232,50 @@ input[type="checkbox"]:checked~#menu-trigger.menu_complete{
     height: 100%;
     transition: min-width 0s;
 }
-
+h3.fixed{
+    height: 100px;
+    transition: 0.3s;
+}
+h3.fixed.menuOpen{
+    width:inherit;
+    height: 310px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
 
     h3{
+        position: absolute;
+        z-index: 3;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
         font-family: $Exo;
         text-align: center;
         font-weight: 400;
+        height: 100px;
         color:$btn_blue_text;
         padding : 7% 0px;
         border-bottom: 1px solid $divider;
         background:$button-grey; 
+        transition: 0.3s;
+        header{
+            height: 110.63px !important;
+            margin-right: 32.5vw !important;
+            width:inherit;
+            span{
+                animation: appear 0.3s forwards;
+            }
+        }
+        .simple-svg-wrapper{
+            padding: 15px;
+            border-radius: 100%;
+        }
+    }
+    h3.menuOpen:not(.fixed){
+        height: 84vh;
+        header{
+            height: 25%;
+            transition-delay: 0.3s;
+        }
     }
     a:hover{
         text-decoration: none;
@@ -426,6 +502,7 @@ input[type="checkbox"]:checked~#menu-trigger.menu_complete{
         }
     }
     @media (max-width: 768px){
+
         nav{
             div{
                 width: 32px;
@@ -440,6 +517,9 @@ input[type="checkbox"]:checked~#menu-trigger.menu_complete{
         #form{ 
             margin-top: 8vh;
             box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+        }
+        .step{
+           margin-top: 6vh; 
         }
         #controls{
             display: flex;
@@ -457,11 +537,15 @@ input[type="checkbox"]:checked~#menu-trigger.menu_complete{
             position: fixed;
             width: 100%;
             top:4vh;
-            z-index: 2;
+            z-index: 4;
             border-top: none !important;
             border-left:none !important;
             border-right: none !important;
             box-shadow: 0 1px 10px 0px rgba($color: #000000, $alpha: 0.1);
+        }
+        h3{
+            position: fixed;
+            left:0px
         }
     }
     @media (max-width: 320px){
@@ -469,6 +553,23 @@ input[type="checkbox"]:checked~#menu-trigger.menu_complete{
             a{
                 padding: 0;
             }
+        }
+    }
+    @keyframes appear {
+        0%{
+            opacity: 0;
+        }
+        100%{
+            width: 100%;
+            opacity: 1;
+        }
+    }
+    @keyframes top {
+        0%{
+           top: 141.031px;
+        }
+        100%{ 
+            top: 65px;
         }
     }
 </style>

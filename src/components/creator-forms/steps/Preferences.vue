@@ -136,7 +136,6 @@ export default {
   props: ['status'],
   methods: {
     update_area: function () {
-      // eslint-disable-next-line
       let content = $('#w_area_field').val()
       content = content.trim()
       if (this.area.length === 0 && content.length !== 0) {
@@ -158,11 +157,9 @@ export default {
       }
     },
     choose_salary: function () {
-      // eslint-disable-next-line
       this.min_salary = $('#salary').val()
     },
     choose_hours: function () {
-      // eslint-disable-next-line
       this.hours = $('#hours').val()
     },
     change_max_wt: function (newTerm) {
@@ -245,7 +242,6 @@ export default {
         return this.val.length === 0 || this.$store.state.resume.preferences.area ? this.$store.state.resume.preferences.area : this.val
       },
       set: function (value) {
-        // eslint-disable-next-line
         $('#w_area_field').val(value)
         this.$store.commit('CHANGE_AREA', value)
       }
