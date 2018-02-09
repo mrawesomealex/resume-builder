@@ -59,8 +59,8 @@ export default {
     education: {
       schools: {
         school0: {
-          name: 'rgdfsgds',
-          major: 'hgjjk',
+          name: '',
+          major: '',
           beginYear: '',
           endYear: { 
             val: '',
@@ -136,6 +136,7 @@ export default {
               }
               if(property.indexOf('school') !== -1){
                 for (let subValue2 in state[step][property][value]) {
+                  if(subValue2 === 'inProgress') {continue}
                   if (state[step][property][value][subValue2]) {
                     isValue = 1
                   } else {
@@ -282,6 +283,21 @@ export default {
         inProgress: false,
       }
       Vue.set(state.education.schools, 'school' + length, content)
+    },
+    REMOVE_SCHOOL: function (state, school){
+      Vue.delete(state.education.schools, school)
+    }
+  },
+  actions: {
+    removeSchool ({commit, state}, school) {
+      return new Promise((resolve, reject) => {
+        if (Object.keys(state.education.schools).length > 1) {
+          commit('REMOVE_SCHOOL',school)
+          resolve()
+        } else {
+          reject()
+        }
+      })
     }
   }
 }

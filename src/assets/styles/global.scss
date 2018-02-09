@@ -147,6 +147,13 @@ a{
     transition: 0.3s;
     letter-spacing: 0.1px !important;
 }
+.errorColor{
+    color: $active !important;
+    background: $btn_red_inactive !important;
+    span {
+        color: $active !important; 
+    }
+}
 .error{
     position: relative;
     border: 1px solid $btn_red_outline !important;
@@ -162,7 +169,16 @@ a{
     }
 }
 .error:hover{
-    background: $btn_red_inactive !important;
+    background: $btn_red_inactive;
+}
+input[type="number"]::-webkit-inner-spin-button{
+    display: none;
+}
+input[type="range"] ~ label,
+input[type="checkbox"] ~ label{
+    div.error:hover{
+        background: $btn_blue_text !important;
+    }
 }
 .error~span{
     color: $active
@@ -350,6 +366,7 @@ input[type="checkbox"] {
 @media (max-width: 1200px) {
     label>span,
     .login span,
+    .remove span,
     .sign_up span{
       font-size: 1.1vw;
     }
@@ -359,8 +376,12 @@ input[type="checkbox"] {
     }
   }
   @media (max-width: 992px) {
+    .errorMessage{
+      font-size: 1.4vw;
+    }
     label>span,
     .login span,
+    .remove span,
     .sign_up span {
       font-size: 1.5vw;
     }
@@ -376,8 +397,12 @@ input[type="checkbox"] {
     }
   }
   @media (max-width: 768px) {
+    .errorMessage{
+        font-size: 1.8vw;
+    }
     label>span,
     .login span,
+    .remove span,
     .sign_up span {
       font-size: 2.0vw;
     }
@@ -395,8 +420,12 @@ input[type="checkbox"] {
     
   }
   @media (max-width: 570px) {
+    .errorMessage{
+        font-size: 3vw;
+      }
     label>span,
     .login span,
+    .remove span,
     .sign_up span {
       font-size: 2.9vw;
       letter-spacing: 0px;
@@ -410,13 +439,16 @@ input[type="checkbox"] {
             font-size: 4.2vw;
         }
         .login span,
+        .remove span,
         .sign_up span {
             font-size: 4vw;
         }
         label{
             display: flex
         }
-        .login, .sign_up{
+        .login,
+        .remove,
+        .sign_up{
             z-index: 300 !important;
             .wrap_block>div,
             .wrap_block>div{

@@ -1,6 +1,7 @@
 <template>
     <div class="container-fluid">
         <creator-header @RequestMain="OpenMain"></creator-header>
+        <confirm-window @closeRemoveWindow ="CancelRemove()" :removeItem="rItem"  v-if="confirmOpen"></confirm-window> 
         <div id="content" class="row">
            <div class="container pt-5">
                  <nav id="navigation" class="white_block row ">
@@ -33,7 +34,7 @@
                                 <simple-svg class="d-flex" :stroke="'none'" :fill="menu_btn_status" :filepath="require('@/assets/step_icons/menu.svg')" :width="'25px'" :height="'25px'"/>
                             </label>
                         </div>
-                        <router-view :status="steps" class="pt-5 pl-xl-5 pl-lg-4 pl-md-4 pr-5 pl-sm-4 pl-4 "></router-view>
+                        <router-view @remove="Confirmation($event)" :status="steps" class="pt-5 pl-xl-5 pl-lg-4 pl-md-4 pr-5 pl-sm-4 pl-4 "></router-view>
                     </div>
                     <div id="controls" class="container-fluid py-4">
                         <button :disabled="steps.step0.current ? true : false" @click="Change(previous, step, 1)" class="button blue"><a>Предыдущий шаг</a></button>
@@ -47,6 +48,7 @@
 
 <script>
 import CreatorHeader from '@/components/creator-forms/UnregAppHead'
+import ConfirmWindow from '@/components/creator-forms/Confirmation'
 
 export default {
   data: function () {
@@ -59,11 +61,21 @@ export default {
           {class: 'time', content: 'Опыт работы', path: '/creator/experience'},
           {class: 'plus', content: 'Прочее', path: '/creator/additional'}
       ],
+      confirmOpen: false,
+      rItem: '',
       mobile_subMenu: false,
       fixedSub: false
     }
   },
   methods: {
+    CancelRemove: function () {
+      this.confirmOpen = !this.confirmOpen
+      this.rItem = ''
+    },
+    Confirmation: function (arg) {
+      this.rItem = arg
+      this.confirmOpen = !this.confirmOpen
+    },
     Change: function (k, last, type) {
       let isValidated
       let firstError = -1
@@ -103,6 +115,8 @@ export default {
           this.$store.commit('CHANGE_ERROR', k)
           return false
         }
+      }else{
+          return true
       }
     },
     OpenMain: function () {
@@ -168,7 +182,8 @@ export default {
     }
   },
   components: {
-    CreatorHeader
+    CreatorHeader,
+    ConfirmWindow
   }
 }
 </script>
