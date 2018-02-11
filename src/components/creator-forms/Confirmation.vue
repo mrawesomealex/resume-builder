@@ -25,25 +25,28 @@ export default {
       isRemovable: ''
     }
   },
-  props:['removeItem'],
+  props: ['removeItem'],
   methods: {
-    Remove() {
-      let result;
-      if (this.removeItem.step === 'education'){
-        result = this.$store.dispatch('removeSchool',this.removeItem.property)
+    Remove () {
+      let result
+      if (this.removeItem.step === 'education') {
+        result = this.$store.dispatch('removeSchool', this.removeItem.property)
+      }
+      if (this.removeItem.step === 'skills') {
+        result = this.$store.dispatch('removeSkill', this.removeItem.property)
       }
       result.then(() => {
-          this.isRemovable = false
-          this.$emit('closeRemoveWindow')
+        this.isRemovable = false
+        this.$emit('closeRemoveWindow')
       }).catch(() => {
-          this.isRemovable = true
+        this.isRemovable = true
       })
     },
     Close: function (e) {
       if (e.target.className === 'wrap_block' || e.target.id === 'close-btn' || e.target.id === 'cancel') {
         this.$emit('closeRemoveWindow')
       }
-    },      
+    }
   }
 }
 </script>

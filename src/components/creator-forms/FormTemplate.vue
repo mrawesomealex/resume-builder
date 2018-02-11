@@ -106,17 +106,13 @@ export default {
     },
     Validate: function (k) {
       let step = this.nav_links[k].path.substr(9)
-      if (!this.$store.state.resume[step].validated) {
-        this.$store.commit('VALIDATE_STEP', step)
-        if (this.$store.state.resume[step].validated) {
-          this.$store.commit('CHANGE_DONE', k)
-          return true
-        } else {
-          this.$store.commit('CHANGE_ERROR', k)
-          return false
-        }
-      }else{
-          return true
+      this.$store.commit('VALIDATE_STEP', step)
+      if (this.$store.state.resume[step].validated) {
+        this.$store.commit('CHANGE_DONE', k)
+        return true
+      } else {
+        this.$store.commit('CHANGE_ERROR', k)
+        return false
       }
     },
     OpenMain: function () {
@@ -453,6 +449,7 @@ h3.fixed.menuOpen{
         position: relative;
         overflow-x: hidden;
         min-height: 70vh;
+        border: 1px solid $block_grey_outline;
         box-shadow: $shadow_light;
     }
     #controls{

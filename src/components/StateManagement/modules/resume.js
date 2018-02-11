@@ -62,18 +62,26 @@ export default {
           name: '',
           major: '',
           beginYear: '',
-          endYear: { 
+          endYear: {
             val: '',
             not_required: false
           },
           degreeType: '',
           correct: false,
-          inProgress: false,
+          inProgress: false
         }
       },
       validated: false
     },
-    skills: {},
+    skills: {
+      proffesional: {
+        skill0: {value: '', level: 0}
+      },
+      achievements: {
+        achieve0: ''
+      },
+      validated: false
+    },
     experience: {},
     additional: {}
   },
@@ -126,7 +134,7 @@ export default {
                 isValue = 1
                 break
               }
-              if (value.indexOf('resource') === -1 && property.indexOf('school') === -1) {
+              if (value.indexOf('resource') === -1 && property.indexOf('school') === -1 && value.indexOf('skill') === -1) {
                 for (let subValue1 in state[step][property][value]) {
                   if (state[step][property][value][subValue1] || state[step][property][value].source) {
                     isValue = 1
@@ -134,14 +142,16 @@ export default {
                   }
                 }
               }
-              if(property.indexOf('school') !== -1){
-                for (let subValue2 in state[step][property][value]) {
-                  if(subValue2 === 'inProgress') {continue}
-                  if (state[step][property][value][subValue2]) {
-                    isValue = 1
-                  } else {
-                    isValue = 0
-                    break
+              if (property.indexOf('school') !== -1 || value.indexOf('skill') !== -1) {
+                if (typeof state[step][property][value] === 'object') {
+                  for (let subValue2 in state[step][property][value]) {
+                    if (subValue2 === 'inProgress') { continue }
+                    if (state[step][property][value][subValue2]) {
+                      isValue = 1
+                    } else {
+                      isValue = 0
+                      break
+                    }
                   }
                 }
               }
@@ -154,7 +164,7 @@ export default {
             state[step].validated = false
             return
           } else {
-            if(property.indexOf('school') >= 0 ){
+            if (property.indexOf('school') >= 0 || step.indexOf('skill') >= 0) {
               state[step].validated = true
             }
             continue
@@ -245,8 +255,7 @@ export default {
         if (quantity < 14) {
           state.basic.additional['resource' + quantity] = {role: '', source: ''}
         }
-        return
-      }else{
+      } else {
         Vue.set(state.basic.additional['resource' + value.index], 'source', value.newSource)
         Vue.set(state.basic.additional['resource' + value.index], 'role', value.newRole)
       }
@@ -274,30 +283,87 @@ export default {
         name: '',
         major: '',
         beginYear: '',
-        endYear: { 
+        endYear: {
           val: '',
           not_required: false
         },
         degreeType: '',
         correct: false,
-        inProgress: false,
+        inProgress: false
       }
       Vue.set(state.education.schools, 'school' + length, content)
     },
-    REMOVE_SCHOOL: function (state, school){
+    REMOVE_SCHOOL: function (state, school) {
       Vue.delete(state.education.schools, school)
+    },
+
+    // мутации Скиллы
+
+    CHANGE_SKILL_DATA: function (state, skillData) {
+      if (skillData.type === 'proffesional') {
+        state.skills[skillData.type]['skill' + skillData.num].value = skillData.value
+        state.skills[skillData.type]['skill' + skillData.num].level = skillData.level
+      } else {
+        state.skills[skillData.type]['achieve' + skillData.num] = skillData.value
+      }
+    },
+    ADD_NEW_PROFF_SKILL: function (state) {
+      let length = Object.keys(state.skills.proffesional).length
+      let content = {
+        value: '',
+        level: 0
+      }
+      Vue.set(state.skills.proffesional, 'skill' + length, content)
+    },
+    ADD_NEW_ACHIEVE: function (state) {
+      let length = Object.keys(state.skills.achievements).length
+      let content = ''
+      Vue.set(state.skills.achievements, 'achieve' + length, content)
+    },
+    REMOVE_SKILL: function (state, skill) {
+      Vue.delete(state.skills[skill.type], skill.skillVal)
     }
   },
   actions: {
     removeSchool ({commit, state}, school) {
       return new Promise((resolve, reject) => {
         if (Object.keys(state.education.schools).length > 1) {
-          commit('REMOVE_SCHOOL',school)
+          commit('REMOVE_SCHOOL', school)
           resolve()
         } else {
-          reject()
+          // eslint-disable-next-line
+          throw 'DeletionError'
         }
       })
+    },
+    removeSkill ({commit, state}, skill) {
+      if (skill.indexOf('skill') > -1) {
+        return new Promise((resolve, reject) => {
+          if (Object.keys(state.skills.proffesional).length > 1) {
+            commit('REMOVE_SKILL', {
+              type: 'proffesional',
+              skillVal: skill
+            })
+            resolve()
+          } else {
+            // eslint-disable-next-line
+            throw 'DeletionError'
+          }
+        })
+      } else {
+        return new Promise((resolve, reject) => {
+          if (Object.keys(state.skills.achievements).length > 1) {
+            commit('REMOVE_SKILL', {
+              type: 'achievements',
+              skillVal: skill
+            })
+            resolve()
+          } else {
+            // eslint-disable-next-line
+            throw 'DeletionError'
+          }
+        })
+      }
     }
   }
 }

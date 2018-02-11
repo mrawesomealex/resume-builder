@@ -50,7 +50,6 @@ footer {
     font-weight: 400;
     transition: 0s;
     transition: 0.2s;
-    letter-spacing: 1.1px;
   }
   span {
     font-family: $Roboto;

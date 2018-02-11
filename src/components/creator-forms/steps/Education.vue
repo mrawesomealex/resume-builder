@@ -69,12 +69,11 @@
             </div>
           </transition>
       </div>
-      <div id="newSchoolBtn" :class="['container-fluid button text-center py-4 mb-2',{error: errorMessage}]" @click="addNew()"><span>+ Добавить</span></div>
+      <div id="newSchoolBtn" :class="['new_btn container-fluid button text-center py-4 mb-2',{error: errorMessage}]" @click="addNew()"><span>+ Добавить</span></div>
       <h6 v-if="this.errorMessage" class="mb-4 error_message">{{errorMessage}}</h6>
     </div>
 </template>
 <script>
-    import Vue from 'vue'
     export default {
       props: ['status'],
       data: function () {
@@ -86,17 +85,14 @@
         }
       },
       methods: {
-        remove () {
-          
-        },
-        changeCurrent(i){
+        changeCurrent (i) {
           this.current = this.current === i ? -1 : i
         },
         changeSchool (e, field, i) {
           let val
           if (field === 'inProgress' || field === 'correct') {
-            val = field === 'inProgress' ? !this.schools['school'+i].inProgress : !this.schools['school'+i].correct
-          } else{
+            val = field === 'inProgress' ? !this.schools['school' + i].inProgress : !this.schools['school' + i].correct
+          } else {
             val = e.target.value
           }
           this.errorMessage = ''
@@ -112,7 +108,7 @@
               this.errorMessage = 'У вас уже существует пустой блок'
               return
             }
-          }    
+          }
           this.schools = 1
         }
       },
@@ -123,15 +119,15 @@
             return this.$store.state.resume.education.schools
           },
           set: function (newFlag) {
-            newFlag ? this.$store.commit('ADD_NEW_SCHOOL') : ''
+            if (newFlag) { this.$store.commit('ADD_NEW_SCHOOL') }
           }
         },
         statuses: function () {
           let list = {}
           for (let k = 0; k < this.schoolsQuantity; k++) {
-            if ( k === this.current ){
+            if (k === this.current) {
               list['status' + k] = true
-            }else{
+            } else {
               list['status' + k] = false
             }
           }
@@ -139,21 +135,21 @@
         },
         sentence: function () {
           let period = 0
-          if (this.schools['school'+ this.current].inProgress) {
-           period = this.schools['school'+ this.current].beginYear ? new Date().getFullYear() : 0
+          if (this.schools['school' + this.current].inProgress) {
+            period = this.schools['school' + this.current].beginYear ? new Date().getFullYear() : 0
           } else {
-           period = this.schools['school'+ this.current].endYear.val  ? this.schools['school'+ this.current].endYear.val : this.schools['school'+ this.current].beginYear
+            period = this.schools['school' + this.current].endYear.val ? this.schools['school' + this.current].endYear.val : this.schools['school' + this.current].beginYear
           }
-          period -= this.schools['school'+ this.current].beginYear
+          period -= this.schools['school' + this.current].beginYear
           let sentence = ''
-          sentence += this.schools['school'+ this.current].inProgress ? 'Вы учитесь по специальности ' : 'Вы проходили обучение по специальности '
-          sentence += this.schools['school'+ this.current].major ? this.schools['school'+ this.current].major : ' --укажите специальность-- '
-          sentence += this.schools['school'+ this.current].degreeType ? ' (' + this.schools['school'+ this.current].degreeType + ') ' : ' --укажите степень-- ' 
+          sentence += this.schools['school' + this.current].inProgress ? 'Вы учитесь по специальности ' : 'Вы проходили обучение по специальности '
+          sentence += this.schools['school' + this.current].major ? this.schools['school' + this.current].major : ' --укажите специальность-- '
+          sentence += this.schools['school' + this.current].degreeType ? ' (' + this.schools['school' + this.current].degreeType + ') ' : ' --укажите степень-- '
           sentence += ' в '
-          sentence += this.schools['school'+ this.current].name ? this.schools['school'+ this.current].name + ' ' : ' --укажите название учебного заведения -- '
+          sentence += this.schools['school' + this.current].name ? this.schools['school' + this.current].name + ' ' : ' --укажите название учебного заведения -- '
           sentence += period < 5 ? period === 1 ? period + ' год' : period > 1 ? period + ' года' : period + ' лет ' : period + ' лет'
-          sentence += !this.schools['school'+ this.current].inProgress ? ' (c ' + (this.schools['school'+ this.current].beginYear ? this.schools['school'+ this.current].beginYear : '--год начала--') + ' по ' + (this.schools['school'+ this.current].endYear.val ? this.schools['school'+ this.current].endYear.val : '--год окончания--') + ' )' : ''
-          return sentence ? sentence : ''
+          sentence += !this.schools['school' + this.current].inProgress ? ' (c ' + (this.schools['school' + this.current].beginYear ? this.schools['school' + this.current].beginYear : '--год начала--') + ' по ' + (this.schools['school' + this.current].endYear.val ? this.schools['school' + this.current].endYear.val : '--год окончания--') + ' )' : ''
+          return sentence
         }
       }
     }
@@ -183,13 +179,5 @@ input[type="checkbox"]:checked ~ label > div{
         color: $main_black;
     }
 }
-#newSchoolBtn{
-    border: 1px dashed $block_grey_outline;
-    color: $paragraphcolor
-}
-#newSchoolBtn:hover{
-    border: 1px solid $btn_blue_text;
-    color: $btn_blue_text;
-    background: $btn_blue_inactive
-}
+
 </style>
