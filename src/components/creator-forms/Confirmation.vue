@@ -35,6 +35,9 @@ export default {
       if (this.removeItem.step === 'skills') {
         result = this.$store.dispatch('removeSkill', this.removeItem.property)
       }
+      if (this.removeItem.step === 'experience') {
+        result = this.$store.dispatch('removeWork', this.removeItem.property)
+      }
       result.then(() => {
         this.isRemovable = false
         this.$emit('closeRemoveWindow')

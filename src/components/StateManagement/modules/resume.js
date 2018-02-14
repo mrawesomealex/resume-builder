@@ -82,7 +82,29 @@ export default {
       },
       validated: false
     },
-    experience: {},
+    experience: {
+      works: {
+        work0: {
+          title: '',
+          begin: '',
+          end: {
+            val: '',
+            not_required: false
+          },
+          company: '',
+          address: '',
+          workType: -1,
+          duties: '',
+          achievements: {
+            val: '',
+            not_required: true
+          },
+          correct: false,
+          inProgress: false
+        }
+      },
+      validated: false
+    },
     additional: {}
   },
   mutations: {
@@ -134,7 +156,7 @@ export default {
                 isValue = 1
                 break
               }
-              if (value.indexOf('resource') === -1 && property.indexOf('school') === -1 && value.indexOf('skill') === -1) {
+              if (value.indexOf('resource') === -1 && property.indexOf('school') === -1 && value.indexOf('skill') === -1 && value.indexOf('work') === -1) {
                 for (let subValue1 in state[step][property][value]) {
                   if (state[step][property][value][subValue1] || state[step][property][value].source) {
                     isValue = 1
@@ -142,7 +164,7 @@ export default {
                   }
                 }
               }
-              if (property.indexOf('school') !== -1 || value.indexOf('skill') !== -1) {
+              if (property.indexOf('school') !== -1 || value.indexOf('skill') !== -1 || value.indexOf('work') !== -1) {
                 if (typeof state[step][property][value] === 'object') {
                   for (let subValue2 in state[step][property][value]) {
                     if (subValue2 === 'inProgress') { continue }
@@ -164,7 +186,7 @@ export default {
             state[step].validated = false
             return
           } else {
-            if (property.indexOf('school') >= 0 || step.indexOf('skill') >= 0) {
+            if (property.indexOf('school') >= 0 || step.indexOf('skill') >= 0 || property.indexOf('work') >= 0) {
               state[step].validated = true
             }
             continue
@@ -322,8 +344,47 @@ export default {
     },
     REMOVE_SKILL: function (state, skill) {
       Vue.delete(state.skills[skill.type], skill.skillVal)
+    },
+
+    // Мутации Опыт работы
+
+    CHANGE_WORKPLACE_DATA: function (state, workData) {
+      if (workData.property === 'inProgress') {
+        state.experience.works['work' + workData.number].end.not_required = workData.value
+        state.experience.works['work' + workData.number].end.val = ''
+      }
+      if (workData.property !== 'end' && workData.property !== 'achievements') {
+        state.experience.works['work' + workData.number][workData.property] = workData.value
+      } else {
+        state.experience.works['work' + workData.number][workData.property].val = workData.value
+      }
+    },
+    ADD_NEW_WORKPLACE: function (state) {
+      let length = Object.keys(state.experience.works).length
+      let content = {
+        title: '',
+        begin: '',
+        end: {
+          val: '',
+          not_required: false
+        },
+        company: '',
+        address: '',
+        workType: -1,
+        duties: '',
+        achievements: {
+          val: '',
+          not_required: true
+        },
+        correct: false,
+        inProgress: false
+      }
+      Vue.set(state.experience.works, 'work' + length, content)
+    },
+    REMOVE_WORK: function (state, work) {
+      Vue.delete(state.experience.works, work)
     }
-  },
+},
   actions: {
     removeSchool ({commit, state}, school) {
       return new Promise((resolve, reject) => {
@@ -364,6 +425,17 @@ export default {
           }
         })
       }
-    }
+    },
+    removeWork ({commit, state}, work) {
+      return new Promise((resolve, reject) => {
+        if (Object.keys(state.experience.works).length > 1) {
+          commit('REMOVE_WORK', work)
+          resolve()
+        } else {
+          // eslint-disable-next-line
+          throw 'DeletionError'
+        }
+      })
+    },
   }
 }

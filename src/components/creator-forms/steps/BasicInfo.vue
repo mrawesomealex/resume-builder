@@ -89,7 +89,7 @@
            <div class="max-length text-center py-1">{{charactersLeft}} / 135</div>
         </div>
         <h5>Введите ваш адрес проживания</h5>
-        <div id="resume_goal" class="input-group pb-4">
+        <div class="input-group pb-4">
             <div  class="container-fluid ">
                 <div class="row pl-0">
                     <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-0 pr-0 mb-4">
@@ -667,22 +667,6 @@ table{
 
 
 }
-input[type="text"]:focus~.max-length{
-        opacity: 1;
-        transition: 0.2s;
-        transition-delay:0.3s;
-}
-.max-length{
-    opacity: 0;
-    position: absolute;
-    top: -11%;
-    left: 90%;
-    color: $btn_blue_text; 
-    background: white;
-    font-size: 0.7vw;
-    font-family: $Exo;
-    width:8%;
-}
 input[type="radio"]:checked ~ label > div,
 input[type="checkbox"]:checked ~ label > div{
     background: $btn_blue_text url("../../../assets/step_icons/checked.svg") no-repeat;
@@ -873,9 +857,6 @@ label[for="profileImg_picker"]:hover{
     #phone2 input:nth-child(2)~label{
         left: 12%
     }
-    .max-length{
-     font-size: 1vw;
-    }
 }
 @media (max-width: 767px) {
     .phone-style:last-child{
@@ -892,11 +873,6 @@ label[for="profileImg_picker"]:hover{
     label[for="profileImg_picker"] > span[data-v-0f1af499]{
         font-size: 3vw
     }
-    .max-length{
-     font-size: 1.5vw;
-     width: 15%;
-     left: 82%;
-    }
 }
 @media (max-width: 545px) {
     @include flag_inputs;
@@ -905,12 +881,6 @@ label[for="profileImg_picker"]:hover{
     }
     #phone2 input:nth-child(2)~label{
         left: 7%
-    }
-    .max-length{
-     font-size: 2.3vw;
-     top:-12%;
-     width: 15%;
-     left: 82%;
     }
 }
 @media (max-width: 514px){

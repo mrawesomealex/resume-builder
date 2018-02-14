@@ -3,7 +3,6 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import firebase from 'firebase'
 import ScrollFeature from 'vue-scrollto'
 import { store } from './components/StateManagement/store'
 import VueSimpleSVG from 'vue-simple-svg'
@@ -25,17 +24,6 @@ Vue.use(ScrollFeature, {
   x: false,
   y: true
 })
-
-//  initialization of firebase
-var config = {
-  apiKey: 'AIzaSyAqDb6NyJHE7tSYnaDbswUUaQQtssDjmSw',
-  authDomain: 'resume-builder-15f75.firebaseapp.com',
-  databaseURL: 'https://resume-builder-15f75.firebaseio.com',
-  projectId: 'resume-builder-15f75',
-  storageBucket: 'resume-builder-15f75.appspot.com',
-  messagingSenderId: '765245167344'
-}
-firebase.initializeApp(config)
 
 /* eslint-disable no-new */
 new Vue({

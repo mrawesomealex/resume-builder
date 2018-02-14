@@ -8,7 +8,7 @@
           <header class="row p-4" :class="[{errorColor: status.step2.error && (!school.name || !school.major || !school.beginYear || !school.degreeType || !school.correct || (!school.endYear.val && !school.inProgress))}]">
               <simple-svg class="d-xl-inline-block d-lg-inline-block d-md-inline-block d-sm-inline-block d-none mx-3" :stroke="'none'" :fill="status.step2.error && (!school.name || !school.major || !school.beginYear || !school.degreeType || !school.correct || (!school.endYear.val && !school.inProgress)) ?'#ef4136' : '#4b92e2'" :filepath="require('@/assets/step_icons/university.svg')"  :width="'25px'" :height="'25px'"/>
               <label for="school_name" class="ml-xl-0 ml-lg-0 ml-md-0 ml-sm-0 ml-3" @click="changeCurrent(index)">
-                  <span v-if="school.name">{{ school.name }}</span><span v-if="school.degreeType">{{'('+school.degreeType+')'}}</span>
+                  <span v-if="school.name">{{ school.name }}</span><span v-if="school.degreeType">{{' ('+school.degreeType+')'}}</span>
                   <span v-if="!school.name">{{'Новое учебное заведение'}}</span>
                   <simple-svg :class="['d-xl-inline-block d-lg-inline-block d-md-inline-block d-sm-inline-block d-none', {'rotated ml-3 mb-2': statuses['status'+index]},{'ml-2 mr-3': !statuses['status'+index]}]" :stroke="'none'" :fill="status.step2.error && (!school.name || !school.major || !school.beginYear || !school.degreeType || !school.correct || (!school.endYear.val && !school.inProgress)) ?'#ef4136' : '#4b92e2'" :filepath="require('@/assets/images/arrow.svg')"  :width="'12px'" :height="'12px'"/>
               </label>
@@ -52,11 +52,11 @@
                     <div  class="container-fluid px-0">
                         <div class="row px-0">
                             <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-6 pl-0 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-2 pr-2 mb-xl-0 mb-lg-0 mb-md-0 mb-sm-4 mb-4">
-                                <input id="begin_year" :class="['block_neutral col-12 pl-4 py-3',{error : status.step2.error && !school.beginYear}]" type="number" placeholder="Год начала"
+                                <input id="begin_year" :class="['block_neutral col-12 pl-4 py-3',{error : (status.step2.error && !school.beginYear) || (dateError && school.beginYear)}]" type="number" placeholder="Год начала"
                                 :value="school.beginYear" @input="changeSchool($event,'beginYear',index)">
                             </div>
                             <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-6 text-right mr-0 pl-xl-0 pl-lg-0 pl-md-0 pl-sm-2 pl=2 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-0 pr-0 mb-xl-0 mb-lg-0 mb-md-0 mb-sm-4 mb-4">    
-                                <input id="end_year" :class="['block_neutral col-12 pl-4 py-3',{error : status.step2.error && !school.endYear.val && !school.inProgress}]"  type="number" :placeholder="school.endYear.not_required ? '----' : 'Год окончания'" :disabled="school.endYear.not_required"
+                                <input id="end_year" :class="['block_neutral col-12 pl-4 py-3',{error : (status.step2.error && !school.endYear.val && !school.inProgress) || (dateError && school.endYear)}]"  type="number" :placeholder="school.endYear.not_required ? '----' : 'Год окончания'" :disabled="school.endYear.not_required"
                                 :value="school.endYear.val" @input="changeSchool($event,'endYear',index)">
                             </div>
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 col-12 text-right mr-0 px-0">    
@@ -81,7 +81,8 @@
           correct: false,
           current: 0,
           errorMessage: '',
-          schoolsQuantity: 0
+          schoolsQuantity: 0,
+          dateError: false
         }
       },
       methods: {
@@ -94,6 +95,11 @@
             val = field === 'inProgress' ? !this.schools['school' + i].inProgress : !this.schools['school' + i].correct
           } else {
             val = e.target.value
+            if (field === 'beginYear' || field === 'endYear' && !this.schools['school' + i].inProgress) {
+              (this.schools['school' + i].endYear.val - this.schools['school' + i].beginYear < 0) ? this.dateError = true : this.dateError = false
+            }else{
+              this.dateError = false
+            }
           }
           this.errorMessage = ''
           this.$store.commit('CHANGE_SCHOOL_DATA', {
@@ -147,8 +153,12 @@
           sentence += this.schools['school' + this.current].degreeType ? ' (' + this.schools['school' + this.current].degreeType + ') ' : ' --укажите степень-- '
           sentence += ' в '
           sentence += this.schools['school' + this.current].name ? this.schools['school' + this.current].name + ' ' : ' --укажите название учебного заведения -- '
-          sentence += period < 5 ? period === 1 ? period + ' год' : period > 1 ? period + ' года' : period + ' лет ' : period + ' лет'
-          sentence += !this.schools['school' + this.current].inProgress ? ' (c ' + (this.schools['school' + this.current].beginYear ? this.schools['school' + this.current].beginYear : '--год начала--') + ' по ' + (this.schools['school' + this.current].endYear.val ? this.schools['school' + this.current].endYear.val : '--год окончания--') + ' )' : ''
+          if (period < 0) {
+            sentence += period < 5 ? period === 1 ? period + ' год' : period > 1 ? period + ' года' : period + ' лет ' : period + ' лет'
+            sentence += !this.schools['school' + this.current].inProgress ? ' (c ' + (this.schools['school' + this.current].beginYear ? this.schools['school' + this.current].beginYear : '--год начала--') + ' по ' + (this.schools['school' + this.current].endYear.val ? this.schools['school' + this.current].endYear.val : '--год окончания--') + ' )' : ''
+          } else {
+            sentence += ' (c --год начала-- по --год окончания--) '
+          }
           return sentence
         }
       }
@@ -163,21 +173,8 @@ input[type="checkbox"]:checked ~ label > div{
     background-size: contain;
     border: 1px solid $btn_blue_text;
 }
-.rotated{
-    transform: rotate(90deg);
-}
-.blue_text{
-    color:$btn_blue_text !important;
-}
 .simple-svg-wrapper{
     transition: 0.3s;
-}
-.newSchool_form{
-    z-index: -1;
-    transition: all 0.3s,opacity 0.1s;
-    h6:first-child{
-        color: $main_black;
-    }
 }
 
 </style>

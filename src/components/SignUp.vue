@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import firebase from 'firebase'
 
 export default {
   name: 'signUp',
@@ -51,19 +50,19 @@ export default {
   methods: {
     SignUp: function () {
       if (this.isValid) {
-        firebase
-          .auth()
-          .createUserWithEmailAndPassword(this.email, this.password)
-          .then(
-            user => {
-              user.sendEmailVerification()
-              alert('Запрос на подтверждение был отправлен на адрес ' + user.email)
-              this.$emit('SwitchToLogin')
-            },
-            err => {
-              alert('Oops. ' + err.message)
-            }
-          )
+        // firebase
+        //   .auth()
+        //   .createUserWithEmailAndPassword(this.email, this.password)
+        //   .then(
+        //     user => {
+        //       user.sendEmailVerification()
+        //       alert('Запрос на подтверждение был отправлен на адрес ' + user.email)
+        //       this.$emit('SwitchToLogin')
+        //     },
+        //     err => {
+        //       alert('Oops. ' + err.message)
+        //     }
+        //   )
       } else {
         this.UnBlur('password')
       }

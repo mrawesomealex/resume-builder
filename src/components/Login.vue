@@ -19,7 +19,6 @@
  </transition> 
 </template>
 <script>
-import firebase from 'firebase'
 
 export default {
   name: 'login',
@@ -31,21 +30,21 @@ export default {
   },
   methods: {
     Enter: function () {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(this.email, this.password)
-        .then(
-          user => {
-            if (user.emailVerified) {
-              alert('Вы вошли!')
-            } else {
-              alert('Уупс вы не подтвердили e-mail')
-            }
-          },
-          err => {
-            alert('Ooops. ' + err.message)
-          }
-        )
+      // firebase
+      //   .auth()
+      //   .signInWithEmailAndPassword(this.email, this.password)
+      //   .then(
+      //     user => {
+      //       if (user.emailVerified) {
+      //         alert('Вы вошли!')
+      //       } else {
+      //         alert('Уупс вы не подтвердили e-mail')
+      //       }
+      //     },
+      //     err => {
+      //       alert('Ooops. ' + err.message)
+      //     }
+      //   )
     },
     Close: function (e) {
       if (e.target.className === 'wrap_block' || e.target.id === 'close-btn') {
@@ -57,16 +56,15 @@ export default {
     },
     Reset: function () {
       if (this.email) {
-        console.log(firebase.auth())
-        firebase
-          .auth()
-          .sendPasswordResetEmail(this.email)
-          .then(() => {
-            alert('Ссылка на востановление пароля успешно отправлена')
-          })
-          .catch(error => {
-            alert(error)
-          })
+          // firebase
+          // .auth()
+          // .sendPasswordResetEmail(this.email)
+          // .then(() => {
+          //   alert('Ссылка на востановление пароля успешно отправлена')
+          // })
+          // .catch(error => {
+          //   alert(error)
+          // })
       } else {
         alert(
           'Введите в поле e-mail свой адрес электронной почты (поле Пароль заполнять не нужно)'

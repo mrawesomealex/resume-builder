@@ -35,7 +35,7 @@
             <div @click="$emit('remove',{step:'skills',property:'achieve'+index})">
               <simple-svg class=" d-inline-block  pl-xl-3 pl-lg-3 pl-md-1 pl-sm-2 pl-2 pr-xl-4 pr-lg-3 pr-md-3 pr-sm-2  pr-2 removeBtn" :stroke="'none'" :fill="status.step3.error && !achieve ? '#ef4136' : '#4b92e2'" :filepath="require('@/assets/step_icons/cancel.svg')"  :width="'25px'" :height="'25px'"/>
             </div>
-            <div class="input-wrap col-11  ml-auto row">
+            <div class="input-wrap col-11 pl-0 ml-auto row">
                 <input type="text" placeholder="Например: Владение Microsoft Office 2017 #5" :class="['block_neutral col-12  py-3',{error: status.step3.error && !achieve}]" 
                 :value="achieve ? achieve : ''" @input="changeAchieve($event, index)"/>
             </div>
@@ -63,21 +63,23 @@
         changeProfSkills (e, i) {
           let val = e.target.value
           let level
-          if (/#[1-5]/.test(val) && val.length > 2) {
-            this.errorMessage = ''
-            this.errorField.value = ''
-            this.errorField.index = -1
-            val = val.substr(0, val.length - 2).trim()
-            level = parseInt(e.target.value.trim().substr(-1))
-            this.$store.commit('CHANGE_SKILL_DATA', {
-              num: i,
-              type: 'proffesional',
-              value: val,
-              level: level
-            })
-          } else {
-            this.errorField.value = 'Вы ввели неккорректный уровень'
-            this.errorField.index = i
+          if (/#[1-5]/.test(val)) {
+            if (val.length > 2) {
+              this.errorMessage = ''
+              this.errorField.value = ''
+              this.errorField.index = -1
+              val = val.substr(0, val.length - 2).trim()
+              level = parseInt(e.target.value.trim().substr(-1))
+              this.$store.commit('CHANGE_SKILL_DATA', {
+                num: i,
+                type: 'proffesional',
+                value: val,
+                level: level
+              })
+            } else {
+              this.errorField.value = 'Вы ввели неккорректный уровень'
+              this.errorField.index = i
+            }
           }
         },
         changeAchieve (e, i) {
