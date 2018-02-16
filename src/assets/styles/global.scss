@@ -132,6 +132,9 @@ a:hover{
   .open-window-enter-to .newSchool_form{
      height: 398px;
   }
+  .open-window-enter-to .newRef_form{
+    height: 140px;
+ }
   .open-window-enter-to .newJob_form{
     height: 500px;
   }
@@ -385,7 +388,8 @@ input[type="checkbox"] {
     color:$btn_blue_text !important;
 }
 .newSchool_form,
-.newJob_form{
+.newJob_form,
+.newRef_form{
     z-index: -1;
     transition: all 0.3s,opacity 0.1s;
     h6:first-child{
@@ -411,9 +415,30 @@ textarea{
     font-size: 0.7vw;
     font-family: $Exo;
     width:8%;
+    z-index: 2 !important;
 }
 textarea~.max-length{
     top: -5%;
+}
+.pragraph-block{
+    position: relative;
+}
+textarea{
+    height: 30vh;
+}
+textarea::-webkit-scrollbar{
+    background: none
+}
+.drag_zone{
+    span{
+    color: $btn_blue_text !important;
+    }
+    .simple-svg-wrapper{
+      position: relative;  
+      animation: bounce 3s infinite;
+      animation-delay: 0.5s;
+    }
+    border: 1px dashed $btn_blue_text !important;
 }
 @media (max-width: 1200px) {
     label>span,

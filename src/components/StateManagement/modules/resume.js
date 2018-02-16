@@ -105,7 +105,29 @@ export default {
       },
       validated: false
     },
-    additional: {}
+    additional: {
+      aboutMe: {
+        val: '',
+        not_required: true
+      },
+      docs: {
+        doc0: {
+          name: '',
+          file: ''
+        },
+        not_required: true
+      },
+      references: {
+        reference0: {
+          fullName: '',
+          email: '',
+          phone: { code: '', number: '' },
+          canCall: false
+        },
+        not_required: true
+      },
+      validated: false
+    }
   },
   mutations: {
 

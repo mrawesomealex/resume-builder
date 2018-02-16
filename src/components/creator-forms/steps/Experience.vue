@@ -256,15 +256,6 @@ input[type="checkbox"]:checked ~ label > div{
     background-size: contain;
     border: 1px solid $btn_blue_text;
 }
-.pragraph-block{
-    position: relative;
-}
-textarea{
-    height: 30vh;
-}
-textarea::-webkit-scrollbar{
-    background: none
-}
 .simple-svg-wrapper{
     transition: 0.3s;
 }

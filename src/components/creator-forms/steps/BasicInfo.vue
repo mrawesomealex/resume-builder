@@ -206,7 +206,7 @@
                         <input id="profileImg_picker" class="d-none" type="file" accept=".png, .jpg, .jpeg" @change="readAsButton()">
                         <label @dragover.stop.prevent="dragClass=true" @dragleave.stop.prevent.self="dragClass=false" @drop.stop.prevent="fileHandler($event)" id="drop-zone"  :class="['d-block block_neutral text-center py-xl-5 py-lg-5 py-md-5 py-sm-3 py-3 mb-0',{drag_zone: dragClass},{error : file_error || (!photo && status.step1.error)}]" for="profileImg_picker">
                             <simple-svg :stroke="'none'" class="mt-0" :fill="dragClass ? '#64a4ee' : 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/photo.svg')" :width="'30px'" :height="'30px'" />
-                            <span class="d-block mt-1">Загрузить</span>
+                            <span class="d-block mt-1 ">Загрузить</span>
                             <h6 class="mb-0 col-12">Нажмите или перетяните нужный файл</h6>
                         </label>
                     </div> 
@@ -840,17 +840,6 @@ label[for="profileImg_picker"]:hover{
         justify-content: center;
         align-items: center;
     }
-}
-.drag_zone{
-    span{
-    color: $btn_blue_text !important;
-    }
-    .simple-svg-wrapper{
-      position: relative;  
-      animation: bounce 3s infinite;
-      animation-delay: 0.5s;
-    }
-    border: 1px dashed $btn_blue_text !important;
 }
 @media (max-width: 990px) and (min-width: 768px){
     @include flag_inputs;
