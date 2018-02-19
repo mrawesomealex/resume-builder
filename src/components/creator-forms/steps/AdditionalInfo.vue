@@ -4,15 +4,15 @@
       <h6>Лица, которые могут составить мнения о ваших професиональных качествах</h6>
       <div id="recommendators" class="row input-group">
         <div  v-for="(person, key, index) in recommendations" :key="key" :class="['container-fluid list-item p-0 ref mb-2',{'mt-0' : index > 0},{open:statuses['status'+index]}]">
-            <header class="row p-4" :class="[{errorColor: status.step5.error }]">
-              <simple-svg class="d-xl-inline-block d-lg-inline-block d-md-inline-block d-sm-inline-block d-none mx-3" :stroke="'none'" :fill="'#4b92e2'" :filepath="require('@/assets/step_icons/university.svg')"  :width="'25px'" :height="'25px'"/>
+            <header class="row p-4" :class="[{errorColor: status.step5.error && !person.not_required && (!person.fullName || (!person.email && !person.phone.code && !person.phone.number))}]">
+              <simple-svg class="d-xl-inline-block d-lg-inline-block d-md-inline-block d-sm-inline-block d-none mx-3" :stroke="'none'" :fill="status.step5.error && !person.not_required && (!person.fullName || (!person.email && !person.phone.code && !person.phone.number))?'#ef4136' : '#4b92e2'" :filepath="require('@/assets/step_icons/university.svg')"  :width="'25px'" :height="'25px'"/>
               <label for="person_name" class="ml-xl-0 ml-lg-0 ml-md-0 ml-sm-0 ml-3" @click="changeCurrent(index)">
                 <span v-if="person.fullName">{{ person.fullName }}</span>
                 <span v-if="!person.fullName">{{'Новая рекомендация'}}</span>
-                <simple-svg :class="['d-xl-inline-block d-lg-inline-block d-md-inline-block d-sm-inline-block d-none', {'rotated ml-3 mb-2': statuses['status'+index]},{'ml-2 mr-3': !statuses['status'+index]}]" :stroke="'none'" :fill="'#4b92e2'" :filepath="require('@/assets/images/arrow.svg')"  :width="'12px'" :height="'12px'"/>
+                <simple-svg :class="['d-xl-inline-block d-lg-inline-block d-md-inline-block d-sm-inline-block d-none', {'rotated ml-3 mb-2': statuses['status'+index]},{'ml-2 mr-3': !statuses['status'+index]}]" :stroke="'none'" :fill="status.step5.error && !person.not_required && (!person.fullName || (!person.email && !person.phone.code && !person.phone.number))?'#ef4136' : '#4b92e2'" :filepath="require('@/assets/images/arrow.svg')"  :width="'12px'" :height="'12px'"/>
               </label>
                 <div :class="['ml-auto mr-3 my-auto']" @click="$emit('remove',{step:'additional',property:'reference'+index})">
-                <simple-svg :stroke="'none'" :fill="'#4b92e2'" :filepath="require('@/assets/step_icons/cancel.svg')"  :width="'25px'" :height="'25px'"/>
+                <simple-svg :stroke="'none'" :fill="status.step5.error && !person.not_required && (!person.fullName || (!person.email && !person.phone.code && !person.phone.number))?'#ef4136' : '#4b92e2'" :filepath="require('@/assets/step_icons/cancel.svg')"  :width="'25px'" :height="'25px'"/>
                 </div>
             </header>
             <transition name="open-window">
@@ -20,7 +20,7 @@
                   <div class="container-fluid">
                       <div class="row align-middle mb-4">
                           <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-0 pr-sm-0 pr-0">
-                              <input id="person_name" type="text" placeholder="ФИО рекомендующего" :class="['block_neutral col-12 pl-4 py-3 mb-xl-0 mb-lg-0 mb-md-4 mb-sm-4 mb-4',{error : status.step5.error && !person.fullName}]" 
+                              <input id="person_name" type="text" placeholder="ФИО рекомендующего" :class="['block_neutral col-12 pl-4 py-3 mb-xl-0 mb-lg-0 mb-md-4 mb-sm-4 mb-4',{error : status.step5.error && !person.not_required && !person.fullName}]" 
                               :value="person.fullName" @input="changeRef($event,'fullName',index)"/>
                           </div>    
                           <div class="d-flex col-xl-5 col-lg-5 col-md-12 col-sm-12 col-12 text-right mr-0 pr-0 pl-xl-3 pl-lg-3 pl-md-0 pl-sm-0 pl-0 " >
@@ -35,9 +35,9 @@
                   <div class="container-fluid ">
                       <div class="row">
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 text-right mr-0 pr-0 pl-0 mb-4" id="email">
-                          <input id="email_value" type="email" placeholder="Укажите email" :class="['block_neutral col-12 pl-4 py-3',{error: !validateEmail['email'+index] || status.step5.error}]" :value="bufEmail ? bufEmail : person.email" @blur="buffEmail = ''" @input="updateEmail($event, index)" @change="changeRef($event,'email',index)"/>
+                          <input id="email_value" type="email" placeholder="Укажите email" :class="['block_neutral col-12 pl-4 py-3',{error: !validateEmail['email'+index] || (status.step5.error && !person.not_reqired && (!person.email && !person.phone.code && !person.phone.number))}]" :value="bufEmail ? bufEmail : person.email" @blur="buffEmail = ''" @input="updateEmail($event, index)" @change="changeRef($event,'email',index)"/>
                         </div>
-                        <phone :phoneData="{phone: person.phone, i: index}" @changePhone="passPhone"></phone>
+                        <phone :phoneData="{phone: person.phone, i: index}" :errorStatus="status.step5.error && !person.not_reqired && (!person.email && !person.phone.code && !person.phone.number)" @changePhone="passPhone"></phone>
                       </div>
                   </div>
                 </div>
@@ -53,20 +53,20 @@
           <div class="row"> 
             <div class="col-xl-1 col-lg-1 col-md-1 pl-1 mb-xl-0 mb-lg-0 mb-md-0 mb-sm-3 mb-3">
               <div @click="$emit('remove',{step:'additional',property:'doc'+index})">
-                <simple-svg class=" d-inline-block  pl-xl-3 pl-lg-3 pl-md-1 pl-sm-2 pl-2 pr-xl-4 pr-lg-3 pr-md-3 pr-sm-2  pr-2 removeBtn" :stroke="'none'" :fill="status.step5.error && !doc.name ? '#ef4136' : '#4b92e2'" :filepath="require('@/assets/step_icons/cancel.svg')"  :width="'25px'" :height="'25px'"/>
+                <simple-svg class=" d-inline-block  pl-xl-3 pl-lg-3 pl-md-1 pl-sm-2 pl-2 pr-xl-4 pr-lg-3 pr-md-3 pr-sm-2  pr-2 removeBtn" :stroke="'none'" :fill="(status.step5.error && !doc.not_required && (!doc.name || !doc.file)) ? '#ef4136' : '#4b92e2'" :filepath="require('@/assets/step_icons/cancel.svg')"  :width="'25px'" :height="'25px'"/>
               </div>
             </div>
             <div class="col-xl-11 col-lg-11 col-md-11 col-sm-12 col-12 pr-0">
               <div class="row ml-2">
                 <div class="input-wrap col-xl-7 col-lg-7 col-md-10 col-sm-12 col-12 pl-xl-0 pl-lg-0 pl-md-2 pl-sm-2 pl-2 row mb-xl-0 mb-lg-0 mb-md-0 mb-sm-3 mb-3">
-                    <input type="text" placeholder="Введите название сертификата или лецензии" :class="['block_neutral col-12  py-3',{error: status.step5.error && !doc.name}]" 
+                    <input type="text" placeholder="Введите название сертификата или лецензии" :class="['block_neutral col-12  py-3',{error: status.step5.error && !doc.not_required && !doc.name}]" 
                     :value="doc.name ? doc.name : ''" @input="changeDocName($event, index)"/>
                 </div>
                 <div class="col-xl-5 col-lg-5 col-md-2 col-sm-12 col-12 pl-xl-4 pl-lg-4 pl-md-4 pl-sm-0 pl-xl-0 pl-lg-0 pl-md-2 pl-sm-2 pl-2 align-middle pr-xl-0 pr-lg-0 pr-md-0 row">  
                   <input id="doc_picker" class="d-none" type="file" accept=".png, .jpg, application/pdf" @change="readAsButton($event, index)">
-                  <label id="drop-zone"  :class="['block_neutral text-left container-fluid mb-0 py-3 ',{error : file_errors['error' + index]}]" for="doc_picker">
+                  <label id="drop-zone"  :class="['block_neutral text-left container-fluid mb-0 py-3 ',{error : file_errors['error' + index] || (!doc.not_required && status.step5.error &&  (!doc.name || !doc.file))}]" for="doc_picker">
                     <div class="row">
-                      <simple-svg :stroke="'none'" class="d-flex mt-0 mx-3" :fill="file_errors['error' + index] ? '#ef4136' : 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/photo.svg')" :width="'30px'" :height="'30px'" />
+                      <simple-svg :stroke="'none'" class="d-flex mt-0 mx-3" :fill="(file_errors['error' + index] && !doc.not_required) ? '#ef4136' : 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/photo.svg')" :width="'30px'" :height="'30px'" />
                       <h6 v-if="!file_errors['error' + index] && !doc.file " class="mb-0 d-xl-flex d-lg-flex d-md-none d-sm-flex d-flex">Нажмите или перетяните файл</h6>
                       <h6 v-if="file_errors['error' + index]" class="mb-0 d-xl-flex d-lg-flex d-md-none d-sm-flex d-flex">{{ file_errors['error' + index] }}</h6>
                       <h6 v-if="doc.file" class="mb-0 d-xl-flex d-lg-flex d-md-none d-sm-flex d-flex">Файл загружен!</h6>
@@ -85,7 +85,7 @@
         <h6>Составьте о себе первоначальное мнение, не привязываясь к местам работы и учебы</h6>
       </div>
       <div class="row input-group pragraph-block">
-        <textarea id="aboutMe" placeholder="Ваш текст напишите здесь" maxlength="500" :class="['block_neutral pl-4 py-3 col-12 mr-3 mb-4',{error : status.step5.error}]" @input="changeAbout($event)" :value="about"></textarea>
+        <textarea id="aboutMe" placeholder="Ваш текст напишите здесь" maxlength="500" :class="['block_neutral pl-4 py-3 col-12 mr-3 mb-4']" @input="changeAbout($event)" :value="about"></textarea>
         <div class="max-length text-center py-1">{{charactersLeft}}/ 500</div>
       </div>
     </div>
@@ -218,14 +218,12 @@ export default {
     docs: {
       get: function () {
         let p = this.$store.state.resume.additional.docs
-        delete p.not_required
         return p
       }
     },
     recommendations: {
       get: function () {
         let p = this.$store.state.resume.additional.references
-        delete p.not_required
         for (let i = 0; i < Object.keys(p).length; i++) {
           this.file_errors['error' + i] = ''
           this.validateEmail['email' + i] = true

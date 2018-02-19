@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view @openBuilder="ChooseBuilderView"/>
+    <router-view @openBuilder="ChooseBuilderView" />
     <my-footer></my-footer>
   </div>
 </template>
@@ -26,6 +26,7 @@ export default {
     ChooseBuilderView: function () {
     //   if (!this.$store.state.user.current) {
       this.$router.replace('/creator/preferences')
+
     //   } else {
     //     // открыть профиль
     //   }

@@ -81,7 +81,7 @@ export default {
       let firstError = -1
       if (k === last) { return }
       if (k < last) {
-        isValidated = this.Validate(k)
+        isValidated = this.Validate(last)
       }
       for (let i = k - 1; i >= 0; i--) {
         isValidated = this.Validate(i)
@@ -116,7 +116,9 @@ export default {
       }
     },
     OpenMain: function () {
-      this.$emit('openBuilder')
+      if(!this.$store.state.user.current){
+          this.Change(0, this.steps, 1)
+      }
     },
     ForceClose: function () {
       if (document.getElementById('open-menu').checked) {

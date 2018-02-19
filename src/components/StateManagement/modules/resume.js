@@ -113,18 +113,20 @@ export default {
       docs: {
         doc0: {
           name: '',
-          file: ''
+          file: '',
+          not_required: true
         },
-        not_required: true
+        
       },
       references: {
         reference0: {
           fullName: '',
           email: '',
           phone: { code: '', number: '' },
-          canCall: false
+          canCall: false,
+          not_required: true
         },
-        not_required: true
+        
       },
       validated: false
     }
@@ -164,11 +166,19 @@ export default {
       let isValue
       for (let property in state[step]) {
         if (state[step][property].not_required || property === 'validated') {
+          if (property === 'validated') {
+            state[step][property] = true
+            return
+          }
           continue
         }
         isValue = 0
         if (typeof state[step][property] === 'object' && !Array.isArray(state[step][property])) {
           for (let value in state[step][property]) {
+            if (state[step][property][value].not_required) {
+              isValue = 1
+              continue
+            }
             if (typeof state[step][property][value] === 'object') {
               if (!state[step][property][value] && value.indexOf('resource') === -1) {
                 state[step].validated = false
@@ -178,12 +188,27 @@ export default {
                 isValue = 1
                 break
               }
-              if (value.indexOf('resource') === -1 && property.indexOf('school') === -1 && value.indexOf('skill') === -1 && value.indexOf('work') === -1) {
+              if (value.indexOf('resource') === -1 && property.indexOf('school') === -1 && value.indexOf('skill') === -1 && value.indexOf('work') === -1 && property.indexOf('reference') === -1 && property.indexOf('doc') === -1) {
                 for (let subValue1 in state[step][property][value]) {
                   if (state[step][property][value][subValue1] || state[step][property][value].source) {
                     isValue = 1
                     break
                   }
+                }
+              }
+              if (property.indexOf('reference') >= 0) {
+                if (state[step][property][value].fullName && (state[step][property][value].email || (state[step][property][value].phone.code && state[step][property][value].phone.number))) {
+                  isValue = 1
+                  continue
+                } else {
+                  isValue = 0
+                }
+              }
+              if ( property.indexOf('doc') >= 0) {
+                if (state[step][property][value].name && state[step][property][value].file) {
+                  isValue = 1
+                } else {
+                  isValue = 0
                 }
               }
               if (property.indexOf('school') !== -1 || value.indexOf('skill') !== -1 || value.indexOf('work') !== -1) {
@@ -414,6 +439,7 @@ export default {
     },
     CHANGE_CERTIFICATE_NAME: function (state, value) {
       state.additional.docs['doc' + value.num].name = value.val
+      state.additional.docs['doc' + value.num].not_required = false
     },
     CHANGE_CERTIFICATES: function (state, value) {
       state.additional.docs['doc' + value.num].file = value.val
@@ -422,12 +448,14 @@ export default {
       let length = Object.keys(state.additional.docs).length
       let content = {
         name: '',
-        file: ''
+        file: '',
+        not_required: true
       }
       Vue.set(state.additional.docs, 'doc' + length, content)
     },
     CHANGE_REFERENCE_INFO: function (state, value) {
       state.additional.references['reference' + value.index][value.property] = value.val
+      state.additional.references['reference' + value.index].not_required = !state.additional.references['reference' + value.index].fullName.length && !state.additional.references['reference' + value.index].email && !(state.additional.references['reference' + value.index].phone.code && state.additional.references['reference' + value.index].phone.number) && !state.additional.references['reference' + value.index].canCall
     },
     ADD_NEW_REFERENCE: function (state) {
       let length = Object.keys(state.additional.references).length
@@ -435,7 +463,8 @@ export default {
         fullName: '',
         email: '',
         phone: { code: '', number: '' },
-        canCall: false
+        canCall: false,
+        not_required: true
       }
       Vue.set(state.additional.references, 'reference' + length, content)
     },
