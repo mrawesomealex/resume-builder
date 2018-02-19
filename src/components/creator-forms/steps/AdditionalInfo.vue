@@ -21,10 +21,10 @@
                       <div class="row align-middle mb-4">
                           <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-0 pr-sm-0 pr-0">
                               <input id="person_name" type="text" placeholder="ФИО рекомендующего" :class="['block_neutral col-12 pl-4 py-3 mb-xl-0 mb-lg-0 mb-md-4 mb-sm-4 mb-4',{error : status.step5.error && !person.fullName}]" 
-                              :value="person.fullName" @input="changeRefence()"/>
+                              :value="person.fullName" @input="changeRef($event,'fullName',index)"/>
                           </div>    
                           <div class="d-flex col-xl-5 col-lg-5 col-md-12 col-sm-12 col-12 text-right mr-0 pr-0 pl-xl-3 pl-lg-3 pl-md-0 pl-sm-0 pl-0 " >
-                              <input class="d-none" id="can_call" type="checkbox" value="0" :checked="person.canCall" @change="changeCall()"/>
+                              <input class="d-none" id="can_call" type="checkbox" value="0" :checked="person.canCall" @change="changeRef($event,'canCall',index)"/>
                               <label class="d-block ml-xl-auto ml-lg-auto ml-md-0 mb-0" for="can_call">
                                   <div class="checkbox block_neutral mr-3"></div>
                                   <span>Можно связаться с данным человеком</span>
@@ -35,19 +35,19 @@
                   <div class="container-fluid ">
                       <div class="row">
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 text-right mr-0 pr-0 pl-0 mb-4" id="email">
-                          <input id="email_value" type="email" placeholder="Укажите email" :class="['block_neutral col-12 pl-4 py-3',{error: !validateEmail['email'+index] && status.step5.error}]" :value="person.email" @change="set_email(index)" @input="update_email(index)"/>
+                          <input id="email_value" type="email" placeholder="Укажите email" :class="['block_neutral col-12 pl-4 py-3',{error: !validateEmail['email'+index] || status.step5.error}]" :value="bufEmail ? bufEmail : person.email" @blur="buffEmail = ''" @input="updateEmail($event, index)" @change="changeRef($event,'email',index)"/>
                         </div>
-                        <phone :phoneData="person.phone"></phone>
+                        <phone :phoneData="{phone: person.phone, i: index}" @changePhone="passPhone"></phone>
                       </div>
                   </div>
                 </div>
             </transition>
         </div>
-        <div id="newSkillBtn" :class="['new_btn container-fluid button text-center py-4 mb-2 px-0 mt-4',{error: errorMessage2}]" @click="addNewRef"><span>+ Добавить</span></div>
+        <div id="newRefBtn" :class="['new_btn container-fluid button text-center py-4 mb-2 px-0 mt-4',{error: errorMessage2}]" @click="addNewRef"><span>+ Добавить</span></div>
         <h6 v-if="this.errorMessage2" class="mb-4 error_message">{{errorMessage2}}</h6>   
       </div>
       <h5>Добавьте сертификаты и лицензии</h5>
-      <h6>Документ загрузите в формате PDF или картинкой ( JPEG, PNG )</h6>
+      <h6>Документ должен быть в формате PDF или картинкой ( JPEG, PNG ) и менее 3Мб</h6>
       <div id="certificates" class="row input-group">
         <div  v-for="(doc, key, index) in docs" :key="key" :class="['container-fluid list-item p-3 mb-1',{'mt-0' : index > 0}]">
           <div class="row"> 
@@ -63,11 +63,13 @@
                     :value="doc.name ? doc.name : ''" @input="changeDocName($event, index)"/>
                 </div>
                 <div class="col-xl-5 col-lg-5 col-md-2 col-sm-12 col-12 pl-xl-4 pl-lg-4 pl-md-4 pl-sm-0 pl-xl-0 pl-lg-0 pl-md-2 pl-sm-2 pl-2 align-middle pr-xl-0 pr-lg-0 pr-md-0 row">  
-                  <input id="doc_picker" class="d-none" type="file" accept=".png, .jpg, application/pdf" @change="readAsButton()">
-                  <label @dragover.stop.prevent="dragClass=true" @dragleave.stop.prevent="dragClass=false" @drop.stop.prevent="fileHandler($event)" id="drop-zone"  :class="['block_neutral text-left container-fluid mb-0 py-3 ',{drag_zone: dragClass},{error : file_error || (!doc.file && status.step5.error)}]" for="doc_picker">
+                  <input id="doc_picker" class="d-none" type="file" accept=".png, .jpg, application/pdf" @change="readAsButton($event, index)">
+                  <label id="drop-zone"  :class="['block_neutral text-left container-fluid mb-0 py-3 ',{error : file_errors['error' + index]}]" for="doc_picker">
                     <div class="row">
-                      <simple-svg :stroke="'none'" class="d-flex mt-0 mx-3" :fill="dragClass ? '#64a4ee' : 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/photo.svg')" :width="'30px'" :height="'30px'" />
-                      <h6 @dragover.stop.prevent="dragClass=true"  @drop.stop.prevent="fileHandler($event)" class="mb-0 d-xl-flex d-lg-flex d-md-none d-sm-flex d-flex">Нажмите или перетяните файл</h6>
+                      <simple-svg :stroke="'none'" class="d-flex mt-0 mx-3" :fill="file_errors['error' + index] ? '#ef4136' : 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/photo.svg')" :width="'30px'" :height="'30px'" />
+                      <h6 v-if="!file_errors['error' + index] && !doc.file " class="mb-0 d-xl-flex d-lg-flex d-md-none d-sm-flex d-flex">Нажмите или перетяните файл</h6>
+                      <h6 v-if="file_errors['error' + index]" class="mb-0 d-xl-flex d-lg-flex d-md-none d-sm-flex d-flex">{{ file_errors['error' + index] }}</h6>
+                      <h6 v-if="doc.file" class="mb-0 d-xl-flex d-lg-flex d-md-none d-sm-flex d-flex">Файл загружен!</h6>
                     </div>
                   </label>
                 </div>
@@ -83,138 +85,205 @@
         <h6>Составьте о себе первоначальное мнение, не привязываясь к местам работы и учебы</h6>
       </div>
       <div class="row input-group pragraph-block">
-        <!-- @input="changeWorkplace($event,'duties',index)"    
-            && !work.duties   
-            :value="work.duties" 
-            {{charactersLeft1}} / 900-->
-        <textarea id="aboutMe" placeholder="Ваш текст напишите здесь" maxlength="500" :class="['block_neutral pl-4 py-3 col-12 mr-3 mb-4',{error : status.step5.error}]"></textarea>
-        <div class="max-length text-center py-1">/ 500</div>
+        <textarea id="aboutMe" placeholder="Ваш текст напишите здесь" maxlength="500" :class="['block_neutral pl-4 py-3 col-12 mr-3 mb-4',{error : status.step5.error}]" @input="changeAbout($event)" :value="about"></textarea>
+        <div class="max-length text-center py-1">{{charactersLeft}}/ 500</div>
       </div>
     </div>
 </template>
 
 <script>
+import Vue from 'vue'
 import Phone from '@/components/creator-forms/steps/Phone'
-    export default {
-      props: ['status'],
-      data: function () {
-        return {
-          dragClass: false,
-          errorMessage1: '',
-          errorMessage2: '',
-          file_error: '',
-          current: '',
-        }
-      },
-      methods: {
-        changeCurrent (i) {
-          this.current = this.current === i ? -1 : i
-        },
-        changeDocName (e,i) {
-          
-        },
-        readAsButton () {
-
-        },
-        fileHandler (e) {
-          
-        },
-        addNewDoc () {
-
-        },
-        changeReference () {
-
-        },
-        update_email (i) {
-
-        },
-        addNewRef () {
-
-        },
-        changeCall () {
-
-        }
-      },
-      computed: {
-        docs: {
-          get: function () {
-            let p = this.$store.state.resume.additional.docs
-            delete p.not_required
-            return p
-          },
-          set: function (newFlag) {
-
-          }
-        },
-        recommendations:{
-          get: function () {
-            let p = this.$store.state.resume.additional.references
-            delete p.not_required
-            return p
-          },
-          set: function (newFlag) {
-
-          }
-        },
-        validateEmail: {
-          get: function () {
-            let p = {}
-            let length = Object.keys(this.recommendations).length
-            for ( let i = 0; i < length; i++) {
-              p['email' + i] = false
-            }
-            return p
-          }
-        },
-        statuses: function () {
-          let list = {}
-          for (let k = 0; k <  Object.keys(this.recommendations).length; k++) {
-            if (k === this.current) {
-              list['status' + k] = true
-            } else {
-              list['status' + k] = false
-            }
-          }
-          return list
-        }
-      },
-      components: {
-        Phone
-      }   
+export default {
+  props: ['status'],
+  data: function () {
+    return {
+      errorMessage1: '',
+      errorMessage2: '',
+      current: '',
+      bufEmail: '',
+      maxFileSize: 3153827,
+      file_errors: {},
+      validateEmail: {},
+      VALID_EMAIL_REG: /^(([^<>()[\]\\.,;:\s@]+(\.[^<>()[\]\\.,;:\s@]+)*)|(.+))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     }
+  },
+  methods: {
+    changeCurrent (i) {
+      this.current = this.current === i ? -1 : i
+    },
+    changeDocName (e, i) {
+      this.$store.commit('CHANGE_CERTIFICATE_NAME', {
+        num: i,
+        val: e.target.value
+      })
+    },
+    readAsButton (e, index) {
+      let reader = new FileReader()
+      let input = $(e.target)[0].files[0]
+      reader.onload = e => {
+        this.$store.commit('CHANGE_CERTIFICATES', {
+          num: index,
+          val: e.target.result
+        })
+      }
+      if (
+        input.size > this.maxFileSize ||
+        (input.type.indexOf('image/png') === -1 &&
+          input.type.indexOf('image/jpeg') === -1 &&
+          input.type.indexOf('application/pdf') === -1)
+      ) {
+        Vue.set(
+          this.file_errors,
+          'error' + index,
+          input.size > this.maxFileSize
+            ? 'Файл больше 3МБ!'
+            : 'Неккоректный формат файла'
+        )
+        this.$store.commit('CHANGE_CERTIFICATES', {
+          num: index,
+          val: ''
+        })
+      } else {
+        Vue.set(this.file_errors, 'error' + index, '')
+        reader.readAsDataURL(input)
+      }
+      this.$forceUpdate()
+    },
+    addNewDoc () {
+      for (let key in this.docs) {
+        if (!this.docs[key].name || !this.docs[key].file.length) {
+          this.errorMessage1 = 'У вас уже существует пустой блок'
+          return
+        }
+      }
+      this.$store.commit('ADD_NEW_CERTIFICATE')
+    },
+    updateEmail (e, index) {
+      if (this.bufEmail) {
+        this.$store.commit('CHANGE_REFERENCE_INFO', {
+          index: index,
+          property: 'email',
+          val: ''
+        })
+      }
+      this.bufEmail = e.target.value
+      if (!this.VALID_EMAIL_REG.test(e.target.value)) {
+        this.validateEmail['email' + index] = false
+      } else {
+        this.validateEmail['email' + index] = true
+      }
+      this.$forceUpdate()
+    },
+    passPhone (value) {
+      this.$store.commit('CHANGE_REFERENCE_INFO', {
+        index: value.num,
+        property: 'phone',
+        val: value.phone
+      })
+    },
+    changeRef (e, field, index) {
+      if (this.validateEmail['email' + index]) {
+        let value =
+          field.indexOf('canCall') >= 0
+            ? !this.recommendations['reference' + index].canCall
+            : e.target.value
+        this.bufEmail = ''
+        this.$store.commit('CHANGE_REFERENCE_INFO', {
+          index: index,
+          property: field,
+          val: value
+        })
+      }
+    },
+    addNewRef () {
+      this.$store.commit('ADD_NEW_REFERENCE')
+    },
+    changeAbout (e) {
+      this.$store.commit('CHANGE_ABOUTME', e.target.value)
+    }
+  },
+  computed: {
+    about: function () {
+      return this.$store.state.resume.additional.aboutMe.val
+    },
+    charactersLeft: function () {
+      return (
+        500 -
+        (this.$store.state.resume.additional.aboutMe.val.length > 0
+          ? this.$store.state.resume.additional.aboutMe.val.length
+          : 0)
+      )
+    },
+    docs: {
+      get: function () {
+        let p = this.$store.state.resume.additional.docs
+        delete p.not_required
+        return p
+      }
+    },
+    recommendations: {
+      get: function () {
+        let p = this.$store.state.resume.additional.references
+        delete p.not_required
+        for (let i = 0; i < Object.keys(p).length; i++) {
+          this.file_errors['error' + i] = ''
+          this.validateEmail['email' + i] = true
+        }
+        return p
+      }
+    },
+    statuses: function () {
+      let list = {}
+      for (let k = 0; k < Object.keys(this.recommendations).length; k++) {
+        if (k === this.current) {
+          list['status' + k] = true
+        } else {
+          list['status' + k] = false
+        }
+      }
+      return list
+    }
+  },
+  components: {
+    Phone
+  }
+}
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 @import "../../../assets/styles/global";
 input[type="radio"]:checked ~ label > div,
-input[type="checkbox"]:checked ~ label > div{
-    background: $btn_blue_text url("../../../assets/step_icons/checked.svg") no-repeat ;
-    background-size: contain;
-    border: 1px solid $btn_blue_text;
+input[type="checkbox"]:checked ~ label > div {
+  background: $btn_blue_text url("../../../assets/step_icons/checked.svg")
+    no-repeat;
+  background-size: contain;
+  border: 1px solid $btn_blue_text;
 }
-.simple-svg-wrapper{
-    transition: 0.3s;
+.simple-svg-wrapper {
+  transition: 0.3s;
 }
-#doc_picker ~label{
+#doc_picker ~ label {
   background: none !important;
 }
-label[for="doc_picker"]{
-    background: none;
-    border: 1px dashed $block_grey_outline;
-    span{
-        color: $main_black
-    }
+label[for="doc_picker"] {
+  background: none;
+  border: 1px dashed $block_grey_outline;
+  span {
+    color: $main_black;
+  }
 }
-label[for="doc_picker"]:hover{
-    overflow: hidden;
-    border: 1px solid $btn_blue_text;
-    background: $btn_blue_inactive;
-    h6, h6{
-        color:$btn_blue_text;
-        transition: 0.2s;
-    }
+label[for="doc_picker"]:hover {
+  overflow: hidden;
+  border: 1px solid $btn_blue_text;
+  background: $btn_blue_inactive;
+  h6,
+  h6 {
+    color: $btn_blue_text;
+    transition: 0.2s;
+  }
 }
-#aboutMe{
+#aboutMe {
   height: 20vh;
 }
 </style>

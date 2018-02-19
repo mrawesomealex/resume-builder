@@ -38,6 +38,9 @@ export default {
       if (this.removeItem.step === 'experience') {
         result = this.$store.dispatch('removeWork', this.removeItem.property)
       }
+      if (this.removeItem.step === 'additional') {
+        result = this.removeItem.property.indexOf('reference') >= 0 ? this.$store.dispatch('removeRef', this.removeItem.property) : this.$store.dispatch('removeResource', this.removeItem.property)
+      }
       result.then(() => {
         this.isRemovable = false
         this.$emit('closeRemoveWindow')

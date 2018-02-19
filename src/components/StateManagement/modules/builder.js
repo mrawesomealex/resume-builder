@@ -13,7 +13,9 @@ export default{
   },
   mutations: {
     CHANGE_STEP: function (state, status) {
-      state.steps['step' + status.from].current = 0
+      for (let key in state.steps) {
+        state.steps[key].current = 0
+      }
       state.steps['step' + status.next].current = 1
       state.currentStep = status.next
       state.lastStep = status.from

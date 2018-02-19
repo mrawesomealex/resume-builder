@@ -134,15 +134,15 @@
         }
       },
       methods: {
-        countPeriod(Date1, Date2){
+        countPeriod (Date1, Date2) {
           let period
           if (Date1.getFullYear() === Date2.getFullYear()) {
-              period = Date2.getMonth() - Date1.getMonth()
-              return period < 5 ? period  + ' месяца ' : period  + ' месяцев '
+            period = Date2.getMonth() - Date1.getMonth()
+            return period < 5 ? period + ' месяца ' : period + ' месяцев '
           }
           if (Date1.getFullYear() < Date2.getFullYear()) {
-              period = Date2.getFullYear() - Date1.getFullYear()
-              return period === 1 ? period + ' год' : period < 5 && period !== 0 ? period + ' года' : period + ' лет'
+            period = Date2.getFullYear() - Date1.getFullYear()
+            return period === 1 ? period + ' год' : period < 5 && period !== 0 ? period + ' года' : period + ' лет'
           }
           this.dateError.endErr = true
           return ''
@@ -158,16 +158,16 @@
           } else {
             val = field.value ? field.value : e.target.value
             if (field === 'begin' || field === 'end') {
-              if (e.target.value.length < 10 &&  !/(([0-2]\d){1}|(3[0-1]){1})\.((0\d){1}|(1[0-2]){1})\.\d{4}/.test(e.target.value)) {
+              if (e.target.value.length < 10 && !/(([0-2]\d){1}|(3[0-1]){1})\.((0\d){1}|(1[0-2]){1})\.\d{4}/.test(e.target.value)) {
                 field === 'begin' ? this.dateBuff1 = e.target.value : this.dateBuff2 = e.target.value
               }
-              if ( !/(([0-2]\d){1}|(3[0-1]){1})\.((0\d){1}|(1[0-2]){1})\.\d{4}/.test(e.target.value)) {  
+              if (!/(([0-2]\d){1}|(3[0-1]){1})\.((0\d){1}|(1[0-2]){1})\.\d{4}/.test(e.target.value)) {
                 field === 'begin' ? this.dateError.beginErr = true : this.dateError.endErr = true
                 return
               } else {
                 this.dateError.beginErr = false
                 this.dateError.endErr = false
-                val = new Date(parseInt(val.substr(6,4)), parseInt(val.substr(3,2)) - 1, parseInt(val.substr(0,2)), 0, 0, 0)
+                val = new Date(parseInt(val.substr(6, 4)), parseInt(val.substr(3, 2)) - 1, parseInt(val.substr(0, 2)), 0, 0, 0)
               }
             }
           }
@@ -219,7 +219,7 @@
           if (this.workPlaces['work' + this.current].begin && this.workPlaces['work' + this.current].end.val) {
             sentence += this.countPeriod(this.workPlaces['work' + this.current].begin, this.workPlaces['work' + this.current].end.val)
           } else {
-            sentence += (this.workPlaces['work' + this.current].begin && this.workPlaces['work' + this.current].inProgress) ? this.countPeriod(this.workPlaces['work' + this.current].begin, new Date) :'--введите Дату начала и Дату окончания работы на данной позиции--'
+            sentence += this.workPlaces['work' + this.current].begin && this.workPlaces['work' + this.current].inProgress ? this.countPeriod(this.workPlaces['work' + this.current].begin, new Date()) : '--введите Дату начала и Дату окончания работы на данной позиции--'
           }
           sentence += ' на должности '
           sentence += this.workPlaces['work' + this.current].title ? this.workPlaces['work' + this.current].title : '--укажите должность--'
@@ -239,10 +239,10 @@
           return sentence
         },
         charactersLeft1 () {
-          return 900 - (this.current >= 0 ? this.workPlaces['work'+this.current].duties.length : 0)
+          return 900 - (this.current >= 0 ? this.workPlaces['work' + this.current].duties.length : 0)
         },
         charactersLeft2 () {
-          return 900 - (this.current >= 0 ? this.workPlaces['work'+this.current].achievements.val.length : 0)
+          return 900 - (this.current >= 0 ? this.workPlaces['work' + this.current].achievements.val.length : 0)
         }
       }
     }

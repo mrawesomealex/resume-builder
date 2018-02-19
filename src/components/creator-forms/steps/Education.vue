@@ -95,9 +95,9 @@
             val = field === 'inProgress' ? !this.schools['school' + i].inProgress : !this.schools['school' + i].correct
           } else {
             val = e.target.value
-            if (field === 'beginYear' || field === 'endYear' && !this.schools['school' + i].inProgress) {
+            if (field === 'beginYear' || (field === 'endYear' && !this.schools['school' + i].inProgress)) {
               (this.schools['school' + i].endYear.val - this.schools['school' + i].beginYear < 0) ? this.dateError = true : this.dateError = false
-            }else{
+            } else {
               this.dateError = false
             }
           }

@@ -128,6 +128,7 @@ export default {
     }
   },
   beforeCreate: function () {
+    // для незарегистрированных пользователей
     this.$router.replace('/creator/preferences')
   },
   created: function () {

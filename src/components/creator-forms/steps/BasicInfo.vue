@@ -445,7 +445,7 @@
             $('#preview_block').css({'background': 'url("' + e.target.result + '") no-repeat 50% 50%', 'background-size': 'contain'})
             this.photo = e.target.result
           }
-          if (input.size > this.maxFileSize && (input.type.indexOf('image/png') === -1 || input.type.indexOf('image/jpeg') === -1)) {
+          if (input.size > this.maxFileSize || (input.type.indexOf('image/png') === -1 && input.type.indexOf('image/jpeg') === -1)) {
             this.file_error = true
           } else {
             this.file_error = false
@@ -461,7 +461,7 @@
             $('#preview_block').css({'background': 'url("' + e.target.result + '") no-repeat 50% 50%', 'background-size': 'contain'})
             this.photo = e.target.result
           }
-          if (file.size > this.maxFileSize && (file.type.indexOf('image/png') === -1 || file.type.indexOf('image/jpeg') === -1)) {
+          if (file.size > this.maxFileSize || file.type.indexOf('image/png') === -1 || file.type.indexOf('image/jpeg') === -1) {
             this.file_error = true
           } else {
             this.file_error = false

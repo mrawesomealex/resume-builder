@@ -405,8 +405,47 @@ export default {
     },
     REMOVE_WORK: function (state, work) {
       Vue.delete(state.experience.works, work)
+    },
+
+    // Мутации Прочее
+
+    CHANGE_ABOUTME: function (state, value) {
+      state.additional.aboutMe.val = value
+    },
+    CHANGE_CERTIFICATE_NAME: function (state, value) {
+      state.additional.docs['doc' + value.num].name = value.val
+    },
+    CHANGE_CERTIFICATES: function (state, value) {
+      state.additional.docs['doc' + value.num].file = value.val
+    },
+    ADD_NEW_CERTIFICATE: function (state) {
+      let length = Object.keys(state.additional.docs).length
+      let content = {
+        name: '',
+        file: ''
+      }
+      Vue.set(state.additional.docs, 'doc' + length, content)
+    },
+    CHANGE_REFERENCE_INFO: function (state, value) {
+      state.additional.references['reference' + value.index][value.property] = value.val
+    },
+    ADD_NEW_REFERENCE: function (state) {
+      let length = Object.keys(state.additional.references).length
+      let content = {
+        fullName: '',
+        email: '',
+        phone: { code: '', number: '' },
+        canCall: false
+      }
+      Vue.set(state.additional.references, 'reference' + length, content)
+    },
+    REMOVE_REF: function (state, reference) {
+      Vue.delete(state.additional.references, reference)
+    },
+    REMOVE_RESOURCE: function (state, doc) {
+      Vue.delete(state.additional.docs, doc)
     }
-},
+  },
   actions: {
     removeSchool ({commit, state}, school) {
       return new Promise((resolve, reject) => {
@@ -459,5 +498,27 @@ export default {
         }
       })
     },
+    removeRef ({commit, state}, ref) {
+      return new Promise((resolve, reject) => {
+        if (Object.keys(state.additional.references).length > 1) {
+          commit('REMOVE_REF', ref)
+          resolve()
+        } else {
+          // eslint-disable-next-line
+          throw 'DeletionError'
+        }
+      })
+    },
+    removeResource ({commit, state}, doc) {
+      return new Promise((resolve, reject) => {
+        if (Object.keys(state.additional.docs).length > 1) {
+          commit('REMOVE_RESOURCE', doc)
+          resolve()
+        } else {
+          // eslint-disable-next-line
+          throw 'DeletionError'
+        }
+      })
+    }
   }
 }
