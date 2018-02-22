@@ -115,8 +115,7 @@ export default {
           name: '',
           file: '',
           not_required: true
-        },
-        
+        }
       },
       references: {
         reference0: {
@@ -125,8 +124,7 @@ export default {
           phone: { code: '', number: '' },
           canCall: false,
           not_required: true
-        },
-        
+        }
       },
       validated: false
     }
@@ -204,7 +202,7 @@ export default {
                   isValue = 0
                 }
               }
-              if ( property.indexOf('doc') >= 0) {
+              if (property.indexOf('doc') >= 0) {
                 if (state[step][property][value].name && state[step][property][value].file) {
                   isValue = 1
                 } else {

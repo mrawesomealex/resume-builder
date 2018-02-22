@@ -196,6 +196,31 @@ export default {
       }
     }
   },
+  created: function () {
+    let p = {}
+
+    p['Текущий статус'] = {}
+    p['Текущий статус']['status'] = this.work_status[0] || this.work_status[1] || this.work_status[2]
+    p['Текущий статус']['link'] = '#navigation'
+
+    p['Сфера деятельности'] = {}
+    p['Сфера деятельности']['status'] = !!this.area
+    p['Сфера деятельности']['link'] = '#work_status'
+
+    p['Тип зарплаты'] = {}
+    p['Тип зарплаты']['status'] = this.salary_type[0] || this.salary_type[1]
+    p['Тип зарплаты']['link'] = '#work_area'
+
+    p['Зарплата'] = {}
+    p['Зарплата']['status'] = parseInt(this.min_salary)
+    p['Зарплата']['link'] = '#work_salary'
+
+    p['Количество часов'] = {}
+    p['Количество часов']['status'] = parseInt(this.hours)
+    p['Количество часов']['link'] = '#salary_counts'
+
+    this.$emit('formSideMenu', p)
+  },
   mounted: function () {
     this.salaryInfo.local_hours = this.$store.state.resume.preferences.hours
     this.salaryInfo.local_salary = this.$store.state.resume.preferences.salary

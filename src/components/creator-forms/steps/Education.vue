@@ -4,7 +4,7 @@
         <h5>Заполните информацию о вашем образовании</h5>
         <h6>Для добавления места учебы нажимайте соответсвующую клавишу</h6>
       </div>
-       <div  v-for="(school, key, index) in schools" :key="key" :class="['container-fluid list-item p-0 school mb-2',{'mt-0' : index > 0},{open:statuses['status'+index]}]">
+       <div :id="'school'+index" v-for="(school, key, index) in schools" :key="key" :class="['container-fluid list-item p-0 school mb-2',{'mt-0' : index > 0},{open:statuses['status'+index]}]">
           <header class="row p-4" :class="[{errorColor: status.step2.error && (!school.name || !school.major || !school.beginYear || !school.degreeType || !school.correct || (!school.endYear.val && !school.inProgress))}]">
               <simple-svg class="d-xl-inline-block d-lg-inline-block d-md-inline-block d-sm-inline-block d-none mx-3" :stroke="'none'" :fill="status.step2.error && (!school.name || !school.major || !school.beginYear || !school.degreeType || !school.correct || (!school.endYear.val && !school.inProgress)) ?'#ef4136' : '#4b92e2'" :filepath="require('@/assets/step_icons/university.svg')"  :width="'25px'" :height="'25px'"/>
               <label for="school_name" class="ml-xl-0 ml-lg-0 ml-md-0 ml-sm-0 ml-3" @click="changeCurrent(index)">
@@ -52,8 +52,13 @@
                     <div  class="container-fluid px-0">
                         <div class="row px-0">
                             <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-6 pl-0 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-2 pr-2 mb-xl-0 mb-lg-0 mb-md-0 mb-sm-4 mb-4">
-                                <input id="begin_year" :class="['block_neutral col-12 pl-4 py-3',{error : (status.step2.error && !school.beginYear) || (dateError && school.beginYear)}]" type="number" placeholder="Год начала"
-                                :value="school.beginYear" @input="changeSchool($event,'beginYear',index)">
+                                <input 
+                                  id="begin_year"
+                                  :class="['block_neutral col-12 pl-4 py-3',{error : (status.step2.error && !school.beginYear) || (dateError && school.beginYear)}]"
+                                  type="number"
+                                  placeholder="Год начала"
+                                  :value="school.beginYear"
+                                  @input="changeSchool($event,'beginYear',index)">
                             </div>
                             <div class="col-xl-2 col-lg-2 col-md-2 col-sm-6 col-6 text-right mr-0 pl-xl-0 pl-lg-0 pl-md-0 pl-sm-2 pl=2 pr-xl-3 pr-lg-3 pr-md-3 pr-sm-0 pr-0 mb-xl-0 mb-lg-0 mb-md-0 mb-sm-4 mb-4">    
                                 <input id="end_year" :class="['block_neutral col-12 pl-4 py-3',{error : (status.step2.error && !school.endYear.val && !school.inProgress) || (dateError && school.endYear)}]"  type="number" :placeholder="school.endYear.not_required ? '----' : 'Год окончания'" :disabled="school.endYear.not_required"
@@ -85,7 +90,23 @@
           dateError: false
         }
       },
+      created: function () {
+        this.CreateMenu()
+      },
       methods: {
+        CreateMenu () {
+          let p = {}
+          let q = 0
+          let prop = ''
+          for (let school in this.schools) {
+            prop = q + 1 + ' ' + (this.schools[school].name ? this.schools[school].name : 'Новое уч. заведение')
+            p[prop] = {}
+            p[prop]['status'] = school.name && school.major && school.beginYear && school.degreeType && school.correct && (school.inProgress ? school.endYear.val : 1)
+            p[prop]['link'] = q > 0 ? '#school' + (q - 1) : '#navigation'
+            q++
+          }
+          this.$emit('formSideMenu', p)
+        },
         changeCurrent (i) {
           this.current = this.current === i ? -1 : i
         },
@@ -96,7 +117,9 @@
           } else {
             val = e.target.value
             if (field === 'beginYear' || (field === 'endYear' && !this.schools['school' + i].inProgress)) {
-              (this.schools['school' + i].endYear.val - this.schools['school' + i].beginYear < 0) ? this.dateError = true : this.dateError = false
+              let begin = field === 'beginYear' ? val : this.schools['school' + i].beginYear
+              let end = field === 'endYear' ? val : this.schools['school' + i].endYear.val
+              this.dateError = (end - begin) < 0
             } else {
               this.dateError = false
             }
@@ -107,6 +130,7 @@
             number: i,
             value: val
           })
+          if (field === 'name') { this.CreateMenu() }
         },
         addNew () {
           for (let key in this.schools) {
@@ -116,6 +140,7 @@
             }
           }
           this.schools = 1
+          this.CreateMenu()
         }
       },
       computed: {
@@ -153,9 +178,18 @@
           sentence += this.schools['school' + this.current].degreeType ? ' (' + this.schools['school' + this.current].degreeType + ') ' : ' --укажите степень-- '
           sentence += ' в '
           sentence += this.schools['school' + this.current].name ? this.schools['school' + this.current].name + ' ' : ' --укажите название учебного заведения -- '
-          if (period < 0) {
-            sentence += period < 5 ? period === 1 ? period + ' год' : period > 1 ? period + ' года' : period + ' лет ' : period + ' лет'
-            sentence += !this.schools['school' + this.current].inProgress ? ' (c ' + (this.schools['school' + this.current].beginYear ? this.schools['school' + this.current].beginYear : '--год начала--') + ' по ' + (this.schools['school' + this.current].endYear.val ? this.schools['school' + this.current].endYear.val : '--год окончания--') + ' )' : ''
+          if (period > 0) {
+            if (this.schools['school' + this.current].inProgress) {
+              sentence += period < 5 ? period === 1 ? period + ' год' : period > 1 ? period + ' года' : period + ' лет ' : period + ' лет'
+            } else {
+              if (!this.schools['school' + this.current].inProgress) {
+                sentence += ' (c '
+                sentence += this.schools['school' + this.current].beginYear ? this.schools['school' + this.current].beginYear : '--год начала--'
+                sentence += ' по '
+                sentence += this.schools['school' + this.current].endYear.val ? this.schools['school' + this.current].endYear.val : '--год окончания--'
+                sentence += ' )'
+              }
+            }
           } else {
             sentence += ' (c --год начала-- по --год окончания--) '
           }

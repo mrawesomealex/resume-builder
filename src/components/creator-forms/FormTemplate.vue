@@ -24,6 +24,17 @@
                             <simple-svg class="d-flex open-menu ml-3 mr-2" :stroke="'none'" fill="#4b92e2" :filepath="require('@/assets/step_icons/menu.svg')" :width="'25px'" :height="'25px'"/>
                             <span class="d-flex ml-0">{{item.content}}</span>
                         </header>
+                        <ul id="mobile_anchors" class="pl-5 ml-4 pt-2">
+                                <li :class="['row py-2 pl-4', {current: (!steps['step'+step].error && steps['step'+step].current) || (steps['step'+step].current && point.status)}, {done: steps['step'+step].done && point.status}, {errorLink: steps['step'+step].error && !point.status}]" v-for="(point, key) in list" :key="key" >
+                                    <a class="col-12" v-scroll-to="point.link"><span v-if="steps['step'+step].error && !point.status">! </span>{{key}}</a>
+                                    <ul class="pt-2 pb-3" v-if="Object.keys(point).length" :key="key">
+                                        <li v-if="skey !== 'link' && skey !== 'status'" :class="['row py-2 pl-4', {current: (!steps['step'+step].error && steps['step'+step].current) || (steps['step'+step].current && item.status)}, {done: steps['step'+step].done && item.status}, {errorLink: steps['step'+step].error && !item.status}]" 
+                                            v-for="(item, skey) in point" :key="skey">
+                                            <a v-scroll-to="item.link"><span v-if="steps['step'+step].error && !item.status">! </span>{{skey}}</a>
+                                        </li>                                    
+                                    </ul>
+                                </li>
+                        </ul>
                     </h3>
                     <div class="d-flex pt-xl-0 pt-lg-0 pt-md-0 pt-sm-5 mt-5 mt-xl-0 mt-lg-0 mt-md-0 mt-sm-5 mt-5">
                         <input id="open-menu" class="d-none" type="checkbox">
@@ -33,8 +44,19 @@
                             <label id="btn-open" for="open-menu">
                                 <simple-svg class="d-flex" :stroke="'none'" :fill="menu_btn_status" :filepath="require('@/assets/step_icons/menu.svg')" :width="'25px'" :height="'25px'"/>
                             </label>
+                            <ul id="anchors" class="container-fluid ml-3">
+                                <li :class="['row py-2 pl-xl-4 pl-lg-4 pl-md-2', {current: (!steps['step'+step].error && steps['step'+step].current) || (steps['step'+step].current && point.status)}, {done: steps['step'+step].done && point.status}, {errorLink: steps['step'+step].error && !point.status}]" v-for="(point, key) in list" :key="key" >
+                                    <a v-scroll-to="point.link"><span v-if="steps['step'+step].error && !point.status">! </span>{{key}}</a>
+                                    <ul v-if="Object.keys(point).length" :key="key">
+                                        <li v-if="skey !== 'link' && skey !== 'status'" :class="['row py-2 pl-4', {current: (!steps['step'+step].error && steps['step'+step].current) || (steps['step'+step].current && item.status)}, {done: steps['step'+step].done && item.status}, {errorLink: steps['step'+step].error && !item.status}]" 
+                                            v-for="(item, skey) in point" :key="skey">
+                                            <a v-scroll-to="item.link"><span v-if="steps['step'+step].error && !item.status">! </span>{{skey}}</a>
+                                        </li>                                    
+                                    </ul>
+                                </li>
+                            </ul>
                         </div>
-                        <router-view @remove="Confirmation($event)" :status="steps" class="pt-5 pl-xl-5 pl-lg-4 pl-md-4 pr-5 pl-sm-4 pl-4 "></router-view>
+                        <router-view @click.native="ForceClose()" @remove="Confirmation($event)" @formSideMenu="SideMenuGenerator" :status="steps" class="pt-5 pl-xl-5 pl-lg-4 pl-md-4 pr-5 pl-sm-4 pl-4 "></router-view>
                     </div>
                     <div id="controls" class="container-fluid py-4">
                         <button :disabled="steps.step0.current ? true : false" @click="Change(previous, step, 1)" class="button blue"><a>Предыдущий шаг</a></button>
@@ -64,7 +86,8 @@ export default {
       confirmOpen: false,
       rItem: '',
       mobile_subMenu: false,
-      fixedSub: false
+      fixedSub: false,
+      list: {}
     }
   },
   methods: {
@@ -116,8 +139,8 @@ export default {
       }
     },
     OpenMain: function () {
-      if(!this.$store.state.user.current){
-          this.Change(0, this.steps, 1)
+      if (!this.$store.state.user.current) {
+        this.Change(0, this.steps, 1)
       }
     },
     ForceClose: function () {
@@ -127,6 +150,9 @@ export default {
     },
     Open_Menu: function () {
       this.mobile_subMenu = !this.mobile_subMenu
+    },
+    SideMenuGenerator: function (list) {
+      this.list = list
     }
   },
   beforeCreate: function () {
@@ -190,6 +216,54 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/styles/global";
 
+#anchors{
+    opacity: 0;
+    transition: 0.3s;
+    width: 14vw;
+    visibility: hidden;
+    height: 480px;
+    ul{
+        font-size: 10pt;
+        padding: 0;
+        li.current{
+            a{ color: $btn_blue_text }
+        }
+    }
+            li.done{
+         a {color: $done!important;}
+        }
+}
+#anchors::-webkit-scrollbar{
+    width: 0px;
+}
+#mobile_anchors{
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.2s;
+    margin-top: 90px;
+    font-size: 14pt;
+    ul{
+        font-size: 10pt;
+    }
+    li.current{
+            a{ color: $btn_blue_text }
+    }
+    li.errorLink{
+            a {color: $active!important;}
+    }
+    li.done{
+         a {color: $done!important;}
+    }
+}
+#anchors,
+#mobile_anchors{
+    list-style-type: none;
+    font-family: $Roboto;
+    a:hover{
+      transition: opacity 0s;
+      opacity: .6;
+    }
+}
 $button-grey: #fcfcfc;
 .hideBlock{
     top: 141.031px;
@@ -205,6 +279,7 @@ $button-grey: #fcfcfc;
     min-width:5%;
     border-top-left-radius: 6px; 
     transition: 0.2s;
+    overflow: hidden;
     cursor: pointer;
     label{
         cursor: pointer;
@@ -218,41 +293,51 @@ $button-grey: #fcfcfc;
 }
 input[type="checkbox"]:checked~#menu-trigger{
     min-width: 20%;
+    #anchors{
+        opacity: 1;
+        transition-delay: 0.2s;
+        visibility:visible;
+    }
 }
 .menu_error{
    background: $btn_red_inactive;
 }
-input[type="checkbox"]:checked~#menu-trigger.menu_error{
-   box-shadow: 11px 7px 10px $btn_red_inactive inset,0px -10px 10px $btn_red_inactive inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset ;
-}
-
 .menu_current{
    background: $btn_blue_inactive;
 }
-input[type="checkbox"]:checked~#menu-trigger.menu_current{
-   box-shadow: 11px 7px 10px $btn_blue_inactive inset,0px -10px 10px $btn_blue_inactive inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset ;
-}
 
 .menu_complete{
-   background: #f2fff8;
-}
-input[type="checkbox"]:checked~#menu-trigger.menu_complete{
-   box-shadow: 11px 7px 10px #f2fff8 inset,0px -10px 10px #f2fff8 inset,-1px 0px 10px rgba(0, 0, 0, 0.096) inset;
+   background: #f3f8f5;
 }
 
 .fixed{
     position: fixed;
-    top: 75px;
+    top: 83px;
     height: 100%;
     transition: min-width 0s;
+}
+.fixed~#anchors{
+    position: fixed;
+    top: 148px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+h3{
+    flex-direction: column
 }
 h3.fixed{
     height: 100px;
     transition: 0.3s;
 }
+h3.menuOpen{
+  #mobile_anchors{
+    opacity: 1;
+  }
+}
 h3.fixed.menuOpen{
     width:inherit;
-    height: 310px;
+    height: 270px;
+    overflow-y: scroll;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
 }
@@ -305,6 +390,7 @@ h3.fixed.menuOpen{
     nav.white_block{
         border: 1px solid $block_grey_outline
     }
+
     nav{
         position: relative;
         display: flex;
@@ -342,7 +428,8 @@ h3.fixed.menuOpen{
         a:hover{
             background: $button-grey;
         }
-        div{
+        div,
+        img{
             height: 50px;
             width: 40px;
         }
@@ -492,6 +579,27 @@ h3.fixed.menuOpen{
         left:0;
         top:0px;
     }
+    li.current{
+        a, a:hover{
+          color: $btn_blue_text;
+        }
+    }
+    li.done{
+        a, a:hover{
+          color: $done;
+        }  
+    }
+    #anchors li.errorLink{
+        a, a:hover{
+          color: $active;
+        }  
+    }
+    @media (min-width: 1600px) {
+        #anchors{
+            width: 12vw;
+            padding-left: 0px;
+        }    
+    }
     @media (max-width: 1200px){
         nav{
             font-size: 10pt;
@@ -499,8 +607,22 @@ h3.fixed.menuOpen{
         #menu-trigger{
             min-width:6%;
         }
+        #anchors{
+            width: 16vw;
+        }
     }
     @media (max-width:992px) and (min-width: 768px) {
+    #anchors{
+        list-style-type: none;
+        width: 12vw;
+        font-size: 10pt;
+        ul{
+            font-size: 8pt;
+        }
+        li{
+            margin-top: 20px;
+        }
+    }
     #menu-trigger{
       min-width:8%;
     }

@@ -4,8 +4,8 @@
         <h5>Профессиональные навыки</h5>
         <h6>В данную категорию входят все навыки, кроме владения языками. Для указания уровня поставьте  хештег и цифру после него (1 - 5) </h6>
       </div>
-      <div class="container-fluid input-group px-0 align-middle">
-        <div  v-for="(skill, key, index) in profSkills" :key="key" :class="['container-fluid list-item p-3 mb-1',{'mt-0' : index > 0}]">
+      <div id="skills" class="container-fluid input-group px-0 align-middle">
+        <div  v-for="(skill, key, index) in profSkills" :key="key" :id="'skill'+index" :class="['container-fluid list-item p-3 mb-1',{'mt-0' : index > 0}]">
           <div class="col-12 row px-0 ml-0 align-middle"> 
             <div @click="$emit('remove',{step:'skills',property:'skill'+index})">
               <simple-svg class=" d-inline-block pb-xl-0 pb-lg-0 pb-md-0 pb-sm-2 pb-2 pl-xl-3 pl-lg-3 pl-md-1 pl-sm-2 pl-2 pr-xl-4 pr-lg-3 pr-md-3 pr-sm-2  pr-2 removeBtn" :stroke="'none'" :fill="status.step3.error && !skill.value ? '#ef4136' : '#4b92e2'" :filepath="require('@/assets/step_icons/cancel.svg')"  :width="'25px'" :height="'25px'"/>
@@ -30,7 +30,7 @@
         <h6>Укажите все ваши награды, призовые места, успехи в учебе ( достижения в работе указываются на след. шаге )</h6>
       </div>
       <div class="container-fluid input-group px-0 align-middle">
-        <div  v-for="(achieve, key, index) in achievements" :key="key" :class="['container-fluid list-item p-3 mb-1',{'mt-0' : index > 0}]">
+        <div  v-for="(achieve, key, index) in achievements" :key="key" :id="'achieve'+index" :class="['container-fluid list-item p-3 mb-1',{'mt-0' : index > 0}]">
           <div class="col-12 row px-0 ml-0 align-middle"> 
             <div @click="$emit('remove',{step:'skills',property:'achieve'+index})">
               <simple-svg class=" d-inline-block  pl-xl-3 pl-lg-3 pl-md-1 pl-sm-2 pl-2 pr-xl-4 pr-lg-3 pr-md-3 pr-sm-2  pr-2 removeBtn" :stroke="'none'" :fill="status.step3.error && !achieve ? '#ef4136' : '#4b92e2'" :filepath="require('@/assets/step_icons/cancel.svg')"  :width="'25px'" :height="'25px'"/>
@@ -59,7 +59,48 @@
           }
         }
       },
+      created () {
+        this.CreateMenu()
+      },
       methods: {
+        CreateMenu () {
+          let p = {}
+          let q = 0
+          p['Проф. навыки'] = {}
+          p['Проф. навыки']['link'] = '#navigation'
+          let subprop = ''
+          let isErrorValue = 0
+          for (let skill in this.profSkills) {
+            subprop = q + 1 + ' ' + (this.profSkills[skill].value ? this.profSkills[skill].value : 'Навык без названия')
+            p['Проф. навыки'][subprop] = {}
+            p['Проф. навыки'][subprop]['status'] = !!this.profSkills[skill].value
+            p['Проф. навыки'][subprop]['link'] = q > 0 ? '#skill' + (q - 1) : '#navigation'
+            q++
+            if (!this.profSkills[skill].value) {
+              isErrorValue = 1
+            }
+          }
+          p['Проф. навыки']['status'] = !isErrorValue
+
+          p['Достижения'] = {}
+          p['Достижения']['link'] = '#skills'
+          q = 0
+          subprop = ''
+          isErrorValue = 0
+          for (let achieve in this.achievements) {
+            subprop = q + 1 + ' ' + (this.achievements[achieve] ? this.achievements[achieve] : 'Достижение без названия')
+            p['Достижения'][subprop] = {}
+            p['Достижения'][subprop]['status'] = !!this.achievements[achieve]
+            p['Достижения'][subprop]['link'] = q > 0 ? '#achieve' + (q - 1) : '#skills'
+            q++
+            if (!this.achievements[achieve]) {
+              isErrorValue = 1
+            }
+          }
+          p['Достижения']['status'] = !isErrorValue
+
+          this.$emit('formSideMenu', p)
+        },
         changeProfSkills (e, i) {
           let val = e.target.value
           let level
@@ -81,6 +122,7 @@
               this.errorField.index = i
             }
           }
+          this.CreateMenu()
         },
         changeAchieve (e, i) {
           this.errorMessage2 = ''
@@ -91,6 +133,7 @@
             value: val,
             level: ''
           })
+          this.CreateMenu()
         },
         addNewProff () {
           this.errorMessage = ''
@@ -101,6 +144,7 @@
             }
           }
           this.$store.commit('ADD_NEW_PROFF_SKILL')
+          this.CreateMenu()
         },
         addNewAchive () {
           this.errorMessage2 = ''
@@ -111,6 +155,7 @@
             }
           }
           this.$store.commit('ADD_NEW_ACHIEVE')
+          this.CreateMenu()
         }
       },
       computed: {

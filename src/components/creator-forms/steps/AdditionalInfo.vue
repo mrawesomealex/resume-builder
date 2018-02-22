@@ -3,9 +3,9 @@
       <h5>Рекомендации</h5>
       <h6>Лица, которые могут составить мнения о ваших професиональных качествах</h6>
       <div id="recommendators" class="row input-group">
-        <div  v-for="(person, key, index) in recommendations" :key="key" :class="['container-fluid list-item p-0 ref mb-2',{'mt-0' : index > 0},{open:statuses['status'+index]}]">
+        <div  v-for="(person, key, index) in recommendations" :key="key" :id="'ref'+index" :class="['container-fluid list-item p-0 ref mb-2',{'mt-0' : index > 0},{open:statuses['status'+index]}]">
             <header class="row p-4" :class="[{errorColor: status.step5.error && !person.not_required && (!person.fullName || (!person.email && !person.phone.code && !person.phone.number))}]">
-              <simple-svg class="d-xl-inline-block d-lg-inline-block d-md-inline-block d-sm-inline-block d-none mx-3" :stroke="'none'" :fill="status.step5.error && !person.not_required && (!person.fullName || (!person.email && !person.phone.code && !person.phone.number))?'#ef4136' : '#4b92e2'" :filepath="require('@/assets/step_icons/university.svg')"  :width="'25px'" :height="'25px'"/>
+              <simple-svg class="d-xl-inline-block d-lg-inline-block d-md-inline-block d-sm-inline-block d-none mx-3" :stroke="'none'" :fill="status.step5.error && !person.not_required && (!person.fullName || (!person.email && !person.phone.code && !person.phone.number))?'#ef4136' : '#4b92e2'" :filepath="require('@/assets/step_icons/reference.svg')"  :width="'25px'" :height="'25px'"/>
               <label for="person_name" class="ml-xl-0 ml-lg-0 ml-md-0 ml-sm-0 ml-3" @click="changeCurrent(index)">
                 <span v-if="person.fullName">{{ person.fullName }}</span>
                 <span v-if="!person.fullName">{{'Новая рекомендация'}}</span>
@@ -20,8 +20,13 @@
                   <div class="container-fluid">
                       <div class="row align-middle mb-4">
                           <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 col-12 pl-0 pr-xl-3 pr-lg-3 pr-md-0 pr-sm-0 pr-0">
-                              <input id="person_name" type="text" placeholder="ФИО рекомендующего" :class="['block_neutral col-12 pl-4 py-3 mb-xl-0 mb-lg-0 mb-md-4 mb-sm-4 mb-4',{error : status.step5.error && !person.not_required && !person.fullName}]" 
-                              :value="person.fullName" @input="changeRef($event,'fullName',index)"/>
+                              <input 
+                                id="person_name"
+                                type="text" 
+                                placeholder="ФИО рекомендующего" 
+                                :class="['block_neutral col-12 pl-4 py-3 mb-xl-0 mb-lg-0 mb-md-4 mb-sm-4 mb-4',{error : status.step5.error && !person.not_required && !person.fullName}]" 
+                                :value="person.fullName" 
+                                @input="changeRef($event,'fullName',index)"/>
                           </div>    
                           <div class="d-flex col-xl-5 col-lg-5 col-md-12 col-sm-12 col-12 text-right mr-0 pr-0 pl-xl-3 pl-lg-3 pl-md-0 pl-sm-0 pl-0 " >
                               <input class="d-none" id="can_call" type="checkbox" value="0" :checked="person.canCall" @change="changeRef($event,'canCall',index)"/>
@@ -49,7 +54,7 @@
       <h5>Добавьте сертификаты и лицензии</h5>
       <h6>Документ должен быть в формате PDF или картинкой ( JPEG, PNG ) и менее 3Мб</h6>
       <div id="certificates" class="row input-group">
-        <div  v-for="(doc, key, index) in docs" :key="key" :class="['container-fluid list-item p-3 mb-1',{'mt-0' : index > 0}]">
+        <div  v-for="(doc, key, index) in docs" :key="key" :id="'doc'+index" :class="['container-fluid list-item p-3 mb-1',{'mt-0' : index > 0}]">
           <div class="row"> 
             <div class="col-xl-1 col-lg-1 col-md-1 pl-1 mb-xl-0 mb-lg-0 mb-md-0 mb-sm-3 mb-3">
               <div @click="$emit('remove',{step:'additional',property:'doc'+index})">
@@ -66,8 +71,9 @@
                   <input id="doc_picker" class="d-none" type="file" accept=".png, .jpg, application/pdf" @change="readAsButton($event, index)">
                   <label id="drop-zone"  :class="['block_neutral text-left container-fluid mb-0 py-3 ',{error : file_errors['error' + index] || (!doc.not_required && status.step5.error &&  (!doc.name || !doc.file))}]" for="doc_picker">
                     <div class="row">
-                      <simple-svg :stroke="'none'" class="d-flex mt-0 mx-3" :fill="(file_errors['error' + index] && !doc.not_required) ? '#ef4136' : 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/photo.svg')" :width="'30px'" :height="'30px'" />
-                      <h6 v-if="!file_errors['error' + index] && !doc.file " class="mb-0 d-xl-flex d-lg-flex d-md-none d-sm-flex d-flex">Нажмите или перетяните файл</h6>
+                      <simple-svg v-if="!doc.file" :stroke="'none'" class="d-flex mt-0 mx-3" :fill="(file_errors['error' + index] && !doc.not_required) ? '#ef4136' : 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/photo.svg')" :width="'30px'" :height="'30px'"></simple-svg>
+                      <simple-svg v-if="doc.file" :stroke="'none'" class="d-flex mt-0 mx-3" :fill="(file_errors['error' + index] && !doc.not_required) ? '#ef4136' : 'rgba(41, 41, 43, 0.98)' " :filepath="require('@/assets/step_icons/doc.svg')" :width="'30px'" :height="'30px'" />
+                      <h6 v-if="!file_errors['error' + index] && !doc.file " class="mb-0 d-xl-flex d-lg-flex d-md-none d-sm-flex d-flex">Нажмите чтобы загрузить</h6>
                       <h6 v-if="file_errors['error' + index]" class="mb-0 d-xl-flex d-lg-flex d-md-none d-sm-flex d-flex">{{ file_errors['error' + index] }}</h6>
                       <h6 v-if="doc.file" class="mb-0 d-xl-flex d-lg-flex d-md-none d-sm-flex d-flex">Файл загружен!</h6>
                     </div>
@@ -108,7 +114,52 @@ export default {
       VALID_EMAIL_REG: /^(([^<>()[\]\\.,;:\s@]+(\.[^<>()[\]\\.,;:\s@]+)*)|(.+))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     }
   },
+  created () {
+    this.CreateMenu()
+  },
   methods: {
+    CreateMenu () {
+      let p = {}
+      let q = 0
+      p['Рекомендации'] = {}
+      p['Рекомендации']['link'] = '#navigation'
+      let subprop = ''
+      let isErrorValue = 0
+      for (let ref in this.recommendations) {
+        subprop = q + 1 + ' ' + (this.recommendations[ref].fullName ? this.recommendations[ref].fullName : 'Новая рекомендация')
+        p['Рекомендации'][subprop] = {}
+        p['Рекомендации'][subprop]['status'] = !(ref.not_required && (!ref.fullName || (!ref.email && !ref.phone.code && !ref.phone.number)))
+        p['Рекомендации'][subprop]['link'] = q > 0 ? '#ref' + (q - 1) : '#navigation'
+        q++
+        if (!p['Рекомендации'][subprop]['status']) {
+          isErrorValue = 1
+        }
+      }
+      p['Рекомендации']['status'] = !isErrorValue
+
+      p['Сертификаты'] = {}
+      p['Сертификаты']['link'] = '#recommendators'
+      q = 0
+      subprop = ''
+      isErrorValue = 0
+      for (let doc in this.docs) {
+        subprop = q + 1 + ' ' + (this.docs[doc].name ? this.docs[doc].name : 'Сертификат без названия')
+        p['Сертификаты'][subprop] = {}
+        p['Сертификаты'][subprop]['status'] = !!this.docs[doc].name && !!this.docs[doc].file
+        p['Сертификаты'][subprop]['link'] = q > 0 ? '#doc' + (q - 1) : '#recommendators'
+        q++
+        if (!this.docs[doc]) {
+          isErrorValue = 1
+        }
+      }
+      p['Сертификаты']['status'] = !isErrorValue
+
+      p['О себе'] = {}
+      p['О себе']['link'] = '#certificates'
+      p['О себе']['status'] = true
+
+      this.$emit('formSideMenu', p)
+    },
     changeCurrent (i) {
       this.current = this.current === i ? -1 : i
     },
@@ -117,6 +168,7 @@ export default {
         num: i,
         val: e.target.value
       })
+      this.CreateMenu()
     },
     readAsButton (e, index) {
       let reader = new FileReader()
@@ -158,6 +210,7 @@ export default {
         }
       }
       this.$store.commit('ADD_NEW_CERTIFICATE')
+      this.CreateMenu()
     },
     updateEmail (e, index) {
       if (this.bufEmail) {
@@ -195,12 +248,15 @@ export default {
           val: value
         })
       }
+      this.CreateMenu()
     },
     addNewRef () {
       this.$store.commit('ADD_NEW_REFERENCE')
+      this.CreateMenu()
     },
     changeAbout (e) {
       this.$store.commit('CHANGE_ABOUTME', e.target.value)
+      this.CreateMenu()
     }
   },
   computed: {

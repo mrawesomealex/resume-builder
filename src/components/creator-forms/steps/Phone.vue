@@ -1,6 +1,19 @@
 <template>
     <div class="phone-style col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 text-right mr-0 pr-0 pl-0 pl-xl-3 pl-lg-3 pl-md-3 pl-sm-0 pl-0" id="phone">
-        <input id="phone_code"  :class="['country-code py-3 mr-0 col-3 block_neutral',{'pl-4' : !country}, {error : phone_code_invalid || errorStatus}]" type="tel" placeholder="+ Код" @change="get_country_code()"  v-model="phone_code_local"/><input id="phone_number" :class="['block_neutral col-9 pl-4 py-3', {error: phone_invalid || errorStatus}]" type="tel"  placeholder="Доп. телефон (необязательно)" @change="processPhone()" v-model="phone_number_local"/>
+        <input
+          id="phone_code"  
+          :class="['country-code py-3 mr-0 col-3 block_neutral',{'pl-4' : !country}, {error : phone_code_invalid || errorStatus}]"
+          type="tel"
+          placeholder="+ Код"
+          @change="get_country_code()"
+          v-model="phone_code_local"
+        />
+        <input 
+          id="phone_number"
+          :class="['block_neutral col-9 pl-4 py-3', {error: phone_invalid || errorStatus}]" type="tel"  placeholder="Доп. телефон (необязательно)"
+          @change="processPhone()"
+          v-model="phone_number_local"
+        />
         <label v-if="country" for="phone_code">
             <img class="flag" :src="country" width="25px"/>
         </label>
@@ -20,7 +33,7 @@ export default {
       VALID_PHONE_REG: /^((-{0,1}\(\d+\)-)|(\(\d+\))){0,1}\d{3,}(-\d+)*$/
     }
   },
-  props: ['phoneData','errorStatus'],
+  props: ['phoneData', 'errorStatus'],
   mounted () {
     if (this.phoneData.phone.code) {
       this.phone_code_local = this.phoneData.phone.code

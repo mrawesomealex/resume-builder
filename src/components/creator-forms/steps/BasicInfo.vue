@@ -177,7 +177,7 @@
         <h6>Используйте кнопки "+" для добавление дополнительных ресурсов к вашему резюме</h6>        
         <div id="additional_resources" class="row input-group px-0 pb-3"> 
             <div class="container-fluid px-0 mb-4 pb-3 text-xl-left text-lg-left text-md-left text-sm-center text-center">
-                <button @click="resource.role ? set_current(index) : new_resource()" v-for="(resource,key,index) in resources" :key="resource.role" :class="['mb-4  py-3 px-4 resourse-btn block_neutral',{'mr-3':index < 13},{social_filled: resource.source},{new_btn: !resource.role},{focused: index === current_resource}]">
+                <button @click="resource.role ? set_current($event,index) : new_resource()" v-for="(resource,key,index) in resources" :key="resource.role" :class="['mb-4  py-3 px-4 resourse-btn block_neutral',{'mr-3':index < 13},{social_filled: resource.source},{new_btn: !resource.role},{focused: index === current_resource}]">
                     <span class="px-1" v-if="!resource.role">+</span>
                     <span class="px-1" v-if="resource.role && index > 4">{{resource.role.substr(0,2)}}</span>
                     <simple-svg v-if="index < 5" class="d-flex mx-auto my-auto" :stroke="'none'" :fill="resource.source && index !== current_resource ? 'white' : colors['el'+index] " :filepath="require('@/assets/step_icons/'+svg_socials[index]+'.svg')" :width="'20px'" :height="'20px'" />
@@ -273,6 +273,56 @@
           VALID_PHONE_REG: /^((-{0,1}\(\d+\)-)|(\(\d+\))){0,1}\d{3,}(-\d+)*$/
         }
       },
+      created: function () {
+        let p = {}
+
+        p['Тип занятости'] = {}
+        p['Тип занятости']['status'] = this.work_type[0] || this.work_type[1] || this.work_type[2] || this.work_type[3]
+        p['Тип занятости']['link'] = '#navigation'
+        let isValue = 0
+        for (let day in this.shifts) {
+          for (let shift in this.shifts[day]) {
+            if (this.shifts[day][shift]) {
+              isValue = 1
+              break
+            }
+          }
+        }
+        p['График работы'] = {}
+        p['График работы']['status'] = isValue
+        p['График работы']['link'] = '#work_type'
+
+        p['Цель резюме'] = {}
+        p['Цель резюме']['status'] = !!this.goal
+        p['Цель резюме']['link'] = '#work_shifts'
+
+        p['Адрес проживания'] = {}
+        p['Адрес проживания']['status'] = this.address.country && this.address.state && this.address.city && this.address.street && this.address.index
+        p['Адрес проживания']['link'] = '#resume_goal'
+
+        p['Общие сведения'] = {}
+        p['Общие сведения']['status'] = !!this.fio
+        p['Общие сведения']['link'] = '#index'
+
+        p['Контакты'] = {}
+        p['Контакты']['status'] = this.email && this.phone1.code && this.phone1.number
+        p['Контакты']['link'] = '#personal_info'
+        isValue = 0
+        for (let res in this.resources) {
+          if (this.resources[res].role && this.resources[res].source) {
+            isValue = 1
+          }
+        }
+        p['Доп. ресурсы'] = {}
+        p['Доп. ресурсы']['status'] = isValue
+        p['Доп. ресурсы']['link'] = '#contacts'
+
+        p['Фотография'] = {}
+        p['Фотография']['status'] = !!this.photo
+        p['Фотография']['link'] = '#additional_resources'
+
+        this.$emit('formSideMenu', p)
+      },
       mounted: function () {
         this.goal_unsaved = this.goal
         this.current_portfolio = this.portfolio_link
@@ -312,13 +362,14 @@
         focus_color (el) {
           this.colors['el' + el] = this.current_resource === el ? '#4b92e2' : 'rgba(41, 41, 43, 0.98)'
         },
-        set_current (index) {
+        set_current (e, index) {
           this.source_invalid = 0
           if (this.current_resource === index) {
             this.current_resource = -1
             for (let i = 0; i < 6; i++) {
               this.focus_color(i)
             }
+            e.target.blur()
           } else {
             this.current_resource = index
             for (let i = 0; i < 6; i++) {

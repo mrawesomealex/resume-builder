@@ -34,7 +34,7 @@
 </template>
 
 <script>
-
+import AuthentificationService from '@/services/AuthentificationService'
 export default {
   name: 'signUp',
   data: function () {
@@ -48,21 +48,12 @@ export default {
     }
   },
   methods: {
-    SignUp: function () {
+    async SignUp () {
       if (this.isValid) {
-        // firebase
-        //   .auth()
-        //   .createUserWithEmailAndPassword(this.email, this.password)
-        //   .then(
-        //     user => {
-        //       user.sendEmailVerification()
-        //       alert('Запрос на подтверждение был отправлен на адрес ' + user.email)
-        //       this.$emit('SwitchToLogin')
-        //     },
-        //     err => {
-        //       alert('Oops. ' + err.message)
-        //     }
-        //   )
+        await AuthentificationService.register({
+          email: this.email,
+          password: this.password
+        })
       } else {
         this.UnBlur('password')
       }

@@ -4,9 +4,9 @@
         <h5>Добавьте места работы</h5>
         <h6>Для добавления места работы нажмите соответсвующую клавишу. Даты необходимо вводить в соответсвующем формате (ДД . MM . ГГГГ)</h6>
       </div>
-      <div  v-for="(work, key, index) in workPlaces" :key="key" :class="['container-fluid list-item work p-0 mb-2',{'mt-0' : index > 0},{open:statuses['status'+index]}]">
+      <div  v-for="(work, key, index) in workPlaces" :key="key" :id="'work'+index" :class="['container-fluid list-item work p-0 mb-2',{'mt-0' : index > 0},{open:statuses['status'+index]}]">
           <header class="row p-4" :class="[{errorColor: status.step4.error && (!work.title || !work.begin || !work.company || !work.address || !work.correct || (!work.end.val && !work.inProgress) || !work.duties || (work.workType === -1))}]">
-              <simple-svg class="d-xl-inline-block d-lg-inline-block d-md-inline-block d-sm-inline-block d-none mx-3" :stroke="'none'" :fill="status.step4.error && (!work.title || !work.begin || !work.company || !work.address || !work.correct || (!work.end.val && !work.inProgress) || !work.duties || (work.workType === -1)) ?'#ef4136' : '#4b92e2'" :filepath="require('@/assets/step_icons/university.svg')"  :width="'25px'" :height="'25px'"/>
+              <simple-svg class="d-xl-inline-block d-lg-inline-block d-md-inline-block d-sm-inline-block d-none mx-3" :stroke="'none'" :fill="status.step4.error && (!work.title || !work.begin || !work.company || !work.address || !work.correct || (!work.end.val && !work.inProgress) || !work.duties || (work.workType === -1)) ?'#ef4136' : '#4b92e2'" :filepath="require('@/assets/step_icons/workplace.svg')"  :width="'25px'" :height="'25px'"/>
               <label for="work_title" class="ml-xl-0 ml-lg-0 ml-md-0 ml-sm-0 ml-3" @click="changeCurrent(index)">
                   <span v-if="work.title">{{ work.title }}</span><span v-if="work.company">{{' ('+work.company+')'}}</span>
                   <span v-if="!work.title">{{'Новое рабочее место'}}</span>
@@ -133,7 +133,23 @@
           }
         }
       },
+      created () {
+        this.CreateMenu()
+      },
       methods: {
+        CreateMenu () {
+          let p = {}
+          let q = 0
+          let prop = ''
+          for (let work in this.workPlaces) {
+            prop = q + 1 + ' ' + (this.workPlaces[work].company ? this.workPlaces[work].company : 'Новое место работы')
+            p[prop] = {}
+            p[prop]['status'] = !(!work.title || !work.begin || !work.company || !work.address || !work.correct || (!work.end.val && !work.inProgress) || !work.duties || (work.workType === -1))
+            p[prop]['link'] = q > 0 ? '#work' + (q - 1) : '#navigation'
+            q++
+          }
+          this.$emit('formSideMenu', p)
+        },
         countPeriod (Date1, Date2) {
           let period
           if (Date1.getFullYear() === Date2.getFullYear()) {
@@ -179,6 +195,7 @@
             number: i,
             value: val
           })
+          this.CreateMenu()
         },
         addNew () {
           for (let key in this.workPlaces) {
@@ -188,6 +205,7 @@
             }
           }
           this.workPlaces = 1
+          this.CreateMenu()
         }
       },
       computed: {
