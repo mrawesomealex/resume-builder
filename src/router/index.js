@@ -13,6 +13,7 @@ import Education from '@/components/creator-forms/steps/Education'
 import Skills from '@/components/creator-forms/steps/Skills'
 import Experience from '@/components/creator-forms/steps/Experience'
 import Additional from '@/components/creator-forms/steps/AdditionalInfo'
+import Print from '@/components/creator-forms/Print'
 
 Vue.use(Router)
 
@@ -43,6 +44,9 @@ export default new Router({
       path: '/creator',
       name: 'creator',
       component: FormTemplate,
+      redirect: to => {
+        return '/creator/preferences'
+      },
       children: [
         {
           path: 'preferences',
@@ -67,6 +71,10 @@ export default new Router({
         {
           path: 'additional',
           component: Additional
+        },
+        {
+          path: 'print',
+          component: Print
         }
       ]
     }

@@ -46,11 +46,11 @@ export default {
         not_required: true
       },
       additional: {
-        resource0: {role: 'instagram', source: ''},
-        resource1: {role: 'facebook', source: ''},
-        resource2: {role: 'telegram', source: ''},
-        resource3: {role: 'skype', source: ''},
-        resource4: {role: 'vk', source: ''},
+        resource0: {role: '', source: ''},
+        resource1: {role: '', source: ''},
+        resource2: {role: '', source: ''},
+        resource3: {role: '', source: ''},
+        resource4: {role: '', source: ''},
         resource5: {role: '', source: ''}
       },
       photo: '',
@@ -75,7 +75,7 @@ export default {
     },
     skills: {
       proffesional: {
-        skill0: {value: '', level: 0}
+        skill0: {value: '', level: -1}
       },
       achievements: {
         achieve0: ''

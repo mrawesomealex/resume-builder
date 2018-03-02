@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "pdfmake": "^0.1.36",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue-scrollto": "^2.8.0",

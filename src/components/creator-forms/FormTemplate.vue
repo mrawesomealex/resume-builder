@@ -7,10 +7,10 @@
                  <nav id="navigation" class="white_block row ">
                     <a @click="Change(key, step, 1)"
                         v-for="(item,key) in nav_links" :key="key"
-                        :class="['col-2', { current: steps['step'+key].current, 
+                        :class="['col-2', { current: steps['step'+key].current && $router.history.current.path.search('print')  !== -1, 
                                             done: steps['step'+key].done, 
                                             form_error: steps['step'+key].error,
-                                            'no-border': steps['step'+(key+1)] ? ((steps['step'+key].error &&  steps['step'+(key+1)].error) || (steps['step'+key].done &&  steps['step'+(key+1)].done)) && !steps['step'+key].current && !steps['step'+(key+1)].current : false
+                                            'no-border': steps['step'+(key+1)] ? (((steps['step'+key].error &&  steps['step'+(key+1)].error) || (steps['step'+key].done &&  steps['step'+(key+1)].done)) && !steps['step'+key].current && !steps['step'+(key+1)].current) || $router.history.current.path.search('print')  !== -1: false
                     }]">
                         <div v-if="!steps['step'+key].done" :class="item.class"></div>
                         <img v-if="steps['step'+key].done" src="../../assets/step_icons/check.svg"/>
@@ -19,12 +19,12 @@
                 </nav>
                 <div id="wrap"></div>
                 <div id="form" class="row white_block">
-                    <h3  @click="Open_Menu()"  v-for="(item,key) in nav_links" :key="key" v-if="steps['step'+key].current" :class="['container-fluid d-xl-none d-lg-none d-md-none d-sm-flex d-flex text-left py-0', {menuOpen: mobile_subMenu},{fixed: fixedSub}]">
+                    <h3 @click="Open_Menu()"  v-for="(item,key) in nav_links" :key="key" v-if="steps['step'+key].current && $router.history.current.path.search('print')  === -1" :class="['container-fluid d-xl-none d-lg-none d-md-none d-sm-flex d-flex text-left py-0', {menuOpen: mobile_subMenu},{fixed: fixedSub}]">
                         <header class="container-fluid d-flex  px-3 pt-sm-2 py-4 align-middle">
                             <simple-svg class="d-flex open-menu ml-3 mr-2" :stroke="'none'" fill="#4b92e2" :filepath="require('@/assets/step_icons/menu.svg')" :width="'25px'" :height="'25px'"/>
                             <span class="d-flex ml-0">{{item.content}}</span>
                         </header>
-                        <ul id="mobile_anchors" class="pl-5 ml-4 pt-2">
+                        <ul v-if="$router.history.current.path.search('print') === -1" id="mobile_anchors" class="pl-5 ml-4 pt-2">
                                 <li :class="['row py-2 pl-4', {current: (!steps['step'+step].error && steps['step'+step].current) || (steps['step'+step].current && point.status)}, {done: steps['step'+step].done && point.status}, {errorLink: steps['step'+step].error && !point.status}]" v-for="(point, key) in list" :key="key" >
                                     <a class="col-12" v-scroll-to="point.link"><span v-if="steps['step'+step].error && !point.status">! </span>{{key}}</a>
                                     <ul class="pt-2 pb-3" v-if="Object.keys(point).length" :key="key">
@@ -36,9 +36,9 @@
                                 </li>
                         </ul>
                     </h3>
-                    <div class="d-flex pt-xl-0 pt-lg-0 pt-md-0 pt-sm-5 mt-5 mt-xl-0 mt-lg-0 mt-md-0 mt-sm-5 mt-5">
-                        <input id="open-menu" class="d-none" type="checkbox">
-                        <div id="menu-trigger" :class="['d-xl-flex d-lg-flex d-md-flex d-sm-none d-none',
+                    <div :class="['d-flex pt-xl-0 pt-lg-0 pt-md-0 mt-xl-0 mt-lg-0 mt-md-0',  $router.history.current.path.search('print')  === -1 ? 'pt-sm-5 pt-5 mt-sm-5 mt-5' : 'pt-sm-0 pt-0 mt-sm-0 mt-0']">
+                        <input v-if="$router.history.current.path.search('print')  === -1" id="open-menu" class="d-none" type="checkbox">
+                        <div v-if="$router.history.current.path.search('print')  === -1" id="menu-trigger" :class="['d-xl-flex d-lg-flex d-md-flex d-sm-none d-none',
                                                        {menu_current : steps['step'+step].current && !steps['step'+step].error && !steps['step'+step].done },
                                                        {menu_complete: steps['step'+step].done},{menu_error: steps['step'+step].error}]" @click.self="ForceClose()"> 
                             <label id="btn-open" for="open-menu">
@@ -59,8 +59,21 @@
                         <router-view @click.native="ForceClose()" @remove="Confirmation($event)" @formSideMenu="SideMenuGenerator" :status="steps" class="pt-5 pl-xl-5 pl-lg-4 pl-md-4 pr-5 pl-sm-4 pl-4 "></router-view>
                     </div>
                     <div id="controls" class="container-fluid py-4">
-                        <button :disabled="steps.step0.current ? true : false" @click="Change(previous, step, 1)" class="button blue"><a>Предыдущий шаг</a></button>
-                        <button :disabled="steps.step5.current ? true : false" @click="Change(next,step, 0)" class="button blue"><a>Перейти далее</a></button>
+                        <button v-if="$router.history.current.path.search('print')  === -1" :disabled="steps.step0.current ? true : false" @click="Change(previous, step, 1)" class="button blue"><a>Предыдущий шаг</a></button>
+                        <button v-if="!steps.step5.current && $router.history.current.path.search('print')  === -1" @click="Change(next,step, 0)" class="button blue"><a>Перейти далее</a></button>
+                        <router-link
+                            :to="!steps.step0.done ||  !steps.step1.done || !steps.step2.done || !steps.step3.done || !steps.step4.done || !steps.step5.done ? '' : '/creator/print'"
+                            tag="button"
+                            v-if="steps.step5.current && $router.history.current.path.search('print')  === -1"
+                            :disabled="!steps.step0.done ||  !steps.step1.done || !steps.step2.done || !steps.step3.done || !steps.step4.done || !steps.step5.done"
+                            @click="Change(next,step, 0)"
+                            class="button blue">
+                        <a>Создать резюме</a>
+                        </router-link>
+                        <div v-if="$router.history.current.path.search('print')  > -1" class="container col-xl-5 col-lg-6 col-md-8 ">
+                            <button class="ml-auto button blue"><a>Напечатать резюме</a></button>
+                            <button id="PDFExport" class="button blue"><a>Экспорт в PDF</a></button>
+                        </div>
                     </div>
                 </div>   
            </div>  
@@ -144,8 +157,10 @@ export default {
       }
     },
     ForceClose: function () {
-      if (document.getElementById('open-menu').checked) {
-        document.getElementById('open-menu').checked = false
+      if (document.getElementById('open-menu')) {
+        if (document.getElementById('open-menu').checked) {
+          document.getElementById('open-menu').checked = false
+        }
       }
     },
     Open_Menu: function () {
@@ -177,6 +192,9 @@ export default {
       }
       scroll >= 140 ? $('#btn-open').addClass('fixed') : $('#btn-open').removeClass('fixed')
     })
+    // TEST DATA
+    this.$store.commit('INPUT_TEST')
+    this.$router.replace('/creator/print')
   },
   computed: {
     step: function () {
@@ -216,6 +234,9 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/styles/global";
 
+#PDFExport{
+    float: right;
+}
 #anchors{
     opacity: 0;
     transition: 0.3s;
